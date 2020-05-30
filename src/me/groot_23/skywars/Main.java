@@ -10,6 +10,7 @@ import me.groot_23.skywars.commands.SWleave;
 import me.groot_23.skywars.commands.SWmaps;
 import me.groot_23.skywars.commands.SWspawns;
 import me.groot_23.skywars.commands.SWupdate;
+import me.groot_23.skywars.events.GameEvents;
 import me.groot_23.skywars.events.RefillChests;
 import me.groot_23.skywars.events.StopLobbyLeave;
 
@@ -38,6 +39,7 @@ public class Main extends JavaPlugin
 		
 		new StopLobbyLeave(this);
 		new RefillChests(this);
+		new GameEvents(this);
 	}
 	
 	public static Main getInstance() {

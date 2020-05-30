@@ -29,51 +29,7 @@ public class SWapply implements CommandExecutor {
 			return true;
 		}
 		Player player = (Player) sender;
-		String worldName = player.getWorld().getName();
-		// get number of copies
-		int numberOfCopies = 0;
-		if(args.length == 0) {
-			for(File f : Bukkit.getWorldContainer().listFiles()) {
-				if(f.getName().contains("skywars_lobby_" + worldName)) {
-					numberOfCopies++;
-				}
-			}
-		}
-		else {
-			try {
-				numberOfCopies = Integer.parseInt(args[0]);
-			}catch(NumberFormatException e) {
-				player.sendMessage(Util.chat("&c\"" + numberOfCopies + "\" ist keine gültige Zahl"));
-				for(File f : Bukkit.getWorldContainer().listFiles()) {
-					if(f.getName().contains("skywars_lobby_" + worldName)) {
-						numberOfCopies++;
-					}
-				}
-			}
-		}
-		// delete old copies
-		for(File f : Bukkit.getWorldContainer().listFiles()) {
-			if(f.getName().contains("skywars_lobby_" + worldName)) {
-				World world = Bukkit.getWorld(f.getName());
-				if(world != null) {
-					for(Player p : world.getPlayers()) {
-						p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
-					}
-					Bukkit.unloadWorld(world, false);
-				}
-				FileUtil.delete(f);
-			}
-		}
-		// copy new world
-		String src = Bukkit.getWorldContainer() + File.separator + worldName;
-		String dst = Bukkit.getWorldContainer() + File.separator + "skywars_lobby_" + worldName;
-		for(int i = 0; i < numberOfCopies; i++) {
-			try {
-				FileUtil.copyFileOrFolder(new File(src), new File(dst + i));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
 		return true;
 	}
 

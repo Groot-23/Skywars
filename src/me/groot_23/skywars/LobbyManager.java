@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
@@ -112,7 +113,8 @@ public class LobbyManager {
 		for (int i = 0; currentLobby == null; i++) {
 			String worldName = "skywars_lobby_" + currentMap + i;
 			if (Util.worldExists(worldName)) {
-				if (currentLobby == null) {
+				// check if the world has not been loaded yet
+				if (Bukkit.getWorld(worldName) == null) {
 					currentLobby = Bukkit.createWorld(new WorldCreator(worldName).generator(new EmptyChunkGenerator()));
 				}
 			} else {
@@ -144,6 +146,7 @@ public class LobbyManager {
 			}
 		}
 		plugin.gameManager.initLobby(currentLobby);
+		System.out.println("[Skywars] Successfully created new lobby: "+ currentLobby.getName());
 		return true;
 	}
 
@@ -169,6 +172,13 @@ public class LobbyManager {
 			}
 			if(currentLobby != null) {
 				player.teleport(currentLobby.getSpawnLocation());
+				// don't change gamemode too early
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){
+				    @Override
+				    public void run(){
+				        player.setGameMode(GameMode.SURVIVAL);
+				    }
+				}, 3L);
 				if(currentLobby.getPlayers().size() >= playersPerWorld.get(currentMap)) {
 					plugin.gameManager.startGame(currentLobby);
 					Bukkit.getScheduler().cancelTask(taskId);
@@ -180,8 +190,9 @@ public class LobbyManager {
 						@Override
 						public void run() {
 							plugin.gameManager.startGame(currentLobby);
+							createNewLobby();
 						}
-					}, 30);
+					}, 600);
 				}
 			}
 		}
@@ -198,11 +209,10 @@ public class LobbyManager {
 			numberIndex++;
 		}
 		try {
-			System.out.println(name.substring(numberIndex));
 			int number = Integer.parseInt(name.substring(numberIndex));
-			System.out.println(number);
 			for (Player p : world.getPlayers()) {
-				p.teleport(Bukkit.getWorld("world").getSpawnLocation());
+				p.sendMessage(Util.chat("&eDiese Lobby wurde gerade geschlossen!"));
+				p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
 			}
 			Bukkit.unloadWorld(world, false);
 

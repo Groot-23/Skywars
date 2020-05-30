@@ -1,0 +1,37 @@
+name: Skywars
+version: 1.0
+author: Groot_23
+main: me.groot_23.skywars.Main
+
+commands:
+  swjoin:
+    description: Trete einem Skywars Spiel bei
+    usage: </command>
+
+  swleave:
+    description: Verlasse die Lobby
+    usage: </command>
+
+  swedit:
+    description: Bearbeite eine Skywars Welt
+    usage: </command> <world>
+
+  swapply:
+    description: Wende die Aenderungen von "swedit" an
+    usage: </command> <numberOfCopies (optional)>
+
+  swmaps:
+    description: Verwalte die Skywarsmaps
+    usage: </command> [register | list | remove | persistent] <world> <Wahrscheinlichkeit>
+
+  swupdate:
+    description: Lese die Config neu ein
+    usage: </command>
+
+  swchest:
+    description: Platziere eine Skywars Truhe
+    usage: </command> <chest> <time>
+
+permissions:
+  skywars.*:
+    default: false

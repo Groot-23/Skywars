@@ -1,0 +1,44 @@
+package me.groot_23.skywars;
+
+import org.bukkit.plugin.java.JavaPlugin;
+
+import me.groot_23.skywars.commands.SWjoin;
+import me.groot_23.skywars.commands.SWapply;
+import me.groot_23.skywars.commands.SWchest;
+import me.groot_23.skywars.commands.SWedit;
+import me.groot_23.skywars.commands.SWleave;
+import me.groot_23.skywars.commands.SWmaps;
+import me.groot_23.skywars.commands.SWupdate;
+import me.groot_23.skywars.events.RefillChests;
+import me.groot_23.skywars.events.StopLobbyLeave;
+
+public class Main extends JavaPlugin
+{
+	public LobbyManager lobbyManager;
+	public GameManager gameManager;
+	private static Main instance;
+	
+	@Override
+	public void onEnable() 
+	{
+		instance = this;
+		
+		gameManager = new GameManager(this);
+		lobbyManager = new LobbyManager(this);
+
+		new SWjoin(this);
+		new SWleave(this);
+		new SWedit(this);
+		new SWapply(this);
+		new SWmaps(this);
+		new SWupdate(this);
+		new SWchest(this);
+		
+		new StopLobbyLeave(this);
+		new RefillChests(this);
+	}
+	
+	public static Main getInstance() {
+		return instance;
+	}
+}

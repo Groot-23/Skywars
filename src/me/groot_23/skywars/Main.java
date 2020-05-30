@@ -8,6 +8,7 @@ import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
 import me.groot_23.skywars.commands.SWleave;
 import me.groot_23.skywars.commands.SWmaps;
+import me.groot_23.skywars.commands.SWspawns;
 import me.groot_23.skywars.commands.SWupdate;
 import me.groot_23.skywars.events.RefillChests;
 import me.groot_23.skywars.events.StopLobbyLeave;
@@ -33,6 +34,7 @@ public class Main extends JavaPlugin
 		new SWmaps(this);
 		new SWupdate(this);
 		new SWchest(this);
+		new SWspawns(this);
 		
 		new StopLobbyLeave(this);
 		new RefillChests(this);

@@ -1,13 +1,17 @@
 package me.groot_23.skywars;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import me.groot_23.skywars.events.RefillChests;
@@ -42,6 +46,22 @@ public class GameManager {
 	}
 	
 	public void startGame(World world) {
+		ArrayList<Location> spawns = new ArrayList<Location>();
+		for(Entity entity : world.getEntities()) {
+			if(entity.getType() == EntityType.ARMOR_STAND) {
+				if(entity.getCustomName().equals("skywars_spawn")) {
+					spawns.add(entity.getLocation());
+				}
+			}
+		}
+		Collections.shuffle(spawns);
+		if(spawns.size() < world.getPlayers().size()) {
+			Bukkit.getServer().broadcastMessage(Util.chat("&cZu wenige Spawns! Fehler beim Starten von Skywars :("));
+			return;
+		}
+		for(int i = 0; i < world.getPlayers().size(); i++) {
+			world.getPlayers().get(i).teleport(spawns.get(i));
+		}
 		Bukkit.getServer().broadcastMessage(Util.chat("&5Skywars wurde gestartet"));
 	}
 }

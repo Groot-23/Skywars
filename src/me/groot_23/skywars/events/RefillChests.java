@@ -135,13 +135,12 @@ public class RefillChests implements Listener {
 			if (block.getType() == Material.CHEST) {
 				block.setMetadata(SKYWARS_LOOT, new FixedMetadataValue(plugin, meta.getLore().get(0)));
 				block.setMetadata(SKYWARS_REFILL_TIME,
-						new FixedMetadataValue(plugin, Integer.parseInt(meta.getLore().get(1))));
+				new FixedMetadataValue(plugin, Integer.parseInt(meta.getLore().get(1))));
 				block.setMetadata(SKYWARS_TIME_TILL_REFILL, new FixedMetadataValue(plugin, 0));
 
 				RefillRunnable.refillChest(block);
 				// use block.location to floor the values
-				ArmorStand entity = (ArmorStand) world.spawnEntity(block.getLocation().add(0.5, -1, 0.5),
-						EntityType.ARMOR_STAND);
+				ArmorStand entity = (ArmorStand) world.spawnEntity(block.getLocation().add(0.5, -1, 0.5), EntityType.ARMOR_STAND);
 				entity.setCustomNameVisible(true);
 				entity.setCustomName(Util.chat("&aKiste voll!"));
 				entity.setVisible(false);
@@ -153,6 +152,7 @@ public class RefillChests implements Listener {
 				dataHolder.setCustomName("skywars_chest_marker" + "|" + meta.getLore().get(0) + "|" + meta.getLore().get(1));
 				dataHolder.setGravity(false);
 				dataHolder.setCollidable(false);
+				dataHolder.setVisible(false);
 			}
 		}
 	}

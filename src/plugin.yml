@@ -32,6 +32,10 @@ commands:
     description: Platziere eine Skywars Truhe
     usage: </command> <chest> <time>
 
+  swspawns:
+    description: Verwalte die Spawns einer Skywars Welt
+    usage: </command> [add | show]
+
 permissions:
   skywars.*:
     default: false

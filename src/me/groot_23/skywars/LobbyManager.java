@@ -165,7 +165,7 @@ public class LobbyManager {
 		currentLobby = getLobby();
 		if(currentLobby != null) {
 			if(currentLobby.getPlayers().size() >= playersPerWorld.get(currentMap)) {
-				plugin.gameManager.startGame(currentLobby);
+				plugin.gameManager.goToSpawns(currentLobby);
 				Bukkit.getScheduler().cancelTask(taskId);
 				taskId = -1;
 				createNewLobby();
@@ -180,19 +180,25 @@ public class LobbyManager {
 				    }
 				}, 3L);
 				if(currentLobby.getPlayers().size() >= playersPerWorld.get(currentMap)) {
-					plugin.gameManager.startGame(currentLobby);
+					plugin.gameManager.goToSpawns(currentLobby);
 					Bukkit.getScheduler().cancelTask(taskId);
 					taskId = -1;
 					createNewLobby();
 				} else if(taskId == -1){
-					taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-						
+					taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+						int counter = 31;
 						@Override
 						public void run() {
-							plugin.gameManager.startGame(currentLobby);
-							createNewLobby();
+							counter--;
+							plugin.skywarsScoreboard.updatePreGame(currentLobby, playersPerWorld.get(currentMap), counter);
+							if(counter <= 0) {
+								plugin.gameManager.goToSpawns(currentLobby);
+								createNewLobby();
+								Bukkit.getScheduler().cancelTask(taskId);
+								taskId = -1;
+							}
 						}
-					}, 600);
+					}, 20, 20);
 				}
 			}
 		}

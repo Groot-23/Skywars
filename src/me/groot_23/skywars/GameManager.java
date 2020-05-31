@@ -17,6 +17,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.skywars.events.RefillChests;
 import me.groot_23.skywars.util.Util;
@@ -135,13 +136,14 @@ public class GameManager {
 			}
 			if(timer <= 0) {
 				removeGlassSpawns(world, spawns);
+				plugin.gameManager.startGame(world);
 				endTask();
 			}
 		}
 		
 	}
 	
-	public void startGame(World world) {
+	public void goToSpawns(World world) {
 		ArrayList<Location> spawns = new ArrayList<Location>();
 		for(Entity entity : world.getEntities()) {
 			if(entity.getType() == EntityType.ARMOR_STAND) {
@@ -161,5 +163,19 @@ public class GameManager {
 		removeSpawnLobby(world);
 		new StartGameRunnable(plugin, world, spawns).startSchedule();
 		
+	}
+	
+	public void startGame(World world) {
+		new BukkitRunnable() {
+			
+			@Override
+			public void run() {
+				if(world != Bukkit.getWorld(world.getUID())) {
+					System.out.println("Task beendet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					cancel();
+				}
+				plugin.skywarsScoreboard.updateGame(world);
+			}
+		}.runTaskTimer(plugin, 20, 20);
 	}
 }

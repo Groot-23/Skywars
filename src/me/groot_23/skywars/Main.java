@@ -18,6 +18,7 @@ public class Main extends JavaPlugin
 {
 	public LobbyManager lobbyManager;
 	public GameManager gameManager;
+	public SkywarsScoreboard skywarsScoreboard;
 	private static Main instance;
 	
 	@Override
@@ -27,6 +28,7 @@ public class Main extends JavaPlugin
 		
 		gameManager = new GameManager(this);
 		lobbyManager = new LobbyManager(this);
+		skywarsScoreboard = new SkywarsScoreboard(this);
 
 		new SWjoin(this);
 		new SWleave(this);

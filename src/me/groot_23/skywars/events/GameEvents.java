@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.groot_23.skywars.Main;
@@ -65,4 +66,5 @@ public class GameEvents implements Listener {
 			}, 3L);
 		}
 	}
+	
 }

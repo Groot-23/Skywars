@@ -11,7 +11,7 @@ import me.groot_23.skywars.commands.SWmaps;
 import me.groot_23.skywars.commands.SWspawns;
 import me.groot_23.skywars.commands.SWupdate;
 import me.groot_23.skywars.events.GameEvents;
-import me.groot_23.skywars.events.RefillChests;
+import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
 
 public class Main extends JavaPlugin
@@ -26,7 +26,6 @@ public class Main extends JavaPlugin
 	{
 		instance = this;
 		
-		gameManager = new GameManager(this);
 		lobbyManager = new LobbyManager(this);
 		skywarsScoreboard = new SkywarsScoreboard(this);
 
@@ -40,7 +39,7 @@ public class Main extends JavaPlugin
 		new SWspawns(this);
 		
 		new StopLobbyLeave(this);
-		new RefillChests(this);
+		new ChestEvents(this);
 		new GameEvents(this);
 	}
 	

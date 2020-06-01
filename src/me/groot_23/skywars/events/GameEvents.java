@@ -6,8 +6,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.groot_23.skywars.Main;
@@ -51,7 +51,18 @@ public class GameEvents implements Listener {
 	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
-		updatePlayerCount(e.getEntity().getWorld(), e.getEntity());
+		e.getEntity().setGameMode(GameMode.SPECTATOR);
+	}
+	
+	// Later it will be changed to PlayerDeathEvent, but it's helpful for testing it alone
+	@EventHandler
+	public void onKill(EntityDeathEvent e) {
+		Player killer = e.getEntity().getKiller();
+		if(killer != null) {
+			if(killer.getWorld().getName().startsWith("skywars_lobby_")) {
+				plugin.skywarsScoreboard.addKill(killer);
+			}
+		}
 	}
 	
 	@EventHandler

@@ -33,9 +33,6 @@ public class StopLobbyLeave implements Listener {
 		// -> don't stop it, maybe another plugin wants it to keep loaded
 	}
 
-	private boolean isRegistered(String world) {
-		return plugin.getConfig().contains("worlds." + world);
-	}
 
 	@EventHandler
 	public void playerLeave(PlayerChangedWorldEvent e) {

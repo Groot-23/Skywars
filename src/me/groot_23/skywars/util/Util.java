@@ -2,7 +2,6 @@ package me.groot_23.skywars.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -55,7 +54,10 @@ public class Util {
 	}
 	
 	public static String minuteSeconds(int seconds) {
-		return Integer.toString(seconds / 60) + ":" + Integer.toString(seconds % 60);
+		String minuteStr = Integer.toString(seconds / 60);
+		int secondPart = seconds % 60;
+		String secondStr = (secondPart < 10 ? "0" : "") + secondPart;
+		return minuteStr + ":" + secondStr;
 	}
 	
 	public static int secondsFromStr(String str) {

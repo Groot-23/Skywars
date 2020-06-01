@@ -1,8 +1,13 @@
 package me.groot_23.skywars.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -13,11 +18,32 @@ import me.groot_23.skywars.util.Util;
 
 public class SWspawns implements CommandExecutor {
 
-	private Main plugin;
 	
 	public SWspawns(Main plugin) {
 		plugin.getCommand("swspawns").setExecutor(this);
-		this.plugin = plugin;
+		plugin.getCommand("swspawns").setTabCompleter(new Completer());
+	}
+	
+	public class Completer implements TabCompleter {
+
+		@Override
+		public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+			List<String> list = new ArrayList<String>();
+			if(args.length == 1) {
+				String[] modes = new String[] {"add", "show"};
+				for(String s : modes) {
+					if(s.startsWith(args[0])) list.add(s);
+				}
+			}
+			if(args.length == 2 && args[0].equals("show")) {
+				String[] options = new String[] {"true", "false"};
+				for(String s : options) {
+					if(s.startsWith(args[1])) list.add(s);
+				}
+			}
+			return list;
+		}
+		
 	}
 	
 	@Override
@@ -27,6 +53,10 @@ public class SWspawns implements CommandExecutor {
 			return true;
 		}
 		Player player = (Player)sender;
+		if(!sender.hasPermission("skywars.spawns")) {
+			player.sendMessage(ChatColor.RED + "Du hast nicht die benötigte Berechtigung: skywars.spawns");
+			return true;
+		}
 		if(args.length == 0) {
 			player.sendMessage(Util.chat("&cZu wenige Argumente!"));
 			return false;

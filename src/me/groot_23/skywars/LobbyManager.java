@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -16,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.skywars.util.EmptyChunkGenerator;
 import me.groot_23.skywars.util.Pair;
@@ -24,8 +24,9 @@ import me.groot_23.skywars.util.Util;
 public class LobbyManager {
 
 	private World currentLobby = null;
+	private GameManager currentGameManager = null;
 	private String currentMap;
-	private int taskId = -1;
+	private BukkitRunnable task = null;
 	private Main plugin;
 	private Map<String, Integer> playersPerWorld = new HashMap<String, Integer>();
 	private Map<String, Integer> lobbiesPerWorld = new HashMap<String, Integer>();
@@ -145,7 +146,7 @@ public class LobbyManager {
 
 			}
 		}
-		plugin.gameManager.initLobby(currentLobby);
+		currentGameManager = new GameManager(plugin, currentLobby);
 		System.out.println("[Skywars] Successfully created new lobby: "+ currentLobby.getName());
 		return true;
 	}
@@ -161,44 +162,50 @@ public class LobbyManager {
 		return currentLobby;
 	}
 	
+	private void cancelTask() {
+		if(task != null) {
+			task.cancel();
+			task = null;
+		}
+	}
+	
 	public void joinPlayer(Player player) {
 		currentLobby = getLobby();
 		if(currentLobby != null) {
 			if(currentLobby.getPlayers().size() >= playersPerWorld.get(currentMap)) {
-				plugin.gameManager.goToSpawns(currentLobby);
-				Bukkit.getScheduler().cancelTask(taskId);
-				taskId = -1;
+				currentGameManager.goToSpawns();
+				cancelTask();
 				createNewLobby();
 			}
 			if(currentLobby != null) {
 				player.teleport(currentLobby.getSpawnLocation());
+				plugin.skywarsScoreboard.resetKills(player);
 				// don't change gamemode too early
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){
 				    @Override
 				    public void run(){
-				        player.setGameMode(GameMode.SURVIVAL);
+				        player.setGameMode(GameMode.ADVENTURE);
 				    }
 				}, 3L);
 				if(currentLobby.getPlayers().size() >= playersPerWorld.get(currentMap)) {
-					plugin.gameManager.goToSpawns(currentLobby);
-					Bukkit.getScheduler().cancelTask(taskId);
-					taskId = -1;
+					currentGameManager.goToSpawns();
+					cancelTask();
 					createNewLobby();
-				} else if(taskId == -1){
-					taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-						int counter = 31;
+				} else if(task == null){
+					task = new BukkitRunnable() {
+						int counter = 30;
 						@Override
 						public void run() {
-							counter--;
 							plugin.skywarsScoreboard.updatePreGame(currentLobby, playersPerWorld.get(currentMap), counter);
 							if(counter <= 0) {
-								plugin.gameManager.goToSpawns(currentLobby);
+								currentGameManager.goToSpawns();
 								createNewLobby();
-								Bukkit.getScheduler().cancelTask(taskId);
-								taskId = -1;
+								cancelTask();
 							}
+							counter--;
 						}
-					}, 20, 20);
+					};
+					task.runTaskTimer(plugin, 0, 20);
 				}
 			}
 		}

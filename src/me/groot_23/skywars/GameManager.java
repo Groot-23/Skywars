@@ -1,36 +1,43 @@
 package me.groot_23.skywars;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.groot_23.skywars.events.RefillChests;
+import me.groot_23.skywars.events.ChestEvents;
+import me.groot_23.skywars.util.Pair;
 import me.groot_23.skywars.util.Util;
 
 public class GameManager {
 
 	private Main plugin;
+	private World world;
+	private List<Pair<Block, ArmorStand>> chests;
 	
-	public GameManager(Main plugin) {
+	public GameManager(Main plugin, World world) {
 		this.plugin = plugin;
+		this.world = world;
+		world.setPVP(false);
+		this.chests = new ArrayList<Pair<Block,ArmorStand>>();
+		findChests();
+		refillAllChests();
 	}
 	
-	public void initLobby(World world) {
+	private void findChests() {
 		List<Entity> entities = world.getEntities();
 		for(Entity entity : entities) {
 			if(entity.getType() == EntityType.ARMOR_STAND) {
@@ -38,19 +45,47 @@ public class GameManager {
 				if(name.startsWith("skywars_chest_marker")) {
 					String sub = name.substring(name.indexOf('|') + 1);
 					String loot = sub.substring(0, sub.indexOf('|'));
-					int refillTime = Integer.parseInt(sub.substring(sub.indexOf('|') + 1));
+					//int refillTime = Integer.parseInt(sub.substring(sub.indexOf('|') + 1));
 					Block block = entity.getLocation().getBlock();
 					if(block.getType() == Material.CHEST) {
-						block.setMetadata(RefillChests.SKYWARS_LOOT, new FixedMetadataValue(plugin, loot));
-						block.setMetadata(RefillChests.SKYWARS_REFILL_TIME, new FixedMetadataValue(plugin, refillTime));
-						RefillChests.RefillRunnable.refillChest(block);
+						block.setMetadata(ChestEvents.SKYWARS_LOOT, new FixedMetadataValue(plugin, loot));
+						ArmorStand armorStand = null;
+						Collection<Entity> nearbyEntities = world.getNearbyEntities(block.getLocation().add(0.5, -1, 0.5), 0.1, 0.1, 0.1);
+						for(Entity ne : nearbyEntities) {
+							if(ne.getType() == EntityType.ARMOR_STAND) {
+								armorStand = (ArmorStand) ne;
+								break;
+							}
+						}
+						if(armorStand != null) {
+							chests.add(new Pair<Block, ArmorStand>(block, armorStand));
+						} else {
+							plugin.getLogger().warning("No ArmorStand found for chest at: " + block.getLocation().toString());
+						}
 					}
 				}
 			}
 		}
 	}
 	
-	private void removeSpawnLobby(World world) {
+	
+	private void refillAllChests() {
+		for(Pair<Block, ArmorStand> pair : chests) {
+			ChestEvents.refillChest(pair.getElement0());
+			pair.getElement1().setCustomName(ChatColor.GREEN + "Kiste voll");
+		}
+	}
+	
+	private void updateChestTimer(int time) {
+		String timeStr = Util.minuteSeconds(time);
+		for(Pair<Block, ArmorStand> pair : chests) {
+			if(pair.getElement1().getCustomName().contains(":")) {
+				pair.getElement1().setCustomName(timeStr);
+			}
+		}
+	}
+	
+	private void removeSpawnLobby() {
 		int radius = 20;
 		int height = 5;
 		int spawnX = world.getSpawnLocation().getBlockX();
@@ -66,32 +101,18 @@ public class GameManager {
 	}
 	
 
-	
-	public static class StartGameRunnable implements Runnable{
+	public class SpawnRunnable extends BukkitRunnable {
 
-		private static HashMap<UUID, Integer> taskId = new HashMap<UUID, Integer>();
-		
 		private World world;
 		private Main plugin;
 		private List<Location> spawns;
 		private int timer;
 		
-		public StartGameRunnable(Main plugin, World world, List<Location> spawns) {
+		public SpawnRunnable(Main plugin, World world, List<Location> spawns) {
 			this.plugin = plugin;
 			this.world = world;
 			this.spawns = spawns;
-			this.timer = 11;
-		}
-		
-		public void startSchedule() {
-			taskId.put(world.getUID(), Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 20, 20));
-		}
-		
-		
-		private void endTask() {
-			UUID uuid = world.getUID();
-			plugin.getServer().getScheduler().cancelTask(taskId.get(uuid));
-			taskId.remove(uuid);
+			this.timer = 10;
 		}
 		
 		private void removeGlassSpawns(World world, List<Location> spawns) {
@@ -115,7 +136,10 @@ public class GameManager {
 		
 		@Override
 		public void run() {
-			timer--;
+			if(Bukkit.getWorld(world.getUID()) == null) {
+				cancel();
+			}
+			plugin.skywarsScoreboard.updateGame(world, "Start", timer);
 			if(timer % 10 == 0) {
 				for(Player p : world.getPlayers()) {
 					p.sendMessage(Util.chat("Skywars startet in &c" + timer));
@@ -129,6 +153,7 @@ public class GameManager {
 					} else {
 						p.sendMessage(Util.chat("&aSkywars gestartet"));
 						p.sendTitle(Util.chat("&aSkywars gestartet") , Util.chat("&dder Kampf beginnt!"), 3, 20, 3);
+						// remove falldamage
 						p.setFallDistance(-1000);
 					}
 
@@ -136,14 +161,15 @@ public class GameManager {
 			}
 			if(timer <= 0) {
 				removeGlassSpawns(world, spawns);
-				plugin.gameManager.startGame(world);
-				endTask();
+				startGame();
+				cancel();
 			}
+			timer--;
 		}
 		
 	}
 	
-	public void goToSpawns(World world) {
+	public void goToSpawns() {
 		ArrayList<Location> spawns = new ArrayList<Location>();
 		for(Entity entity : world.getEntities()) {
 			if(entity.getType() == EntityType.ARMOR_STAND) {
@@ -160,21 +186,33 @@ public class GameManager {
 		for(int i = 0; i < world.getPlayers().size(); i++) {
 			world.getPlayers().get(i).teleport(spawns.get(i));
 		}
-		removeSpawnLobby(world);
-		new StartGameRunnable(plugin, world, spawns).startSchedule();
+		removeSpawnLobby();
+		new SpawnRunnable(plugin, world, spawns).runTaskTimer(plugin, 0, 20);
 		
 	}
 	
-	public void startGame(World world) {
+	public void startGame() {
+		world.setPVP(true);
+		for(Player player : world.getPlayers()) {
+			player.setGameMode(GameMode.SURVIVAL);
+		}
 		new BukkitRunnable() {
+			
+			private final int refillTime = 30;
+			int refillCounter = refillTime;
 			
 			@Override
 			public void run() {
 				if(world != Bukkit.getWorld(world.getUID())) {
-					System.out.println("Task beendet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					cancel();
 				}
-				plugin.skywarsScoreboard.updateGame(world);
+				plugin.skywarsScoreboard.updateGame(world, "Refill", refillCounter);
+				updateChestTimer(refillCounter);
+				if(refillCounter <= 0) {
+					refillCounter = refillTime;
+					refillAllChests();
+				}
+				refillCounter--;
 			}
 		}.runTaskTimer(plugin, 20, 20);
 	}

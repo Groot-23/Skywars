@@ -1,7 +1,6 @@
 package me.groot_23.skywars.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,8 +21,7 @@ public class SWleave implements CommandExecutor {
 			return false;
 		}
 		Player player = (Player) sender;
-		String world = player.getWorld().getName();
-		player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+		player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
 		return true;
 	}
 	

@@ -25,11 +25,11 @@ public class Pair<K, V> implements Comparable<Pair<K, V>> {
 	@Override
 	public int compareTo(Pair<K, V> other) {
 		if(element0 instanceof Comparable<?>) {
-			Comparable com0 = (Comparable) element0;
+			Comparable<K> com0 = (Comparable<K>) element0;
 			if(com0.compareTo(other.element0) != 0) {
 				return com0.compareTo(other.element0);
 			}
-			return ((Comparable)element1).compareTo(other.element1);
+			return ((Comparable<V>)element1).compareTo(other.element1);
 		}
 		return 0;
 	}

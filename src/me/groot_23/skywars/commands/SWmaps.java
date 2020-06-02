@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,7 +36,7 @@ public class SWmaps implements CommandExecutor {
 		public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
 			List<String> list = new ArrayList<String>();
 			if(args.length == 1) {
-				String[] modes = new String[] {"register", "list", "remove", "persistent", "allowDynamic"};
+				String[] modes = new String[] {"register", "list", "remove"};
 				for(String s : modes) {
 					if(s.startsWith(args[0])) list.add(s);
 				}
@@ -148,8 +149,14 @@ public class SWmaps implements CommandExecutor {
 				player.sendMessage("Es sind keine Daten vorhanden");
 				return true;
 			}
-			for(Map.Entry<String, Object> val : worlds.getValues(false).entrySet()) {
-				player.sendMessage(val.getKey() + "     " + val.getValue().toString());
+			for(String key : worlds.getValues(false).keySet()) {
+				ConfigurationSection section = worlds.getConfigurationSection(key);
+				if(section != null) {
+					player.sendMessage(ChatColor.GREEN + key + ":");
+					for(Map.Entry<String, Object> entry : section.getValues(false).entrySet()) {
+						player.sendMessage("     " + entry.getKey() + ": " + entry.getValue().toString());
+					}
+				}
 			}
 		} else if(mode.equals("remove")) {
 			if(!sender.hasPermission("skywars.maps.remove")) {
@@ -174,40 +181,7 @@ public class SWmaps implements CommandExecutor {
 			// If the world was not found
 			player.sendMessage(Util.chat("&cDie Welt wurde nicht gefunden"));
 			return true;
-		} else if(mode.equals("persistent")) {
-			if(!sender.hasPermission("skywars.maps.persistent")) {
-				player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.persistent"));
-				return true;
-			}
-			
-			if(args.length == 1) {
-				player.sendMessage(Util.chat("&cGib die Anzahl der dauerhaften Lobbys an"));
-				return false;
-			}
-			try {
-				int persistentLobbies = Integer.parseInt(args[1]);
-				plugin.getConfig().set("persistentLobbies", persistentLobbies);
-				plugin.saveConfig();
-			}catch(NumberFormatException e) {
-				player.sendMessage(Util.chat("&c\"" + args[1] + "\" ist keine erlaubte Zahl"));
-				return true;
-			}
-		} else if(mode.equals("allowDynamic")) {
-			if(!sender.hasPermission("skywars.maps.allowDynamic")) {
-				player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.allowDynamic"));
-				return true;
-			}
-			
-			if(args.length == 1) {
-				player.sendMessage(Util.chat("&cGib true oder false an!"));
-				return false;
-			}
-			if(args[1].equals("true")) plugin.getConfig().set("allowDynamicLobbies", true);
-			else if(args[1].equals("false")) plugin.getConfig().set("allowDynamicLobbies", false);
-			else player.sendMessage(Util.chat("&cGib true oder false an!"));
-			plugin.saveConfig();
-		}
-		else {
+		} else {
 			player.sendMessage(Util.chat("&c\"" + mode + "\" ist ein unbekannter Befehl"));
 			return false;
 		}

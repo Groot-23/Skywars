@@ -10,6 +10,7 @@ import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
 import me.groot_23.skywars.commands.SWleave;
 import me.groot_23.skywars.commands.SWmaps;
+import me.groot_23.skywars.commands.SWset;
 import me.groot_23.skywars.commands.SWspawns;
 import me.groot_23.skywars.commands.SWupdate;
 import me.groot_23.skywars.events.GameEvents;
@@ -32,9 +33,10 @@ public class Main extends JavaPlugin
 		
 		File resources = Util.getDataPackResources("skywars");
 		if(!resources.exists()) {
+			getLogger().info("[Skywars] Extracting datapack-");
 			ResourceExtractor.extractResources("resources", resources.toPath(), true);
 		}
-		
+		saveDefaultConfig();
 		
 		lobbyManager = new LobbyManager(this);
 		skywarsScoreboard = new SkywarsScoreboard(this);
@@ -47,6 +49,7 @@ public class Main extends JavaPlugin
 		new SWupdate(this);
 		new SWchest(this);
 		new SWspawns(this);
+		new SWset(this);
 		
 		new StopLobbyLeave(this);
 		new ChestEvents(this);

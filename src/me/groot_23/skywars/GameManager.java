@@ -27,10 +27,14 @@ public class GameManager {
 	private Main plugin;
 	private World world;
 	private List<Pair<Block, ArmorStand>> chests;
+	private int refillTime;
 	
-	public GameManager(Main plugin, World world) {
+	public GameManager(Main plugin, World world) {		
 		this.plugin = plugin;
 		this.world = world;
+		
+		refillTime = plugin.getConfig().getInt("refillTime");
+		
 		world.setPVP(false);
 		this.chests = new ArrayList<Pair<Block,ArmorStand>>();
 		findChests();
@@ -198,7 +202,6 @@ public class GameManager {
 		}
 		new BukkitRunnable() {
 			
-			private final int refillTime = 30;
 			int refillCounter = refillTime;
 			
 			@Override

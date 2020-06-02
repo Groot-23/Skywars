@@ -36,6 +36,10 @@ commands:
     description: Verwalte die Spawns einer Skywars Welt
     usage: </command> [add | show]
 
+  swset:
+    description: Bearbeite die Einstellungen von skywars
+    usage: </command> [refillTime | persistentLobbies | allowDynamic] <value>
+
 permissions:
   skywars.*:
     default: false

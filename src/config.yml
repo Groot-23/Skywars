@@ -1,3 +1,4 @@
 persistentLobbies: 4
 allowDynamicLobbies: true
-worlds: 
+refillTime: 180
+worlds: []

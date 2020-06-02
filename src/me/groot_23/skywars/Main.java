@@ -1,5 +1,7 @@
 package me.groot_23.skywars;
 
+import java.io.File;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.groot_23.skywars.commands.SWjoin;
@@ -13,6 +15,8 @@ import me.groot_23.skywars.commands.SWupdate;
 import me.groot_23.skywars.events.GameEvents;
 import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
+import me.groot_23.skywars.util.ResourceExtractor;
+import me.groot_23.skywars.util.Util;
 
 public class Main extends JavaPlugin
 {
@@ -25,6 +29,12 @@ public class Main extends JavaPlugin
 	public void onEnable() 
 	{
 		instance = this;
+		
+		File resources = Util.getDataPackResources("skywars");
+		if(!resources.exists()) {
+			ResourceExtractor.extractResources("resources", resources.toPath(), true);
+		}
+		
 		
 		lobbyManager = new LobbyManager(this);
 		skywarsScoreboard = new SkywarsScoreboard(this);

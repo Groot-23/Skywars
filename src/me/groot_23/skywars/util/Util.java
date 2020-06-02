@@ -22,6 +22,11 @@ public class Util {
 		return new File(getWorldPath(name)).exists();
 	}
 	
+	public static File getDataPackResources(String namespace) {
+		return new File(Bukkit.getWorlds().get(0).getWorldFolder().getPath() + File.separator + "datapacks" +
+				File.separator + "bukkit" + File.separator + "data" + File.separator + namespace);
+	}
+	
 	public static boolean copyWorld(String src, String dst) {
 		if(worldExists(src) && !worldExists(dst)) {
 			try {

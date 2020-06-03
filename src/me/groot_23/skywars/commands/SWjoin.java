@@ -21,10 +21,10 @@ public class SWjoin implements CommandExecutor {
 
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
-			if(!sender.hasPermission("skywars.join")) {
-				p.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.join"));
-				return true;
-			}
+//			if(!sender.hasPermission("skywars.join")) {
+//				p.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.join"));
+//				return true;
+//			}
 			plugin.lobbyManager.joinPlayer(p);
 		}
 		return true;

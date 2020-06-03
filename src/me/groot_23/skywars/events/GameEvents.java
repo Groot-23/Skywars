@@ -2,19 +2,18 @@ package me.groot_23.skywars.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.potion.PotionEffectType;
-
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.SWconstants;
-import me.groot_23.skywars.util.Util;
 
 public class GameEvents implements Listener {
 	
@@ -67,6 +66,16 @@ public class GameEvents implements Listener {
 			    	e.getPlayer().setGameMode(GameMode.SPECTATOR);
 			    }
 			}, 3L);
+		}
+	}
+	
+	@EventHandler
+	public void preventSpawn(CreatureSpawnEvent e) {
+		World world = e.getEntity().getWorld();
+		if(!world.getMetadata("skywars_edit_world").isEmpty() || world.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+			if(e.getSpawnReason() == SpawnReason.NATURAL) {
+				e.setCancelled(true);
+			}
 		}
 	}
 	

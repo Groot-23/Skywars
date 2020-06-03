@@ -16,27 +16,29 @@ public class SkywarsScoreboard {
 	
 	private Main plugin;
 	
-	private Scoreboard board;
-	private Objective objective;
-	
 	public SkywarsScoreboard(Main plugin) {
 		this.plugin = plugin;
-		init();
 	}
 	
-	public void init() {
+	public void init(Player player) {
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
-		board = manager.getNewScoreboard();
+		Scoreboard board = manager.getNewScoreboard();
 		
-		objective = board.registerNewObjective("skywars", "dummy", ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "SKYWARS");
+		Objective objective = board.registerNewObjective("skywars", "dummy", ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "SKYWARS");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		
+		player.setScoreboard(board);
 	}
 	
-	public void resetObjective() {
+	public Objective resetObjective(Player player) {
+		Scoreboard board = player.getScoreboard();
+		Objective objective = board.getObjective("skywars");
 		objective.unregister();
 		
 		objective = board.registerNewObjective("skywars", "dummy", ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "SKYWARS");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		
+		return objective;
 	}
 	
 	public void resetKills(Player player) {
@@ -51,7 +53,7 @@ public class SkywarsScoreboard {
 	public void updatePreGame(World world, int maxPlayers, int timeLeft) {
 		int playerCount = world.getPlayers().size();
 		for(Player player : world.getPlayers()) {
-			resetObjective();
+			Objective objective = resetObjective(player);
 			
 			objective.getScore(Util.repeat(20, " ")).setScore(6);
 			objective.getScore(Integer.toString(playerCount) + "/" + maxPlayers + " Spieler").setScore(5);
@@ -60,15 +62,14 @@ public class SkywarsScoreboard {
 			objective.getScore(ChatColor.RED + Util.repeat(20, " ")).setScore(2);
 			objective.getScore(ChatColor.YELLOW + "Groot23.mcserv.me").setScore(1);
 			
-			//board.resetScores(player);
-			player.setScoreboard(board);
 		}
 	}
 	
 	public void updateGame(World world, int playersLeft, String nextEvent, int timeTillEvent) {
 
 		for(Player player : world.getPlayers()) {
-			resetObjective();
+			Objective objective = resetObjective(player);
+			
 			int kills = player.getMetadata("Skywars_kills").get(0).asInt();
 			
 			objective.getScore(Util.repeat(20, " ")).setScore(9);
@@ -81,8 +82,6 @@ public class SkywarsScoreboard {
 			objective.getScore(ChatColor.RED + Util.repeat(20, " ")).setScore(2);
 			objective.getScore(ChatColor.YELLOW + "Groot23.mcserv.me").setScore(1);
 			
-			//board.resetScores(player);
-			player.setScoreboard(board);
 		}
 	}
 		

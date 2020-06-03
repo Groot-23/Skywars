@@ -48,9 +48,7 @@ public class GameManager {
 			if(entity.getType() == EntityType.ARMOR_STAND) {
 				String name = entity.getCustomName();
 				if(name.startsWith("skywars_chest_marker")) {
-					String sub = name.substring(name.indexOf('|') + 1);
-					String loot = sub.substring(0, sub.indexOf('|'));
-					//int refillTime = Integer.parseInt(sub.substring(sub.indexOf('|') + 1));
+					String loot = name.substring(name.indexOf('|') + 1);
 					Block block = entity.getLocation().getBlock();
 					if(block.getType() == Material.CHEST) {
 						block.setMetadata(SWconstants.SW_LOOT_TABLE, new FixedMetadataValue(plugin, loot));

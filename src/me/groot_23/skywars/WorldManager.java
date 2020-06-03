@@ -61,7 +61,7 @@ public class WorldManager {
 			PriorityQueue<Pair<Float, String>> partialLobbies = new PriorityQueue<Pair<Float, String>>();
 			int totalInstances = 0;
 			for (String key : worlds.getKeys(false)) {
-				int probability = worlds.getInt(key + ".probability");
+				int probability = worlds.getInt(key + ".weight");
 				float f = (float) probability / worldPickArray.length;
 				int instances = (int) ((float) persistentLobbies * f);
 				totalInstances += instances;
@@ -181,6 +181,7 @@ public class WorldManager {
 			if(currentLobby != null) {
 				player.teleport(currentLobby.getSpawnLocation());
 				plugin.skywarsScoreboard.resetKills(player);
+				plugin.skywarsScoreboard.init(player);
 				// don't change gamemode too early
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){
 				    @Override

@@ -144,7 +144,7 @@ public class GameManager {
 			if(Bukkit.getWorld(world.getUID()) == null) {
 				cancel();
 			}
-			plugin.skywarsScoreboard.updateGame(world, "Start", timer);
+			plugin.skywarsScoreboard.updateGame(world, world.getPlayers().size(), "Start", timer);
 			if(timer % 10 == 0) {
 				for(Player p : world.getPlayers()) {
 					p.sendMessage(Util.chat("Skywars startet in &c" + timer));
@@ -210,7 +210,19 @@ public class GameManager {
 				if(world != Bukkit.getWorld(world.getUID())) {
 					cancel();
 				}
-				plugin.skywarsScoreboard.updateGame(world, "Refill", refillCounter);
+				int playersLeft = 0;
+				Player potentialWinner = null;
+				for(Player p : world.getPlayers()) {
+					if(p.getGameMode() == GameMode.SURVIVAL) {
+						playersLeft++;
+						potentialWinner = p;
+					}
+				}
+				if(playersLeft == 1) {
+					winner(potentialWinner);
+					cancel();
+				}
+				plugin.skywarsScoreboard.updateGame(world, playersLeft, "Refill", refillCounter);
 				updateChestTimer(refillCounter);
 				if(refillCounter <= 0) {
 					refillCounter = refillTime;
@@ -219,5 +231,21 @@ public class GameManager {
 				refillCounter--;
 			}
 		}.runTaskTimer(plugin, 20, 20);
+	}
+	
+	public void winner(Player player) {
+		for(Player p : world.getPlayers()) {
+			p.sendTitle(Util.chat("&c" + player.getName()), Util.chat("&5Hat GEWONNEN"), 3, 30, 3);
+	    	p.setGameMode(GameMode.SPECTATOR);
+		}
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			
+			@Override
+			public void run() {
+				// maybe the world was deleted and got overwritten with a new lobby
+				if(Bukkit.getWorld(world.getUID()) != null)
+					plugin.lobbyManager.stopLobby(world);
+			}
+		}, 200);
 	}
 }

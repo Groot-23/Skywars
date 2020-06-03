@@ -5,8 +5,11 @@ import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class Util {
 
@@ -75,4 +78,9 @@ public class Util {
 		int seconds = Integer.parseInt(str.substring(i + 1));
 		return 60 * minutes + seconds;
 	}
+	
+//	public static void spectatorWithInventory(Player player) {
+//		player.setGameMode(GameMode.ADVENTURE);
+//		player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 0xffff, 1, false, false));
+//	}
 }

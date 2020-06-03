@@ -26,7 +26,7 @@ public class SWchest implements CommandExecutor, TabCompleter {
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> list = new ArrayList<String>();
 		if(args.length == 1) {
-			String[] defaultLootTables = new String[] {"chest"};
+			String[] defaultLootTables = new String[] {"normal", "good"};
 			for(String s : defaultLootTables) {
 				if(s.startsWith(args[0])) list.add(s);
 			}

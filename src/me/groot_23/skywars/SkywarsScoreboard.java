@@ -2,7 +2,6 @@ package me.groot_23.skywars;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -66,14 +65,8 @@ public class SkywarsScoreboard {
 		}
 	}
 	
-	public void updateGame(World world, String nextEvent, int timeTillEvent) {
-		int playersLeft = 0;
-		for(Player p : world.getPlayers()) {
-			if(p.getGameMode() == GameMode.SURVIVAL) {
-				playersLeft++;
-			}
-		}
-		
+	public void updateGame(World world, int playersLeft, String nextEvent, int timeTillEvent) {
+
 		for(Player player : world.getPlayers()) {
 			resetObjective();
 			int kills = player.getMetadata("Skywars_kills").get(0).asInt();

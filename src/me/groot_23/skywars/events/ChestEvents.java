@@ -34,8 +34,6 @@ public class ChestEvents implements Listener {
 
 	Main plugin;
 
-
-
 	public ChestEvents(Main plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.plugin = plugin;
@@ -100,7 +98,7 @@ public class ChestEvents implements Listener {
 	@EventHandler
 	public void onChestDestroy(BlockBreakEvent event) {
 		if (event.getBlock().getType() == Material.CHEST) {
-			if (!event.getBlock().getMetadata("skywarsLoot").isEmpty()) {
+			if (!event.getBlock().getWorld().getMetadata("skywars_edit_world").isEmpty()) {
 				if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 					List<Entity> entities = event.getPlayer().getWorld().getEntities();
 					for (Entity entity : entities) {

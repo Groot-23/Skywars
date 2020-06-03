@@ -2,13 +2,15 @@ package me.groot_23.skywars.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.potion.PotionEffectType;
 
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.SWconstants;
@@ -23,36 +25,10 @@ public class GameEvents implements Listener {
 		this.plugin = plugin;
 	}
 	
-	void updatePlayerCount(World world, Player deadPlayer) {
-		if(world.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-			int count = 0;
-			Player potentialWinner = null;
-			for(Player p : world.getPlayers()) {
-				if(p.getGameMode() == GameMode.SURVIVAL && p != deadPlayer) {
-					count++;
-					potentialWinner = p;
-				}
-			}
-			if(count == 1) {
-				for(Player p : world.getPlayers()) {
-					p.sendTitle(Util.chat("&c" + potentialWinner.getName()), Util.chat("&5Hat GEWONNEN"), 3, 30, 3);
-				}
-				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-					
-					@Override
-					public void run() {
-						// maybe the world was deleted and got overwritten with a new lobby
-						if(Bukkit.getWorld(world.getUID()) != null)
-							plugin.lobbyManager.stopLobby(world);
-					}
-				}, 200);
-			}
-		}
-	}
 	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
-		e.getEntity().setGameMode(GameMode.SPECTATOR);
+    	e.getEntity().setGameMode(GameMode.SPECTATOR);
 	}
 	
 	// Later it will be changed to PlayerDeathEvent, but it's helpful for testing it alone
@@ -67,13 +43,28 @@ public class GameEvents implements Listener {
 	}
 	
 	@EventHandler
+	public void onWorldLeave(PlayerChangedWorldEvent e) {
+		if(e.getFrom().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+			Player p = e.getPlayer();
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+				public void run() {
+					p.setGameMode(GameMode.ADVENTURE);
+					p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+				}
+			}, 5);
+
+		}
+	}
+	
+	
+	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
 		if(e.getPlayer().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			e.setRespawnLocation(e.getPlayer().getWorld().getSpawnLocation());
 			Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){
 			    @Override
 			    public void run(){
-			        e.getPlayer().setGameMode(GameMode.SPECTATOR);
+			    	e.getPlayer().setGameMode(GameMode.SPECTATOR);
 			    }
 			}, 3L);
 		}

@@ -11,15 +11,14 @@ Skywars Plugin for Minecraft 1.14.4
 ```
 /swmaps register <map> <numPlayers> <weight>
 ```
-- numPlayers is the number of players for this map
-- maps are chosen randomly. The higher the weight of map, the higher is the probability that it will be chosen
+- `numPlayers` is the number of players for this map
+- maps are chosen randomly. The higher the `weight of map`, the higher is the probability that it will be chosen
 
 ### 2. edit a map
 ```
 /swedit <map>
 ```
 - this will teleport you to the map and sets you in creative mode
-- you can only edit **registered** maps
 - this takes care of loading the world as a void world and will unload it after leaving
 - It is recommended **NOT** to use multiverse to travel to those worlds because this may 
   keep it loaded or load it normally if you do not use multiverse properly

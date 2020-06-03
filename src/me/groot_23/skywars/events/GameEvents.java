@@ -11,6 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.groot_23.skywars.Main;
+import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
 
 public class GameEvents implements Listener {
@@ -23,7 +24,7 @@ public class GameEvents implements Listener {
 	}
 	
 	void updatePlayerCount(World world, Player deadPlayer) {
-		if(world.getName().startsWith("skywars_lobby_")) {
+		if(world.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			int count = 0;
 			Player potentialWinner = null;
 			for(Player p : world.getPlayers()) {
@@ -59,7 +60,7 @@ public class GameEvents implements Listener {
 	public void onKill(EntityDeathEvent e) {
 		Player killer = e.getEntity().getKiller();
 		if(killer != null) {
-			if(killer.getWorld().getName().startsWith("skywars_lobby_")) {
+			if(killer.getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 				plugin.skywarsScoreboard.addKill(killer);
 			}
 		}
@@ -67,7 +68,7 @@ public class GameEvents implements Listener {
 	
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
-		if(e.getPlayer().getWorld().getName().startsWith("skywars_lobby_")) {
+		if(e.getPlayer().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			e.setRespawnLocation(e.getPlayer().getWorld().getSpawnLocation());
 			Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){
 			    @Override

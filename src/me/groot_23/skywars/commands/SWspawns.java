@@ -16,34 +16,30 @@ import org.bukkit.entity.Player;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 
-public class SWspawns implements CommandExecutor {
+public class SWspawns implements CommandExecutor, TabCompleter {
 
 	
 	public SWspawns(Main plugin) {
 		plugin.getCommand("swspawns").setExecutor(this);
-		plugin.getCommand("swspawns").setTabCompleter(new Completer());
+		plugin.getCommand("swspawns").setTabCompleter(this);
 	}
 	
-	public class Completer implements TabCompleter {
-
-		@Override
-		public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-			List<String> list = new ArrayList<String>();
-			if(args.length == 1) {
-				String[] modes = new String[] {"add", "show"};
-				for(String s : modes) {
-					if(s.startsWith(args[0])) list.add(s);
-				}
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+		List<String> list = new ArrayList<String>();
+		if(args.length == 1) {
+			String[] modes = new String[] {"add", "show"};
+			for(String s : modes) {
+				if(s.startsWith(args[0])) list.add(s);
 			}
-			if(args.length == 2 && args[0].equals("show")) {
-				String[] options = new String[] {"true", "false"};
-				for(String s : options) {
-					if(s.startsWith(args[1])) list.add(s);
-				}
-			}
-			return list;
 		}
-		
+		if(args.length == 2 && args[0].equals("show")) {
+			String[] options = new String[] {"true", "false"};
+			for(String s : options) {
+				if(s.startsWith(args[1])) list.add(s);
+			}
+		}
+		return list;
 	}
 	
 	@Override

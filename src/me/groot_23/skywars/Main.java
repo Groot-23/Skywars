@@ -5,7 +5,6 @@ import java.io.File;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.groot_23.skywars.commands.SWjoin;
-import me.groot_23.skywars.commands.SWapply;
 import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
 import me.groot_23.skywars.commands.SWleave;
@@ -21,7 +20,7 @@ import me.groot_23.skywars.util.Util;
 
 public class Main extends JavaPlugin
 {
-	public LobbyManager lobbyManager;
+	public WorldManager lobbyManager;
 	public GameManager gameManager;
 	public SkywarsScoreboard skywarsScoreboard;
 	private static Main instance;
@@ -38,13 +37,12 @@ public class Main extends JavaPlugin
 		}
 		saveDefaultConfig();
 		
-		lobbyManager = new LobbyManager(this);
+		lobbyManager = new WorldManager(this);
 		skywarsScoreboard = new SkywarsScoreboard(this);
 
 		new SWjoin(this);
 		new SWleave(this);
 		new SWedit(this);
-		new SWapply(this);
 		new SWmaps(this);
 		new SWupdate(this);
 		new SWchest(this);

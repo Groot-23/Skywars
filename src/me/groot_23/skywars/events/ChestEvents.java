@@ -27,15 +27,14 @@ import org.bukkit.loot.Lootable;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import me.groot_23.skywars.Main;
+import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
 
 public class ChestEvents implements Listener {
 
 	Main plugin;
 
-	public static final String SKYWARS_LOOT = "skywarsLoot";
-	public static final String SKYWARS_REFILL_TIME = "skywarsRefillTime";
-	public static final String SKYWARS_TIME_TILL_REFILL = "skywarsTimeTillRefill";
+
 
 	public ChestEvents(Main plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -43,8 +42,7 @@ public class ChestEvents implements Listener {
 	}
 	
 	public static void refillChest(Block block) {
-		block.setMetadata(SKYWARS_TIME_TILL_REFILL, new FixedMetadataValue(Main.getInstance(), 0));
-		String loot = block.getMetadata(SKYWARS_LOOT).get(0).asString();
+		String loot = block.getMetadata(SWconstants.SW_LOOT_TABLE).get(0).asString();
 		LootTable lootTable = Bukkit.getLootTable(new NamespacedKey(Main.getInstance(), "chests/" + loot));
 		BlockState state = block.getState();
 		Lootable lootable = (Lootable) state;
@@ -78,7 +76,7 @@ public class ChestEvents implements Listener {
 			World world = event.getPlayer().getWorld();
 			Block block = event.getBlock();
 			if (block.getType() == Material.CHEST) {
-				block.setMetadata(SKYWARS_LOOT, new FixedMetadataValue(plugin, meta.getLore().get(0)));
+				block.setMetadata(SWconstants.SW_LOOT_TABLE, new FixedMetadataValue(plugin, meta.getLore().get(0)));
 
 				refillChest(block);
 				// use block.location to floor the values
@@ -124,7 +122,7 @@ public class ChestEvents implements Listener {
 	public void onChestHit(BlockDamageEvent event) {
 		if(event.getBlock().getType() == Material.CHEST) {
 			if(event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-				if(event.getPlayer().getWorld().getName().startsWith("skywars_lobby_")) {
+				if(event.getPlayer().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 					event.setCancelled(true);
 				}
 			}

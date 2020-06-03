@@ -14,28 +14,24 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 
-public class SWchest implements CommandExecutor {
+public class SWchest implements CommandExecutor, TabCompleter {
 	
 	public SWchest(Main plugin) {
 		plugin.getCommand("swchest").setExecutor(this);
-		plugin.getCommand("swchest").setTabCompleter(new Completer());
+		plugin.getCommand("swchest").setTabCompleter(this);
 		
 	}
 	
-	public class Completer implements TabCompleter {
-
-		@Override
-		public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-			List<String> list = new ArrayList<String>();
-			if(args.length == 1) {
-				String[] defaultLootTables = new String[] {"chest"};
-				for(String s : defaultLootTables) {
-					if(s.startsWith(args[0])) list.add(s);
-				}
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+		List<String> list = new ArrayList<String>();
+		if(args.length == 1) {
+			String[] defaultLootTables = new String[] {"chest"};
+			for(String s : defaultLootTables) {
+				if(s.startsWith(args[0])) list.add(s);
 			}
-			return list;
 		}
-		
+		return list;
 	}
 	
 	

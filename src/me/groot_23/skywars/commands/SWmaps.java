@@ -17,58 +17,55 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import me.groot_23.skywars.Main;
+import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
 
-public class SWmaps implements CommandExecutor {
+public class SWmaps implements CommandExecutor, TabCompleter {
 
 	private Main plugin;
 	public static final String PERMISSION = "skywars.maps";
 	
 	public SWmaps(Main plugin) {
 		plugin.getCommand("swmaps").setExecutor(this);
-		plugin.getCommand("swmaps").setTabCompleter(new Completer());
+		plugin.getCommand("swmaps").setTabCompleter(this);
 		this.plugin = plugin;
 	}
 	
-	public class Completer implements TabCompleter {
-
-		@Override
-		public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
-			List<String> list = new ArrayList<String>();
-			if(args.length == 1) {
-				String[] modes = new String[] {"register", "list", "remove"};
-				for(String s : modes) {
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
+		List<String> list = new ArrayList<String>();
+		if(args.length == 1) {
+			String[] modes = new String[] {"register", "list", "remove"};
+			for(String s : modes) {
+				if(s.startsWith(args[0])) list.add(s);
+			}
+		}
+		if(args.length == 2) {
+			if(args[0].equals("register")) {
+				File[] worlds = Bukkit.getWorldContainer().listFiles(new FileFilter() {
+					@Override
+					public boolean accept(File pathname) {
+						return pathname.getName().startsWith(args[1]) && !pathname.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX);
+					}
+				});
+				for(File f : worlds) {
+					list.add(f.getName());
+				}
+			}
+			else if(args[0].equals("remove")) {
+				for(String s : plugin.lobbyManager.getRegisteredWorlds()) {
+					if(s.startsWith(args[1]))
+						list.add(s);
+				}
+			}
+			else if(args[0].equals("allowDynamic")) {
+				String[] values = new String[] {"true", "false"};
+				for(String s : values) {
 					if(s.startsWith(args[0])) list.add(s);
 				}
 			}
-			if(args.length == 2) {
-				if(args[0].equals("register")) {
-					File[] worlds = Bukkit.getWorldContainer().listFiles(new FileFilter() {
-						@Override
-						public boolean accept(File pathname) {
-							return pathname.getName().startsWith(args[1]) && !pathname.getName().startsWith("skywars_lobby_");
-						}
-					});
-					for(File f : worlds) {
-						list.add(f.getName());
-					}
-				}
-				else if(args[0].equals("remove")) {
-					for(String s : plugin.lobbyManager.getRegisteredWorlds()) {
-						if(s.startsWith(args[1]))
-							list.add(s);
-					}
-				}
-				else if(args[0].equals("allowDynamic")) {
-					String[] values = new String[] {"true", "false"};
-					for(String s : values) {
-						if(s.startsWith(args[0])) list.add(s);
-					}
-				}
-			}
-			return list;
 		}
-		
+		return list;
 	}
 	
 	@Override
@@ -130,7 +127,7 @@ public class SWmaps implements CommandExecutor {
 			ConfigurationSection worlds = plugin.getConfig().getConfigurationSection("worlds");
 			Map<String, Integer> saveMap = new HashMap<String, Integer>();
 			saveMap.put("numPlayers", numPlayers);
-			saveMap.put("probability", p);
+			saveMap.put("weight", p);
 			if(worlds == null) {
 				worlds = plugin.getConfig().createSection("worlds");
 			}

@@ -19,9 +19,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.skywars.util.EmptyChunkGenerator;
 import me.groot_23.skywars.util.Pair;
+import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
 
-public class LobbyManager {
+public class WorldManager {
 
 	private World currentLobby = null;
 	private GameManager currentGameManager = null;
@@ -35,7 +36,7 @@ public class LobbyManager {
 	private int persistentLobbies;
 	private boolean allowDynamic = true;
 
-	public LobbyManager(Main plugin) {
+	public WorldManager(Main plugin) {
 		this.plugin = plugin;
 		update();
 	}
@@ -47,7 +48,7 @@ public class LobbyManager {
 		ArrayList<String> worldPickList = new ArrayList<String>();
 		if (worlds != null) {
 			for (String key : worlds.getKeys(false)) {
-				int probability = worlds.getInt(key + ".probability");
+				int probability = worlds.getInt(key + ".weight");
 				for (int i = 0; i < probability; i++) {
 					worldPickList.add(key);
 				}
@@ -85,7 +86,7 @@ public class LobbyManager {
 		File[] oldWorlds = Bukkit.getWorldContainer().listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
-				return pathname.getName().startsWith("skywars_lobby_");
+				return pathname.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX);
 			}
 		});
 		for (File f : oldWorlds) {
@@ -95,7 +96,7 @@ public class LobbyManager {
 		// create new worlds
 		for (Map.Entry<String, Integer> entry : lobbiesPerWorld.entrySet()) {
 			for (int i = 0; i < entry.getValue(); i++) {
-				Util.copyWorld(entry.getKey(), "skywars_lobby_" + entry.getKey() + i);
+				Util.copyWorld(entry.getKey(), SWconstants.SW_GAME_WORLD_PREFIX + entry.getKey() + i);
 			}
 		}
 	}
@@ -112,7 +113,7 @@ public class LobbyManager {
 		System.out.println("[Skywars] map for new lobby: " + currentMap);
 		currentLobby = null;
 		for (int i = 0; currentLobby == null; i++) {
-			String worldName = "skywars_lobby_" + currentMap + i;
+			String worldName = SWconstants.SW_GAME_WORLD_PREFIX + currentMap + i;
 			if (Util.worldExists(worldName)) {
 				// check if the world has not been loaded yet
 				if (Bukkit.getWorld(worldName) == null) {
@@ -132,7 +133,7 @@ public class LobbyManager {
 					File[] worlds = Bukkit.getWorldContainer().listFiles(new FileFilter() {
 						@Override
 						public boolean accept(File pathname) {
-							return pathname.getName().startsWith("skywars_lobby_");
+							return pathname.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX);
 						}
 					});
 					for(File f : worlds) {

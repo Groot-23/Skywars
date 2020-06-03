@@ -6,39 +6,35 @@ main: me.groot_23.skywars.Main
 commands:
   swjoin:
     description: Trete einem Skywars Spiel bei
-    usage: </command>
+    usage: /<command>
 
   swleave:
     description: Verlasse die Lobby
-    usage: </command>
+    usage: /<command>
 
   swedit:
     description: Bearbeite eine Skywars Welt
-    usage: </command> <world>
-
-  swapply:
-    description: Wende die Aenderungen von "swedit" an
-    usage: </command> <numberOfCopies (optional)>
+    usage: /<command> <world>
 
   swmaps:
     description: Verwalte die Skywarsmaps
-    usage: </command> [register | list | remove | persistent] <world> <Wahrscheinlichkeit>
+    usage: /<command> [register | list | remove] <world> <weight>
 
   swupdate:
     description: Lese die Config neu ein
-    usage: </command>
+    usage: /<command>
 
   swchest:
     description: Platziere eine Skywars Truhe
-    usage: </command> <chest> <time>
+    usage: /<command> <chest>
 
   swspawns:
     description: Verwalte die Spawns einer Skywars Welt
-    usage: </command> [add | show]
+    usage: /<command> [add | show]
 
   swset:
     description: Bearbeite die Einstellungen von skywars
-    usage: </command> [refillTime | persistentLobbies | allowDynamic] <value>
+    usage: /<command> [refillTime | persistentLobbies | allowDynamic] <value>
 
 permissions:
   skywars.*:

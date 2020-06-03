@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.util.Pair;
+import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
 
 public class GameManager {
@@ -52,7 +53,7 @@ public class GameManager {
 					//int refillTime = Integer.parseInt(sub.substring(sub.indexOf('|') + 1));
 					Block block = entity.getLocation().getBlock();
 					if(block.getType() == Material.CHEST) {
-						block.setMetadata(ChestEvents.SKYWARS_LOOT, new FixedMetadataValue(plugin, loot));
+						block.setMetadata(SWconstants.SW_LOOT_TABLE, new FixedMetadataValue(plugin, loot));
 						ArmorStand armorStand = null;
 						Collection<Entity> nearbyEntities = world.getNearbyEntities(block.getLocation().add(0.5, -1, 0.5), 0.1, 0.1, 0.1);
 						for(Entity ne : nearbyEntities) {

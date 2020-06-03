@@ -13,35 +13,32 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.EmptyChunkGenerator;
 import me.groot_23.skywars.util.Util;
 
-public class SWedit implements CommandExecutor{
+public class SWedit implements CommandExecutor, TabCompleter{
 
 	private Main plugin;
 	
 	public SWedit(Main plugin) {
 		plugin.getCommand("swedit").setExecutor(this);
-		plugin.getCommand("swedit").setTabCompleter(new Completer());
+		plugin.getCommand("swedit").setTabCompleter(this);
 		this.plugin = plugin;
 	}
 	
-	public class Completer implements TabCompleter {
-
-		@Override
-		public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
-			List<String> list = new ArrayList<String>();
-			if(args.length == 1) {
-				for(String s : plugin.lobbyManager.getRegisteredWorlds()) {
-					if(s.startsWith(args[0]))
-						list.add(s);
-				}
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
+		List<String> list = new ArrayList<String>();
+		if(args.length == 1) {
+			for(String s : plugin.lobbyManager.getRegisteredWorlds()) {
+				if(s.startsWith(args[0]))
+					list.add(s);
 			}
-			return list;
 		}
-		
+		return list;
 	}
 	
 	@Override
@@ -60,8 +57,7 @@ public class SWedit implements CommandExecutor{
 			return true;
 		}
 		if(!plugin.getConfig().contains("worlds." + args[0])) {
-			player.sendMessage(Util.chat("&cDu kannst nur bereits registrierte Welten bearbeiten. Verwende zunächst /swmaps register"));
-			return true;
+			player.sendMessage(Util.chat("&eDiese Welt ist nicht registriert. Verwende /swmaps register"));
 		}
 		World world = Bukkit.getWorld(args[0]);
 		if(world == null) {
@@ -76,6 +72,7 @@ public class SWedit implements CommandExecutor{
 			}
 		}
 		world.setAutoSave(true);
+		world.setMetadata("skywars_edit_world", new FixedMetadataValue(plugin, true));
 		player.teleport(world.getSpawnLocation());
 		// The change gamemode should not be done to early
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){

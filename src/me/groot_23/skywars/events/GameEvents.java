@@ -2,18 +2,28 @@ package me.groot_23.skywars.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.EnchantingInventory;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.SWconstants;
+import me.groot_23.skywars.util.Util;
 
 public class GameEvents implements Listener {
 	
@@ -49,7 +59,7 @@ public class GameEvents implements Listener {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 				public void run() {
 					p.setGameMode(GameMode.ADVENTURE);
-					p.getInventory().clear();
+					Util.resetPlayer(p);
 					p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 				}
 			}, 5);
@@ -80,5 +90,30 @@ public class GameEvents implements Listener {
 			}
 		}
 	}
+	
+	@EventHandler
+	public void lapisOpen(InventoryOpenEvent e) {
+		if(e.getInventory().getType() == InventoryType.ENCHANTING) {
+			EnchantingInventory inv = (EnchantingInventory) e.getInventory();
+			inv.setSecondary(new ItemStack(Material.LAPIS_LAZULI, 64));
+		}
+	}
+	
+	@EventHandler
+	public void lapisClose(InventoryCloseEvent e) {
+		if(e.getInventory().getType() == InventoryType.ENCHANTING) {
+			EnchantingInventory inv = (EnchantingInventory) e.getInventory();
+			inv.setSecondary(null);
+		}
+	}
+	
+	@EventHandler
+	public void lapisClick(InventoryClickEvent e) {
+		if(e.getInventory().getType() == InventoryType.ENCHANTING) {
+			if(e.getCurrentItem().getType() == Material.LAPIS_LAZULI) {
+				e.setCancelled(true);
+			}
+		}
+	}	
 	
 }

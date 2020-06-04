@@ -147,7 +147,7 @@ public class WorldManager {
 
 			}
 		}
-		currentGameManager = new GameManager(plugin, currentLobby);
+		currentGameManager = new GameManager(plugin, currentLobby, currentMap);
 		System.out.println("[Skywars] Successfully created new lobby: "+ currentLobby.getName());
 		return true;
 	}
@@ -180,12 +180,11 @@ public class WorldManager {
 			}
 			if(currentLobby != null) {
 				player.teleport(currentLobby.getSpawnLocation());
-				player.getInventory().clear();
-				player.setHealth(20);
-				player.setFoodLevel(20);
+				Util.resetPlayer(player);
 				
 				plugin.skywarsScoreboard.resetKills(player);
 				plugin.skywarsScoreboard.init(player);
+				plugin.skywarsScoreboard.initPreGame(player, playersPerWorld.get(currentMap), 30, currentMap);
 				// don't change gamemode too early
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){
 				    @Override
@@ -202,7 +201,7 @@ public class WorldManager {
 						int counter = 30;
 						@Override
 						public void run() {
-							plugin.skywarsScoreboard.updatePreGame(currentLobby, playersPerWorld.get(currentMap), counter);
+							plugin.skywarsScoreboard.updatePreGame(currentLobby, playersPerWorld.get(currentMap), counter, currentMap);
 							if(counter <= 0) {
 								currentGameManager.goToSpawns();
 								createNewLobby();

@@ -29,10 +29,12 @@ public class GameManager {
 	private World world;
 	private List<Pair<Block, ArmorStand>> chests;
 	private int refillTime;
+	String map;
 	
-	public GameManager(Main plugin, World world) {		
+	public GameManager(Main plugin, World world, String map) {		
 		this.plugin = plugin;
 		this.world = world;
+		this.map = map;
 		
 		refillTime = plugin.getConfig().getInt("refillTime");
 		
@@ -142,7 +144,7 @@ public class GameManager {
 			if(Bukkit.getWorld(world.getUID()) == null) {
 				cancel();
 			}
-			plugin.skywarsScoreboard.updateGame(world, world.getPlayers().size(), "Start", timer);
+			plugin.skywarsScoreboard.updateGame(world, world.getPlayers().size(), "Start", timer, SWconstants.LENGTH_OF_GAME);
 			if(timer % 10 == 0) {
 				for(Player p : world.getPlayers()) {
 					p.sendMessage(Util.chat("Skywars startet in &c" + timer));
@@ -188,6 +190,7 @@ public class GameManager {
 		}
 		for(int i = 0; i < world.getPlayers().size(); i++) {
 			world.getPlayers().get(i).teleport(spawns.get(i));
+			plugin.skywarsScoreboard.initGame(world.getPlayers().get(i), world.getPlayers().size(), "Start", 10, SWconstants.LENGTH_OF_GAME, map); 
 		}
 		removeSpawnLobby();
 		new SpawnRunnable(plugin, world, spawns).runTaskTimer(plugin, 0, 20);
@@ -202,6 +205,7 @@ public class GameManager {
 		new BukkitRunnable() {
 			
 			int refillCounter = refillTime;
+			int remainingTime = SWconstants.LENGTH_OF_GAME;
 			
 			@Override
 			public void run() {
@@ -220,13 +224,17 @@ public class GameManager {
 					winner(potentialWinner);
 					cancel();
 				}
-				plugin.skywarsScoreboard.updateGame(world, playersLeft, "Refill", refillCounter);
+				plugin.skywarsScoreboard.updateGame(world, playersLeft, "Refill", refillCounter, remainingTime);
 				updateChestTimer(refillCounter);
 				if(refillCounter <= 0) {
 					refillCounter = refillTime;
 					refillAllChests();
 				}
+				if(remainingTime <= 0) {
+					draw();
+				}
 				refillCounter--;
+				remainingTime--;
 			}
 		}.runTaskTimer(plugin, 20, 20);
 	}
@@ -234,6 +242,22 @@ public class GameManager {
 	public void winner(Player player) {
 		for(Player p : world.getPlayers()) {
 			p.sendTitle(Util.chat("&c" + player.getName()), Util.chat("&5Hat GEWONNEN"), 3, 30, 3);
+	    	p.setGameMode(GameMode.SPECTATOR);
+		}
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			
+			@Override
+			public void run() {
+				// maybe the world was deleted and got overwritten with a new lobby
+				if(Bukkit.getWorld(world.getUID()) != null)
+					plugin.lobbyManager.stopLobby(world);
+			}
+		}, 200);
+	}
+	
+	public void draw() {
+		for(Player p : world.getPlayers()) {
+			p.sendTitle(ChatColor.RED + "UNENTSCHIEDEN", "", 3, 30, 3);
 	    	p.setGameMode(GameMode.SPECTATOR);
 		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {

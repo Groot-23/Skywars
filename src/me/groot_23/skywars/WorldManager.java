@@ -180,6 +180,10 @@ public class WorldManager {
 			}
 			if(currentLobby != null) {
 				player.teleport(currentLobby.getSpawnLocation());
+				player.getInventory().clear();
+				player.setHealth(20);
+				player.setFoodLevel(20);
+				
 				plugin.skywarsScoreboard.resetKills(player);
 				plugin.skywarsScoreboard.init(player);
 				// don't change gamemode too early
@@ -226,7 +230,7 @@ public class WorldManager {
 		try {
 			int number = Integer.parseInt(name.substring(numberIndex));
 			for (Player p : world.getPlayers()) {
-				p.sendMessage(Util.chat("&eDiese Lobby wurde gerade geschlossen!"));
+				p.sendMessage(Util.chat("&eDiese Welt wurde gerade geschlossen!"));
 				p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
 			}
 			Bukkit.unloadWorld(world, false);

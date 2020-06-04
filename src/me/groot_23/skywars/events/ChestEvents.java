@@ -54,7 +54,7 @@ public class ChestEvents implements Listener {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
 			if (block.getType() == Material.CHEST) {
-				Collection<Entity> near = block.getWorld().getNearbyEntities(block.getLocation().add(0.5, -1, 0.5), 0.1, 0.1, 0.1);
+				Collection<Entity> near = block.getWorld().getNearbyEntities(block.getLocation().add(0.5, 1, 0.5), 0.1, 0.1, 0.1);
 				for(Entity n : near) {
 					if(n.getType() == EntityType.ARMOR_STAND) {
 						if(!n.getCustomName().contains(":")) {
@@ -78,12 +78,13 @@ public class ChestEvents implements Listener {
 
 				refillChest(block);
 				// use block.location to floor the values
-				ArmorStand entity = (ArmorStand) world.spawnEntity(block.getLocation().add(0.5, -1, 0.5), EntityType.ARMOR_STAND);
+				ArmorStand entity = (ArmorStand) world.spawnEntity(block.getLocation().add(0.5, 1, 0.5), EntityType.ARMOR_STAND);
 				entity.setCustomNameVisible(true);
 				entity.setCustomName(Util.chat("&aKiste voll!"));
 				entity.setVisible(false);
 				entity.setGravity(false);
 				entity.setCollidable(false);
+				entity.setMarker(true);
 				// place persistent data holder armorstand
 				ArmorStand dataHolder = (ArmorStand) world.spawnEntity(block.getLocation(), EntityType.ARMOR_STAND);
 				dataHolder.setCustomNameVisible(false);
@@ -91,6 +92,7 @@ public class ChestEvents implements Listener {
 				dataHolder.setGravity(false);
 				dataHolder.setCollidable(false);
 				dataHolder.setVisible(false);
+				dataHolder.setMarker(true);
 			}
 		}
 	}

@@ -53,7 +53,7 @@ public class GameManager {
 					if(block.getType() == Material.CHEST) {
 						block.setMetadata(SWconstants.SW_LOOT_TABLE, new FixedMetadataValue(plugin, loot));
 						ArmorStand armorStand = null;
-						Collection<Entity> nearbyEntities = world.getNearbyEntities(block.getLocation().add(0.5, -1, 0.5), 0.1, 0.1, 0.1);
+						Collection<Entity> nearbyEntities = world.getNearbyEntities(block.getLocation().add(0.5, 1, 0.5), 0.1, 0.1, 0.1);
 						for(Entity ne : nearbyEntities) {
 							if(ne.getType() == EntityType.ARMOR_STAND) {
 								armorStand = (ArmorStand) ne;

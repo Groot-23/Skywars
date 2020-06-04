@@ -27,12 +27,13 @@ public class GameEvents implements Listener {
 	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
-    	e.getEntity().setGameMode(GameMode.SPECTATOR);
+		if(e.getEntity().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+	    	e.getEntity().setGameMode(GameMode.SPECTATOR);
+		}
 	}
 	
-	// Later it will be changed to PlayerDeathEvent, but it's helpful for testing it alone
 	@EventHandler
-	public void onKill(EntityDeathEvent e) {
+	public void onKill(PlayerDeathEvent e) {
 		Player killer = e.getEntity().getKiller();
 		if(killer != null) {
 			if(killer.getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
@@ -48,6 +49,7 @@ public class GameEvents implements Listener {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 				public void run() {
 					p.setGameMode(GameMode.ADVENTURE);
+					p.getInventory().clear();
 					p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 				}
 			}, 5);

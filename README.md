@@ -20,7 +20,7 @@ Skywars Plugin for Minecraft 1.14.4
 ```
 - this will teleport you to the map and sets you in creative mode
 - this takes care of loading the world as a void world and will unload it after leaving
-- It is recommended **NOT** to use multiverse to travel to those worlds because this may 
+- It is **NOT** recommended to use multiverse to travel to those worlds because this may 
   keep it loaded or load it normally if you do not use multiverse properly
   
 ### 3. Add chests
@@ -74,13 +74,13 @@ The command `/swset` can be used to change some settings like the refill time of
 ```
 /swset refillTime <time>
 ```
-*time* can bb given in seconds and the format *minutes:seconds*. E.g. 145 and 2:25 are the same
+*time* can be given in seconds and the format *minutes:seconds*. E.g. 145 and 2:25 are the same
 
-### 2. dynamic and persistent lobbies
+### 2. dynamic and persistent game worlds
 
-The worlds you actually play in are either created dynamically (if they are needed) or they are persistent. Persistent game lobbies are always stored on disk while dynamic ones will be deleted after the game is over. Therefore, persistent lobbies have the advantage that they don't need to be copied and deleted when starting a new game. However they may need unused disk space. Let's say you have 10 persistent lobbies and only 2 of them are used currently. So there are 8 unused worlds which may need 10 MB each. 
+The worlds you actually play in are either created dynamically (if they are needed) or they are persistent. Persistent game worlds are always stored on disk while dynamic ones will be deleted after the game is over. Therefore, persistent worlds have the advantage that they don't need to be copied and deleted when starting a new game. However they may need unused disk space. Let's say you have 10 persistent lobbies and only 2 of them are used currently. So there are 8 unused worlds which may need 10 MB each. 
 
-You can set the amount of persistent lobbies (which will always be stored on disk) with the command
+You can set the amount of persistent worlds (which will always be stored on disk) with the command
 ```
 /swset persistentLobbies <count>
 ```
@@ -92,8 +92,6 @@ If you don't want the dynamic creation of worlds, you can disable it:
 ```
 
 ## Permissions
-
-All permissions are not default when you are op. You have to assign them explicitley.
 
 All of them are in the format `skywars.<command>.<mode>` where `mode` refers to the first argument if the command supports different modes; e.g. `/swmaps` supports the modes `register`, `remove` and `list`. So one permission is `skywars.maps.register`. Note that `command` is the name of the command **WITHOUT sw** at the beginning.
 

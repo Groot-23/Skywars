@@ -11,10 +11,13 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.skywars.util.EmptyChunkGenerator;
@@ -181,7 +184,11 @@ public class WorldManager {
 			if(currentLobby != null) {
 				player.teleport(currentLobby.getSpawnLocation());
 				Util.resetPlayer(player);
-				
+				ItemStack kitSelector = new ItemStack(Material.BOW);
+				ItemMeta kitMeta = kitSelector.getItemMeta();
+				kitMeta.setDisplayName("Kit Selector");
+				kitSelector.setItemMeta(kitMeta);
+				player.getInventory().addItem(kitSelector);
 				plugin.skywarsScoreboard.resetKills(player);
 				plugin.skywarsScoreboard.init(player);
 				plugin.skywarsScoreboard.initPreGame(player, playersPerWorld.get(currentMap), 30, currentMap);

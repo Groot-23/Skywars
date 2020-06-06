@@ -1,0 +1,39 @@
+standard_kit:
+  name: "Standard Kit"
+  description:
+  - "Erste Zeile"
+  - "Test"
+  material: "wooden_sword"
+  startItems:
+    weapon:
+      type: "wooden_sword"
+    tool:
+      type: "wooden_pickaxe"
+    food:
+      type: "bread"
+      count: 3
+    armor1:
+      type: chainmail_helmet
+    armor2:
+      type: chainmail_chestplate
+  startEffects: []
+
+builder_kit:
+  name: "Builder Kit"
+  description:
+  - "Für alle, die gerne bauen"
+  material: "golden_pickaxe"
+  startItems:
+    pickaxe:
+      type: "golden_pickaxe"
+    blocks1:
+      type: "bricks"
+      count: 64
+    blocks2:
+      type: "bricks"
+      count: 64
+    food:
+      type: "bread"
+      count: 3
+    armor:
+      type: "golden_helmet"

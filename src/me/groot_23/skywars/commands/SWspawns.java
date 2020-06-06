@@ -62,6 +62,7 @@ public class SWspawns implements CommandExecutor, TabCompleter {
 			entity.setCustomName("skywars_spawn");
 			entity.setCustomNameVisible(false);
 			entity.setGravity(false);
+			entity.setMarker(true);
 		} else if(args[0].equals("show")) {
 			if(args.length < 2) {
 				player.sendMessage(Util.chat("&c[true | false]"));
@@ -72,6 +73,8 @@ public class SWspawns implements CommandExecutor, TabCompleter {
 					if(entity.getType() == EntityType.ARMOR_STAND) {
 						if(entity.getCustomName().equals("skywars_spawn")) {
 							((ArmorStand)entity).setVisible(true);
+							// They should be markers, but maybe they were placed with an older version
+							((ArmorStand)entity).setMarker(true);
 						}
 					}
 				}
@@ -80,6 +83,7 @@ public class SWspawns implements CommandExecutor, TabCompleter {
 					if(entity.getType() == EntityType.ARMOR_STAND) {
 						if(entity.getCustomName().equals("skywars_spawn")) {
 							((ArmorStand)entity).setVisible(false);
+							((ArmorStand)entity).setMarker(true);
 						}
 					}
 				}

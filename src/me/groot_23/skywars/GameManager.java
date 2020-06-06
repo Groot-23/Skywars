@@ -16,6 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.skywars.events.ChestEvents;
@@ -29,6 +30,7 @@ public class GameManager {
 	private World world;
 	private List<Pair<Block, ArmorStand>> chests;
 	private int refillTime;
+	private int refillTimeChange;
 	String map;
 	
 	public GameManager(Main plugin, World world, String map) {		
@@ -37,6 +39,7 @@ public class GameManager {
 		this.map = map;
 		
 		refillTime = plugin.getConfig().getInt("refillTime");
+		refillTimeChange = plugin.getConfig().getInt("refillTimeChange");
 		
 		world.setPVP(false);
 		this.chests = new ArrayList<Pair<Block,ArmorStand>>();
@@ -201,10 +204,20 @@ public class GameManager {
 		world.setPVP(true);
 		for(Player player : world.getPlayers()) {
 			player.setGameMode(GameMode.SURVIVAL);
+			player.getInventory().clear();
+			List<MetadataValue> kitData = player.getMetadata("skywarsKit");
+			SkywarsKit kit;
+			if(!kitData.isEmpty()) {
+				kit = plugin.kitByName.get(kitData.get(0).asString());
+			} else {
+				kit = plugin.kits.get(0);
+			}
+			kit.applyToPlayer(player);
 		}
 		new BukkitRunnable() {
 			
-			int refillCounter = refillTime;
+			int dynamicRefillTime = refillTime;
+			int refillCounter = dynamicRefillTime;
 			int remainingTime = SWconstants.LENGTH_OF_GAME;
 			
 			@Override
@@ -224,10 +237,11 @@ public class GameManager {
 					winner(potentialWinner);
 					cancel();
 				}
-				plugin.skywarsScoreboard.updateGame(world, playersLeft, "Refill", refillCounter, remainingTime);
+				plugin.skywarsScoreboard.updateGame(world, playersLeft, "Kisten Befüllung", refillCounter, remainingTime);
 				updateChestTimer(refillCounter);
 				if(refillCounter <= 0) {
-					refillCounter = refillTime;
+					dynamicRefillTime += refillTimeChange;
+					refillCounter = dynamicRefillTime;
 					refillAllChests();
 				}
 				if(remainingTime <= 0) {

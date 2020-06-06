@@ -26,7 +26,7 @@ public class SWset implements CommandExecutor, TabCompleter{
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
 		List<String> list = new ArrayList<String>();
 		if(args.length == 1) {
-			String[] modes = new String[] {"refillTime", "persistentLobbies", "allowDynamic"};
+			String[] modes = new String[] {"refillTime", "persistentLobbies", "allowDynamic", "refillTimeChange"};
 			for(String s : modes) {
 				if(s.startsWith(args[0])) list.add(s);
 			}
@@ -106,6 +106,29 @@ public class SWset implements CommandExecutor, TabCompleter{
 					refillTime = Integer.parseInt(args[1]);
 				}
 				plugin.getConfig().set("refillTime", refillTime);
+				plugin.saveConfig();
+			}catch(NumberFormatException e) {
+				player.sendMessage(Util.chat("&c\"" + args[1] + "\" ist keine erlaubte Zahl"));
+				return true;
+			}
+		} else if(mode.equals("refillTimeChange")) {
+			if(!sender.hasPermission("skywars.maps.refillTimeChange")) {
+				player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.refillTimeChange"));
+				return true;
+			}
+			
+			if(args.length == 1) {
+				player.sendMessage(Util.chat("&cGib die Zeit an. Entweder in Sekunden oder im Format Minuten:Sekunden"));
+				return false;
+			}
+			try {
+				int refillTime;
+				if(args[1].contains(":")) {
+					refillTime = Util.secondsFromStr(args[1]);
+				} else {
+					refillTime = Integer.parseInt(args[1]);
+				}
+				plugin.getConfig().set("refillTimeChange", refillTime);
 				plugin.saveConfig();
 			}catch(NumberFormatException e) {
 				player.sendMessage(Util.chat("&c\"" + args[1] + "\" ist keine erlaubte Zahl"));

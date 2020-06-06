@@ -85,7 +85,7 @@ public class SkywarsScoreboard {
 		objective.getScore(ChatColor.GREEN + Util.repeat(20, " ")).setScore(6);
 		objective.getScore("Zeit bis zum Start: " + timeLeft).setScore(5);
 		objective.getScore(ChatColor.RED + Util.repeat(20, " ")).setScore(4);
-		objective.getScore(ChatColor.GRAY + "Map: " + ChatColor.WHITE + map).setScore(3);
+		objective.getScore(ChatColor.GOLD + "Map: " + ChatColor.WHITE + map).setScore(3);
 		objective.getScore(ChatColor.AQUA + Util.repeat(20, " ")).setScore(2);
 		objective.getScore(ChatColor.YELLOW + "Groot23.mcserv.me").setScore(1);
 	}
@@ -121,16 +121,16 @@ public class SkywarsScoreboard {
 		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 		
 		replaceScore(objective, 13, Util.repeat(20, " "));
-		replaceScore(objective, 12, ChatColor.GRAY + "Zeit übrig:   " + ChatColor.WHITE + Util.minuteSeconds(remainingTime));
+		replaceScore(objective, 12, ChatColor.AQUA + "Zeit übrig:   " + ChatColor.WHITE + Util.minuteSeconds(remainingTime));
 		replaceScore(objective, 11, ChatColor.GRAY + "");
 		replaceScore(objective, 10, ChatColor.GREEN + "Nächstes Event:");
 		replaceScore(objective,  9, nextEvent + ": " + Util.minuteSeconds(timeTillEvent));
 		replaceScore(objective,  8, ChatColor.BLUE + Util.repeat(20, " "));
-		replaceScore(objective,  7, "Players left: " + playersLeft);
+		replaceScore(objective,  7, "Spieler übrig:  " + playersLeft);
 		replaceScore(objective,  6, ChatColor.GREEN + Util.repeat(20, " "));
 		replaceScore(objective,  5, ChatColor.RED + "Kills: " + 0);
 		replaceScore(objective,  4, ChatColor.RED + Util.repeat(20, " "));
-		replaceScore(objective,  3, ChatColor.GRAY + "Map: " + ChatColor.WHITE + map);
+		replaceScore(objective,  3, ChatColor.GOLD + "Map: " + ChatColor.WHITE + map);
 		replaceScore(objective,  2, ChatColor.AQUA + Util.repeat(20, " "));
 		replaceScore(objective,  1, ChatColor.YELLOW + "Groot23.mcserv.me");
 	}
@@ -143,12 +143,12 @@ public class SkywarsScoreboard {
 			int kills = player.getMetadata("Skywars_kills").get(0).asInt();
 			
 //			replaceScore(objective, 13, Util.repeat(20, " "));
-			replaceScore(objective, 12, ChatColor.GRAY + "Zeit übrig:   " + ChatColor.WHITE + Util.minuteSeconds(remainingTime));
+			replaceScore(objective, 12, ChatColor.AQUA + "Zeit übrig:   " + ChatColor.WHITE + Util.minuteSeconds(remainingTime));
 //			replaceScore(objective, 11, ChatColor.GRAY + "");
 //			replaceScore(objective, 10, ChatColor.GREEN + "Nächstes Event:");
 			replaceScore(objective,  9, nextEvent + ": " + Util.minuteSeconds(timeTillEvent));
 //			replaceScore(objective,  8, ChatColor.BLUE + Util.repeat(20, " "));
-			replaceScore(objective,  7, "Players left: " + playersLeft);
+			replaceScore(objective,  7, "Spieler übrig: " + playersLeft);
 //			replaceScore(objective,  6, ChatColor.GREEN + Util.repeat(20, " "));
 			replaceScore(objective,  5, ChatColor.RED + "Kills: " + kills);
 //			replaceScore(objective,  4, ChatColor.RED + Util.repeat(20, " "));

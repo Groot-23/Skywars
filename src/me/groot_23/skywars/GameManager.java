@@ -23,6 +23,8 @@ import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.util.Pair;
 import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class GameManager {
 
@@ -31,12 +33,14 @@ public class GameManager {
 	private List<Pair<Block, ArmorStand>> chests;
 	private int refillTime;
 	private int refillTimeChange;
+	private Location spawnLocation;
 	String map;
 	
-	public GameManager(Main plugin, World world, String map) {		
+	public GameManager(Main plugin, World world, Location spawnLocation, String map) {		
 		this.plugin = plugin;
 		this.world = world;
 		this.map = map;
+		this.spawnLocation = spawnLocation;
 		
 		refillTime = plugin.getConfig().getInt("refillTime");
 		refillTimeChange = plugin.getConfig().getInt("refillTimeChange");
@@ -214,6 +218,9 @@ public class GameManager {
 			}
 			kit.applyToPlayer(player);
 		}
+		world.getWorldBorder().setCenter(spawnLocation);
+		world.getWorldBorder().setSize(200);
+		world.getWorldBorder().setSize(40, 2 * 60);
 		new BukkitRunnable() {
 			
 			int dynamicRefillTime = refillTime;
@@ -231,11 +238,12 @@ public class GameManager {
 					if(p.getGameMode() == GameMode.SURVIVAL) {
 						playersLeft++;
 						potentialWinner = p;
+						p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "Teaming ist verboten!!!"));
 					}
 				}
 				if(playersLeft == 1) {
-					winner(potentialWinner);
-					cancel();
+//					winner(potentialWinner);
+//					cancel();
 				}
 				plugin.skywarsScoreboard.updateGame(world, playersLeft, "Kisten Befüllung", refillCounter, remainingTime);
 				updateChestTimer(refillCounter);
@@ -263,8 +271,8 @@ public class GameManager {
 			@Override
 			public void run() {
 				// maybe the world was deleted and got overwritten with a new lobby
-				if(Bukkit.getWorld(world.getUID()) != null)
-					plugin.lobbyManager.stopLobby(world);
+				if(Bukkit.getWorld(world.getUID()) != null);
+//					plugin.lobbyManager.stopLobby(world);
 			}
 		}, 200);
 	}
@@ -279,8 +287,8 @@ public class GameManager {
 			@Override
 			public void run() {
 				// maybe the world was deleted and got overwritten with a new lobby
-				if(Bukkit.getWorld(world.getUID()) != null)
-					plugin.lobbyManager.stopLobby(world);
+				if(Bukkit.getWorld(world.getUID()) != null);
+//					plugin.lobbyManager.stopLobby(world);
 			}
 		}, 200);
 	}

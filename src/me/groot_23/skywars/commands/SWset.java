@@ -26,7 +26,8 @@ public class SWset implements CommandExecutor, TabCompleter{
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
 		List<String> list = new ArrayList<String>();
 		if(args.length == 1) {
-			String[] modes = new String[] {"refillTime", "persistentLobbies", "allowDynamic", "refillTimeChange"};
+			String[] modes = new String[] {"refillTime", "persistentLobbies", "allowDynamic", "refillTimeChange",
+					"deathMatchBegin", "deathMatchBorderShrinkTime"};
 			for(String s : modes) {
 				if(s.startsWith(args[0])) list.add(s);
 			}
@@ -54,14 +55,13 @@ public class SWset implements CommandExecutor, TabCompleter{
 			player.sendMessage(Util.chat("&cZu wenige Argumente"));
 			return false;
 		}
+		if(!player.hasPermission("skywars.set")) {
+			player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.set"));
+			return true;
+		}
 		String mode = args[0];
 		
 		if(mode.equals("persistentLobbies")) {
-			if(!sender.hasPermission("skywars.set.persistentLobbies")) {
-				player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.set.persistentLobbies"));
-				return true;
-			}
-			
 			if(args.length == 1) {
 				player.sendMessage(Util.chat("&cGib die Anzahl der dauerhaften Lobbys an"));
 				return false;
@@ -75,11 +75,6 @@ public class SWset implements CommandExecutor, TabCompleter{
 				return true;
 			}
 		} else if(mode.equals("allowDynamic")) {
-			if(!sender.hasPermission("skywars.set.allowDynamic")) {
-				player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.set.allowDynamic"));
-				return true;
-			}
-			
 			if(args.length == 1) {
 				player.sendMessage(Util.chat("&cGib true oder false an!"));
 				return false;
@@ -89,54 +84,48 @@ public class SWset implements CommandExecutor, TabCompleter{
 			else player.sendMessage(Util.chat("&cGib true oder false an!"));
 			plugin.saveConfig();
 		} else if(mode.equals("refillTime")) {
-			if(!sender.hasPermission("skywars.maps.refillTime")) {
-				player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.refillTime"));
-				return true;
-			}
-			
 			if(args.length == 1) {
 				player.sendMessage(Util.chat("&cGib die Zeit an. Entweder in Sekunden oder im Format Minuten:Sekunden"));
 				return false;
 			}
-			try {
-				int refillTime;
-				if(args[1].contains(":")) {
-					refillTime = Util.secondsFromStr(args[1]);
-				} else {
-					refillTime = Integer.parseInt(args[1]);
-				}
-				plugin.getConfig().set("refillTime", refillTime);
-				plugin.saveConfig();
-			}catch(NumberFormatException e) {
-				player.sendMessage(Util.chat("&c\"" + args[1] + "\" ist keine erlaubte Zahl"));
-				return true;
-			}
+			writeTimeToConfig("refillTime", args[1], player);
 		} else if(mode.equals("refillTimeChange")) {
-			if(!sender.hasPermission("skywars.maps.refillTimeChange")) {
-				player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.refillTimeChange"));
-				return true;
-			}
-			
 			if(args.length == 1) {
 				player.sendMessage(Util.chat("&cGib die Zeit an. Entweder in Sekunden oder im Format Minuten:Sekunden"));
 				return false;
 			}
-			try {
-				int refillTime;
-				if(args[1].contains(":")) {
-					refillTime = Util.secondsFromStr(args[1]);
-				} else {
-					refillTime = Integer.parseInt(args[1]);
-				}
-				plugin.getConfig().set("refillTimeChange", refillTime);
-				plugin.saveConfig();
-			}catch(NumberFormatException e) {
-				player.sendMessage(Util.chat("&c\"" + args[1] + "\" ist keine erlaubte Zahl"));
-				return true;
+			writeTimeToConfig("refillTimeChange", args[1], player);
+		} else if(mode.equals("deathMatchBegin")) {
+			if(args.length == 1) {
+				player.sendMessage(Util.chat("&cGib die Zeit an. Entweder in Sekunden oder im Format Minuten:Sekunden"));
+				return false;
 			}
+			writeTimeToConfig("deathMatchBegin", args[1], player);
+		} else if(mode.equals("deathMatchBorderShrinkTime")) {
+			if(args.length == 1) {
+				player.sendMessage(Util.chat("&cGib die Zeit an. Entweder in Sekunden oder im Format Minuten:Sekunden"));
+				return false;
+			}
+			writeTimeToConfig("deathMatchBorderShrinkTime", args[1], player);
 		}
 		
 		return true;
+	}
+	
+	public void writeTimeToConfig(String key, String timeStr, Player sender) {
+		try {
+			int refillTime;
+			if(timeStr.contains(":")) {
+				refillTime = Util.secondsFromStr(timeStr);
+			} else {
+				refillTime = Integer.parseInt(timeStr);
+			}
+			plugin.getConfig().set(key, refillTime);
+			plugin.saveConfig();
+		}catch(NumberFormatException e) {
+			if(sender != null)
+				sender.sendMessage(Util.chat("&c\"" + timeStr + "\" ist keine erlaubte Zahl"));
+		}
 	}
 
 }

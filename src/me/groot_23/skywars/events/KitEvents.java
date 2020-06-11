@@ -50,6 +50,16 @@ public class KitEvents implements Listener {
 			for(int x = 1; x < 9; x++) {
 				if(i < plugin.kits.size()) {
 					ItemStack stack = plugin.kits.get(i).getDisplayItem();
+					// set selected
+					if(!player.getMetadata("skywarsKit").isEmpty()) {
+						String selected = player.getMetadata("skywarsKit").get(0).asString();
+						ItemMeta meta = stack.getItemMeta();
+						if(meta.getDisplayName().equals(selected)) {
+							meta.setDisplayName(meta.getDisplayName() + "    (ausgewählt)");
+							stack.setItemMeta(meta);
+						}
+					}
+
 					inv.setItem(9 * y + x, stack);
 					i++;
 				} else break;
@@ -61,13 +71,30 @@ public class KitEvents implements Listener {
 	
 	@EventHandler
 	public void onClickEvent(InventoryClickEvent e) {
-		if(e.getView().getTitle().equals("Kit Selector")) {
+		if(e.getView().getTitle().equals("Kit Selector") && e.getCurrentItem() != null) {
 			if(e.getCurrentItem().getType() == Material.BARRIER) {
 				e.getWhoClicked().closeInventory();
 			} else {
 				String name = e.getCurrentItem().getItemMeta().getDisplayName();
+				if(name.contains("    (ausgewählt)")) {
+					name = name.substring(0, name.indexOf("    (ausgewählt)"));
+				}
 				SkywarsKit kit = plugin.kitByName.get(name);
 				if(kit != null) {
+					for(ItemStack item : e.getInventory().getContents()) {
+						if(item != null) {
+							ItemMeta meta = item.getItemMeta();
+							String n = meta.getDisplayName();
+							if(n.contains("    (ausgewählt)")) {
+								meta.setDisplayName(n.substring(0, n.indexOf("    (ausgewählt)")));
+								item.setItemMeta(meta);
+								break; // Only one kit can be selected!
+							}
+						}
+					}
+					ItemMeta meta = e.getCurrentItem().getItemMeta();
+					meta.setDisplayName(name + "    (ausgewählt)");
+					e.getCurrentItem().setItemMeta(meta);
 					e.getWhoClicked().setMetadata("skywarsKit", new FixedMetadataValue(plugin, kit.getName()));
 					//kit.applyToPlayer((Player)e.getWhoClicked());
 				}
@@ -79,10 +106,8 @@ public class KitEvents implements Listener {
 	@EventHandler
 	public void clickToOpen(PlayerInteractEvent e) {
 		if(e.getItem() != null) {
-			if(e.getItem().getType() == Material.BOW) {
-				System.out.println("Bow clicked");
+			if(e.getItem().getType() == Material.CHEST) {
 				if(e.getItem().getItemMeta().getDisplayName().equals("Kit Selector")) {
-					System.out.println("Gui open");
 					openGui(e.getPlayer());
 				}
 			}
@@ -92,7 +117,7 @@ public class KitEvents implements Listener {
 	@EventHandler
 	public void preventDrop(PlayerDropItemEvent e) {
 		ItemStack stack = e.getItemDrop().getItemStack();
-		if(stack.getType() == Material.BOW && stack.getItemMeta().getDisplayName().equals("Kit Selector")) {
+		if(stack.getType() == Material.CHEST && stack.getItemMeta().getDisplayName().equals("Kit Selector")) {
 			e.setCancelled(true);
 		}
 	}

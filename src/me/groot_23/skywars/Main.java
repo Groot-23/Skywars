@@ -7,7 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.skywars.commands.SWjoin;
 import me.groot_23.skywars.commands.SWchest;
@@ -23,12 +27,14 @@ import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
 import me.groot_23.skywars.util.ResourceExtractor;
 import me.groot_23.skywars.util.Util;
+import me.groot_23.skywars.world.ArenaProvider;
 
 public class Main extends JavaPlugin
 {
-	public WorldManager lobbyManager;
-	public GameManager gameManager;
+	//public WorldManager lobbyManager;
+	//public GameManager gameManager;
 	public SkywarsScoreboard skywarsScoreboard;
+	public ArenaProvider arenaProvider;
 	public List<SkywarsKit> kits;
 	public Map<String, SkywarsKit> kitByName;
 	private static Main instance;
@@ -46,8 +52,9 @@ public class Main extends JavaPlugin
 			kitByName.put(kit.getName(), kit);
 		}
 		
-		lobbyManager = new WorldManager(this);
+		//lobbyManager = new WorldManager(this);
 		skywarsScoreboard = new SkywarsScoreboard(this);
+		arenaProvider = new ArenaProvider(this);
 
 		new SWjoin(this);
 		new SWleave(this);
@@ -62,6 +69,15 @@ public class Main extends JavaPlugin
 		new ChestEvents(this);
 		new GameEvents(this);
 		new KitEvents(this);
+		
+//		new BukkitRunnable() {
+//			
+//			@Override
+//			public void run() {
+//				World memLeak = Bukkit.createWorld(new WorldCreator("memory_leak"));
+//				Bukkit.unloadWorld(memLeak, true);
+//			}
+//		}.runTaskTimer(this, 60, 100);
 	}
 	
 	public void firstStart() {

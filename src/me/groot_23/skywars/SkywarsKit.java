@@ -71,7 +71,7 @@ public class SkywarsKit {
 		}
 		lore.add(ChatColor.YELLOW + "Items:");
 		for(ItemStack stack : startItems) {
-			String itemString = stack.getType().toString().toLowerCase();
+			String itemString = stack.getType().toString().toLowerCase().replace("_", " ");
 			if(stack.getAmount() > 1) {
 				itemString += " x" + stack.getAmount();
 			}

@@ -53,6 +53,8 @@ Use the normal minecraft command to set the world spawn
 ```
 - This command has to be called after every change to apply the changes
 - Note that this will **end all active games**.
+- **IMPORTANT**: It is recommended to restart the server instead because
+Minecraft may lock the world files, which can't be replaced because of that.
 
 ### 6. Join a game
 ```
@@ -78,7 +80,7 @@ The command `/swset` can be used to change some settings like the refill time of
 
 ### 2. dynamic and persistent game worlds
 
-The worlds you actually play in are either created dynamically (if they are needed) or they are persistent. Persistent game worlds are always stored on disk while dynamic ones will be deleted after the game is over. Therefore, persistent worlds have the advantage that they don't need to be copied and deleted when starting a new game. However they may need unused disk space. Let's say you have 10 persistent lobbies and only 2 of them are used currently. So there are 8 unused worlds which may need 10 MB each. 
+The worlds you actually play in are either created dynamically (if they are needed) or they are persistent. Persistent game worlds are always stored on disk while dynamic ones will be deleted (if Minecraft does not lock the world files. So there is no guarantee that they will actually be deleted) after the game is over. Therefore, persistent worlds have the advantage that they don't need to be copied and deleted when starting a new game. However they may need unused disk space. Let's say you have 10 persistent lobbies and only 2 of them are used currently. So there are 8 unused worlds which may need 10 MB each. 
 
 You can set the amount of persistent worlds (which will always be stored on disk) with the command
 ```

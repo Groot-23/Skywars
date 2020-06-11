@@ -47,8 +47,13 @@ public class SkywarsScoreboard {
 	}
 	
 	public void addKill(Player player) {
-		int kills = player.getMetadata("Skywars_kills").get(0).asInt();
+		if(player.getMetadata("Skywars_kills").isEmpty()) {
+			player.setMetadata("Skywars_kills", new FixedMetadataValue(plugin, 0));
+		}
+		int kills = player.getMetadata("Skywars_kills").get(0).asInt() + 1;
 		player.setMetadata("Skywars_kills", new FixedMetadataValue(plugin, kills + 1));
+		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+		replaceScore(objective,  5, ChatColor.RED + "Kills: " + kills);
 	}
 	
 	
@@ -90,7 +95,7 @@ public class SkywarsScoreboard {
 		objective.getScore(ChatColor.YELLOW + "Groot23.mcserv.me").setScore(1);
 	}
 
-	public void updatePreGame(World world, int maxPlayers, int timeLeft, String map) {
+	public void updatePreGame(World world, int maxPlayers, int timeLeft) {
 		int playerCount = world.getPlayers().size();
 		for(Player player : world.getPlayers()) {
 //			Objective objective = resetObjective(player);
@@ -121,7 +126,7 @@ public class SkywarsScoreboard {
 		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 		
 		replaceScore(objective, 13, Util.repeat(20, " "));
-		replaceScore(objective, 12, ChatColor.AQUA + "Zeit übrig:   " + ChatColor.WHITE + Util.minuteSeconds(remainingTime));
+		replaceScore(objective, 12, ChatColor.AQUA + "Death Match:   " + ChatColor.WHITE + Util.minuteSeconds(remainingTime));
 		replaceScore(objective, 11, ChatColor.GRAY + "");
 		replaceScore(objective, 10, ChatColor.GREEN + "Nächstes Event:");
 		replaceScore(objective,  9, nextEvent + ": " + Util.minuteSeconds(timeTillEvent));
@@ -143,14 +148,14 @@ public class SkywarsScoreboard {
 			int kills = player.getMetadata("Skywars_kills").get(0).asInt();
 			
 //			replaceScore(objective, 13, Util.repeat(20, " "));
-			replaceScore(objective, 12, ChatColor.AQUA + "Zeit übrig:   " + ChatColor.WHITE + Util.minuteSeconds(remainingTime));
+			replaceScore(objective, 12, ChatColor.AQUA + "Death Match:   " + ChatColor.WHITE + Util.minuteSeconds(remainingTime));
 //			replaceScore(objective, 11, ChatColor.GRAY + "");
 //			replaceScore(objective, 10, ChatColor.GREEN + "Nächstes Event:");
 			replaceScore(objective,  9, nextEvent + ": " + Util.minuteSeconds(timeTillEvent));
 //			replaceScore(objective,  8, ChatColor.BLUE + Util.repeat(20, " "));
 			replaceScore(objective,  7, "Spieler übrig: " + playersLeft);
 //			replaceScore(objective,  6, ChatColor.GREEN + Util.repeat(20, " "));
-			replaceScore(objective,  5, ChatColor.RED + "Kills: " + kills);
+//			replaceScore(objective,  5, ChatColor.RED + "Kills: " + kills);
 //			replaceScore(objective,  4, ChatColor.RED + Util.repeat(20, " "));
 //			replaceScore(objective,  3, ChatColor.GRAY + "Map: " + ChatColor.WHITE + map);
 //			replaceScore(objective,  2, ChatColor.AQUA + Util.repeat(20, " "));

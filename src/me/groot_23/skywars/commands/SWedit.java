@@ -33,7 +33,8 @@ public class SWedit implements CommandExecutor, TabCompleter{
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
 		List<String> list = new ArrayList<String>();
 		if(args.length == 1) {
-			for(String s : plugin.lobbyManager.getRegisteredWorlds()) {
+//			for(String s : plugin.lobbyManager.getRegisteredWorlds()) {
+			for(String s : plugin.arenaProvider.getRegisteredWorlds()) {
 				if(s.startsWith(args[0]))
 					list.add(s);
 			}

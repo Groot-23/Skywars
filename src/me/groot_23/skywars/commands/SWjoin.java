@@ -25,7 +25,8 @@ public class SWjoin implements CommandExecutor {
 				p.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.join"));
 				return true;
 			}
-			plugin.lobbyManager.joinPlayer(p);
+//			plugin.lobbyManager.joinPlayer(p);
+			plugin.arenaProvider.joinPlayer(p);
 		}
 		return true;
 	}

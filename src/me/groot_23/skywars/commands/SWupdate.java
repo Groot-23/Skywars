@@ -22,7 +22,7 @@ public class SWupdate implements CommandExecutor {
 			sender.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.update"));
 			return true;
 		}
-		plugin.lobbyManager.update();
+		plugin.arenaProvider.update();
 		sender.sendMessage(Util.chat("Änderungen erfolgreich übernommen"));
 		return true;
 	}

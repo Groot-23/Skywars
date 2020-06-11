@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -34,6 +35,8 @@ public class WorldManager {
 	private Main plugin;
 	private Map<String, Integer> playersPerWorld = new HashMap<String, Integer>();
 	private Map<String, Integer> lobbiesPerWorld = new HashMap<String, Integer>();
+	private Map<String, Location> mainSpawnLocations = new HashMap<String, Location>();
+	private Location spawnLocation = null;
 	private String[] worldPickArray;
 	private Random rand = new Random();
 	private int persistentLobbies;
@@ -47,6 +50,7 @@ public class WorldManager {
 	private void readConfig() {
 		playersPerWorld = new HashMap<String, Integer>();
 		lobbiesPerWorld = new HashMap<String, Integer>();
+		mainSpawnLocations = new HashMap<String, Location>();
 		ConfigurationSection worlds = plugin.getConfig().getConfigurationSection("worlds");
 		ArrayList<String> worldPickList = new ArrayList<String>();
 		if (worlds != null) {
@@ -76,11 +80,23 @@ public class WorldManager {
 				String lobbyStr = partialLobbies.remove().getElement1();
 				lobbiesPerWorld.put(lobbyStr, lobbiesPerWorld.get(lobbyStr) + 1);
 			}
+			
 		}
 		// allow dynamic
 		allowDynamic = true;
 		if(plugin.getConfig().contains("allowDynamicLobbies")) {
 			allowDynamic = plugin.getConfig().getBoolean("allowDynamicLobbies");
+		}
+		
+		// get spawns
+		ConfigurationSection spawnSec = plugin.getConfig().getConfigurationSection("main_spawns");
+		if(spawnSec != null) {
+			for(String key : spawnSec.getKeys(false)) {
+				double x = spawnSec.getDouble(key + ".x");
+				double y = spawnSec.getDouble(key + ".y");
+				double z = spawnSec.getDouble(key + ".z");
+				mainSpawnLocations.put(key, new Location(null, x, y, z));
+			}
 		}
 	}
 
@@ -150,7 +166,13 @@ public class WorldManager {
 
 			}
 		}
-		currentGameManager = new GameManager(plugin, currentLobby, currentMap);
+		if(mainSpawnLocations.containsKey(currentMap)) {
+			spawnLocation = mainSpawnLocations.get(currentMap);
+			spawnLocation.setWorld(currentLobby);
+		} else {
+			spawnLocation = currentLobby.getSpawnLocation();
+		}
+		currentGameManager = new GameManager(plugin, currentLobby, spawnLocation, currentMap);
 		System.out.println("[Skywars] Successfully created new lobby: "+ currentLobby.getName());
 		return true;
 	}
@@ -182,7 +204,7 @@ public class WorldManager {
 				createNewLobby();
 			}
 			if(currentLobby != null) {
-				player.teleport(currentLobby.getSpawnLocation());
+				player.teleport(spawnLocation);
 				Util.resetPlayer(player);
 				ItemStack kitSelector = new ItemStack(Material.BOW);
 				ItemMeta kitMeta = kitSelector.getItemMeta();
@@ -208,7 +230,7 @@ public class WorldManager {
 						int counter = 30;
 						@Override
 						public void run() {
-							plugin.skywarsScoreboard.updatePreGame(currentLobby, playersPerWorld.get(currentMap), counter, currentMap);
+							plugin.skywarsScoreboard.updatePreGame(currentLobby, playersPerWorld.get(currentMap), counter);
 							if(counter <= 0) {
 								currentGameManager.goToSpawns();
 								createNewLobby();

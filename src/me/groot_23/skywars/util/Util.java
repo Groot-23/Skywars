@@ -5,8 +5,14 @@ import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+
+import me.groot_23.skywars.Main;
 
 public class Util {
 
@@ -77,11 +83,17 @@ public class Util {
 	}
 	
 	public static void resetPlayer(Player player) {
+		BossBar bb = Bukkit.getBossBar(new NamespacedKey(Main.getInstance(), "deathMatch"));
+		if(bb != null) bb.removePlayer(player);
 		player.getInventory().clear();
 		player.setHealth(20);
 		player.setFoodLevel(20);
 		player.setLevel(0);
+		for(PotionEffect effect : player.getActivePotionEffects()) {
+			player.removePotionEffect(effect.getType());
+		}
 	}
+	
 	
 //	public static void spectatorWithInventory(Player player) {
 //		player.setGameMode(GameMode.ADVENTURE);

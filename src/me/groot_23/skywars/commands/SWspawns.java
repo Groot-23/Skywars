@@ -8,6 +8,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -18,17 +20,19 @@ import me.groot_23.skywars.util.Util;
 
 public class SWspawns implements CommandExecutor, TabCompleter {
 
+	private Main plugin;
 	
 	public SWspawns(Main plugin) {
 		plugin.getCommand("swspawns").setExecutor(this);
 		plugin.getCommand("swspawns").setTabCompleter(this);
+		this.plugin = plugin;
 	}
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> list = new ArrayList<String>();
 		if(args.length == 1) {
-			String[] modes = new String[] {"add", "show"};
+			String[] modes = new String[] {"add", "show", "main"};
 			for(String s : modes) {
 				if(s.startsWith(args[0])) list.add(s);
 			}
@@ -90,6 +94,18 @@ public class SWspawns implements CommandExecutor, TabCompleter {
 			} else {
 				player.sendMessage(Util.chat("&c[true | false]"));
 			}
+		} else if(args[0].equals("main")) {
+			String base = "worlds." + player.getWorld().getName();
+			FileConfiguration cfg = plugin.getConfig();
+			if(!cfg.contains(base)) {
+				player.sendMessage(ChatColor.RED + "Diese Welt ist nicht registriert! (/swmaps register " + base + ")");
+				return true;
+			}
+			base += ".spawns";
+			cfg.set(base + ".x", player.getLocation().getBlockX());
+			cfg.set(base + ".y", player.getLocation().getBlockY());
+			cfg.set(base + ".z", player.getLocation().getBlockZ());
+			plugin.saveConfig();
 		}
 		return true;
 	}

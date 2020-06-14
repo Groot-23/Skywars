@@ -64,6 +64,10 @@ public abstract class GameState {
 			plugin.skywarsScoreboard.updatePreGame(arena.getWorld(), arena.getMaxPlayers(), counter);
 			
 			int numPlayers = arena.getWorld().getPlayers().size();
+			for(Player player : world.getPlayers()) {
+				player.setHealth(20);
+				player.setFoodLevel(20);
+			}
 			if(numPlayers == arena.getMaxPlayers() || counter <= 0) {
 				return new Spawn(this);
 			}
@@ -100,7 +104,7 @@ public abstract class GameState {
 			for(int i = 0; i < world.getPlayers().size(); i++) {
 				world.getPlayers().get(i).teleport(arena.getSpawns().get(i));
 				plugin.skywarsScoreboard.initGame(world.getPlayers().get(i), arena.getWorld().getPlayers().size(), 
-						"Start", counter, SWconstants.LENGTH_OF_GAME, arena.getMapName());			
+						"Start", counter, data.getDeathMatchBegin() ,SWconstants.LENGTH_OF_GAME, arena.getMapName());			
 			}
 			arena.removeLobby();
 			arena.disableJoin();
@@ -108,7 +112,7 @@ public abstract class GameState {
 
 		@Override
 		public GameState update() {
-			plugin.skywarsScoreboard.updateGame(world, world.getPlayers().size(), "Start", counter, data.getDeathMatchBegin());
+			plugin.skywarsScoreboard.updateGame(world, world.getPlayers().size(), "Start", counter, data.getDeathMatchBegin(), SWconstants.LENGTH_OF_GAME);
 			if(counter % 10 == 0) {
 				for(Player p : world.getPlayers()) {
 					p.sendMessage(Util.chat("Skywars startet in &c" + counter));
@@ -161,11 +165,10 @@ public abstract class GameState {
 			for(Player player : world.getPlayers()) {
 				player.setGameMode(GameMode.SURVIVAL);
 				player.getInventory().clear();
-				List<MetadataValue> kitData = player.getMetadata("skywarsKit");
-				SkywarsKit kit;
-				if(!kitData.isEmpty()) {
-					kit = plugin.kitByName.get(kitData.get(0).asString());
-				} else {
+				SkywarsKit kit = null;
+				if(player.hasMetadata("skywarsKit")) {
+					kit = plugin.kitByName.get(player.getMetadata("skywarsKit").get(0).asString());
+				} if(kit == null) {
 					kit = plugin.kits.get(0);
 				}
 				kit.applyToPlayer(player);
@@ -184,11 +187,11 @@ public abstract class GameState {
 					p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "Teaming ist verboten!!!"));
 				}
 			}
+			plugin.skywarsScoreboard.updateGame(world, playersLeft, "Kisten Befüllung", refillCounter, deathMatchCounter, counter);
 			if(playersLeft == 1) {
 				bossbar.removeAll();
 				return new Victory(this, potentialWinner);
 			}
-			plugin.skywarsScoreboard.updateGame(world, playersLeft, "Kisten Befüllung", refillCounter, deathMatchCounter);
 			arena.updateChestTimer(refillCounter);
 			if(refillCounter <= 0) {
 				dynamicRefillTime += data.getRefillTimeChange();

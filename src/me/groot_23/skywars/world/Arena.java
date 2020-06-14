@@ -213,4 +213,10 @@ public class Arena {
 	public void shrinkBorder(int seconds) {
 		world.getWorldBorder().setSize(2 * midRadius, seconds);
 	}
+	
+	public boolean isInsideMidSpawn(Location location) {
+		int xDist = midSpawn.getBlockX() - location.getBlockX();
+		int zDist = midSpawn.getBlockZ() - location.getBlockZ();
+		return (Math.abs(xDist) < midRadius && Math.abs(zDist) < midRadius);
+	}
 }

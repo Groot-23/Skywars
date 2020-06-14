@@ -7,6 +7,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,6 +21,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.SWconstants;
@@ -67,6 +71,41 @@ public class GameEvents implements Listener {
 				}
 			}, 5);
 
+		}
+	}
+	
+	@EventHandler
+	public void onBlockPlaced(BlockPlaceEvent e) {
+		if(e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+			e.getBlock().setMetadata("skywars_player_placed", new FixedMetadataValue(plugin, true));
+		}
+	}
+	
+	@EventHandler
+	public void onBlockDamage(BlockDamageEvent e) {
+		if(e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+			if(!e.getBlock().hasMetadata("skywars_player_placed")) {
+				Arena arena = plugin.arenaProvider.getArenaById(e.getBlock().getWorld().getUID());
+				if(arena != null) {
+					if(arena.isInsideMidSpawn(e.getBlock().getLocation())) {
+						e.setCancelled(true);
+					}
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent e) {
+		if(e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+			if(!e.getBlock().hasMetadata("skywars_player_placed")) {
+				Arena arena = plugin.arenaProvider.getArenaById(e.getBlock().getWorld().getUID());
+				if(arena != null) {
+					if(arena.isInsideMidSpawn(e.getBlock().getLocation())) {
+						e.setCancelled(true);
+					}
+				}
+			}
 		}
 	}
 	

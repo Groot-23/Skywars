@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -19,7 +21,7 @@ public class ResourceExtractor {
 	 * @param dest Path to the destination
 	 * @param relativeResPath If set to true, the relative path from resPath will be used
 	 */
-	public static void extractResources(String resPath, Path dest, boolean relativeResPath) {
+	public static void extractResources(String resPath, Path dest, boolean relativeResPath, boolean replace) {
 		File jarFile;
 		try {
 			jarFile = new File(ResourceExtractor.class.getProtectionDomain().getCodeSource().getLocation().toURI());
@@ -41,12 +43,14 @@ public class ResourceExtractor {
 								Files.createDirectory(dir);
 							} else {
 								Path file = dest.resolve(name);
-								File parent = file.toFile().getParentFile();
-								if(!parent.exists()) {
-									parent.mkdirs();
-								}
-								try(InputStream in = jar.getInputStream(entry)) {
-									Files.copy(in, file);
+								if(!file.toFile().exists() || replace) {
+									File parent = file.toFile().getParentFile();
+									if(!parent.exists()) {
+										parent.mkdirs();
+									}
+									try(InputStream in = jar.getInputStream(entry)) {
+										Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
+									}
 								}
 							}
 						}

@@ -18,7 +18,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.groot_23.skywars.Main;
+import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.game.SkyChest;
+import me.groot_23.skywars.language.LanguageKeys;
+import me.groot_23.skywars.nms.api.NMSnbt;
 import me.groot_23.skywars.util.Util;
 
 public class Arena {
@@ -87,8 +90,13 @@ public class Arena {
 			player.teleport(midSpawn);
 			Util.resetPlayer(player);
 			ItemStack kitSelector = new ItemStack(Material.CHEST);
+			// set nbt
+			NMSnbt nbt = plugin.nms.getNBT(kitSelector);
+			nbt.setBool(KitEvents.SELECTOR, true);
+			plugin.nms.setNBT(kitSelector, nbt);
+			// set display name
 			ItemMeta kitMeta = kitSelector.getItemMeta();
-			kitMeta.setDisplayName("Kit Selector");
+			kitMeta.setDisplayName(Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.KIT_SELECTOR)));
 			kitSelector.setItemMeta(kitMeta);
 			player.getInventory().setItem(4, kitSelector);
 			plugin.skywarsScoreboard.resetKills(player);
@@ -204,10 +212,9 @@ public class Arena {
 	}
 	
 	public void resetBorder() {
-		System.out.println(midSpawn);
-		System.out.println(mapRadius);
 		world.getWorldBorder().setCenter(midSpawn);
 		world.getWorldBorder().setSize(2 * mapRadius);
+		world.getWorldBorder().setDamageBuffer(0);
 	}
 	
 	public void shrinkBorder(int seconds) {

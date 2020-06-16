@@ -20,29 +20,32 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
+import me.groot_23.skywars.language.LanguageKeys;
+import me.groot_23.skywars.language.LanguageManager;
+import me.groot_23.skywars.nms.api.NMSnbt;
 import me.groot_23.skywars.util.Util;
 
 public class SkywarsKit {
 	
-	private String displayName;
-	private List<String> description;
-	private List<String> lore;
+	private String name;
 	private Material displayMaterial;
 	private List<ItemStack> startItems;
 	private List<PotionEffect> startEffects;
 	
 	public String getName() {
-		return displayName;
+		return name;
 	}
 	
-	public SkywarsKit(String name, List<String> description, Material material, List<ItemStack> items, List<PotionEffect> effects) {
-		displayName = name;
-		this.description = description;
+	public String getDisplayName(Player player) {
+		LanguageManager lang = Main.getInstance().langManager;
+		return Util.chat(lang.getTranslation(player, "kits." + name + ".name"));
+	}
+	
+	public SkywarsKit(String name, Material material, List<ItemStack> items, List<PotionEffect> effects) {
+		this.name = name;
 		displayMaterial = material;
 		startItems = items;
 		startEffects = effects;
-		
-		initLore();
 	}
 	
 	public void applyToPlayer(Player player) {
@@ -54,22 +57,29 @@ public class SkywarsKit {
 		}
 	}
 	
-	public ItemStack getDisplayItem() {
+	public ItemStack getDisplayItem(Player player) {
+		LanguageManager lang = Main.getInstance().langManager;
 		ItemStack item = new ItemStack(displayMaterial);
+		NMSnbt nbt = Main.getInstance().nms.getNBT(item);
+		nbt.setString("skywars_kit", name);
+		Main.getInstance().nms.setNBT(item, nbt);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(displayName);
-		meta.setLore(lore);
+		meta.setDisplayName(ChatColor.RESET + Util.chat(lang.getTranslation(player,"kits." + name + ".name")));
+		meta.setLore(getLore(player));
 		item.setItemMeta(meta);
 		return item;
 	}
 	
-	private void initLore() {
-		lore = new ArrayList<String>();
-		lore.add(ChatColor.YELLOW + "Beschreibung:");
-		for(String s : description) {
-			lore.add(" - " + s);
+	public List<String> getLore(Player player) {
+		LanguageManager lang = Main.getInstance().langManager;
+		List<String> lore = new ArrayList<String>();
+		String description = lang.getTranslation(player, "kits." + name + ".description");
+		String[] descriptions = description.split("\\n");
+		lore.add(ChatColor.YELLOW + lang.getTranslation(player, LanguageKeys.KIT_DESCRIPTION) + ":");
+		for(String s : descriptions) {
+			lore.add(ChatColor.RESET + " - " + Util.chat(s));
 		}
-		lore.add(ChatColor.YELLOW + "Items:");
+		lore.add(ChatColor.YELLOW + lang.getTranslation(player, LanguageKeys.KIT_ITEMS) + ":");
 		for(ItemStack stack : startItems) {
 			String itemString = stack.getType().toString().toLowerCase().replace("_", " ");
 			if(stack.getAmount() > 1) {
@@ -78,15 +88,16 @@ public class SkywarsKit {
 			if(stack.getItemMeta() instanceof PotionMeta) {
 				itemString += " Effekt: " + ((PotionMeta)stack.getItemMeta()).getBasePotionData().getType().toString().toLowerCase();
 			}
-			lore.add(" - " + itemString);
+			lore.add(ChatColor.RESET + " - " + itemString);
 		}
-		lore.add(ChatColor.YELLOW + "Effekte: ");
+		lore.add(ChatColor.YELLOW + lang.getTranslation(player, LanguageKeys.KIT_EFFECTS) + ":");
 		for(PotionEffect effect : startEffects) {
 			String effectString = effect.getType().getName().toLowerCase();
 			effectString += " x" + effect.getAmplifier();
 			effectString += " " + Util.minuteSeconds(effect.getDuration() / 20);
-			lore.add(" - " + effectString);
+			lore.add(ChatColor.RESET + " - " + effectString);
 		}
+		return lore;
 	}
 	
 	private static ItemStack parseItemSection(ConfigurationSection section) {
@@ -96,7 +107,7 @@ public class SkywarsKit {
 		String type = section.getString("type");
 		Material material = Material.matchMaterial(type);
 		if(material == null) {
-			System.err.println("Ungültiger 'type' für Item: '" + type + "' bei: " + section.getCurrentPath());
+			System.err.println("UngÃ¼ltiger 'type' fÃ¼r Item: '" + type + "' bei: " + section.getCurrentPath());
 		}
 		ItemStack stack = new ItemStack(material);
 		if(section.contains("count")) {
@@ -104,7 +115,7 @@ public class SkywarsKit {
 		}
 		if(section.contains("potion")) {
 			if(!(stack.getItemMeta() instanceof PotionMeta)) {
-				System.err.println("Für das Item '" + type + "' kann kein Potion angegeben werden! Bei: " + section.getCurrentPath());
+				System.err.println("FÃ¼r Item'" + type + "' kann kein Potion angegeben werden! Bei: " + section.getCurrentPath());
 			} else {
 				PotionMeta meta = (PotionMeta)stack.getItemMeta();
 				meta.setBasePotionData(new PotionData(PotionType.valueOf(section.getString("potion").toUpperCase())));
@@ -121,7 +132,7 @@ public class SkywarsKit {
 		}
 		PotionType ptype = PotionType.valueOf(section.getString("potion").toUpperCase());
 		if(ptype == null) {
-			System.err.println("Ungültiger 'type' für Potion: '" + section.getString("potion") + "' bei: " + section.getCurrentPath());
+			System.err.println("UngÃ¼ltiger 'type' fÃ¼r Potion: '" + section.getString("potion") + "' bei: " + section.getCurrentPath());
 		}
 		PotionEffectType type = ptype.getEffectType();
 		if(!section.contains("duration")) {
@@ -143,8 +154,8 @@ public class SkywarsKit {
 			for(String kit : yaml.getKeys(false)) {
 				ConfigurationSection section = yaml.getConfigurationSection(kit);
 				
-				String displayName = section.getString("name");
-				List<String> description = section.getStringList("description");
+//				String displayName = ChatColor.RESET + Util.chat(section.getString("name"));
+//				List<String> description = section.getStringList("description");
 				Material material = Material.matchMaterial(section.getString("material"));
 				
 				List<ItemStack> startItems = new ArrayList<ItemStack>();
@@ -163,7 +174,7 @@ public class SkywarsKit {
 					}
 				}
 				
-				kits.add(new SkywarsKit(displayName, description, material, startItems, startEffects));
+				kits.add(new SkywarsKit(kit, material, startItems, startEffects));
 			}
 			
 		} catch (FileNotFoundException e) {

@@ -2,7 +2,9 @@ package me.groot_23.skywars;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,9 @@ import me.groot_23.skywars.events.GameEvents;
 import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
+import me.groot_23.skywars.language.LanguageManager;
+import me.groot_23.skywars.nms.NMSLoader;
+import me.groot_23.skywars.nms.api.NMS;
 import me.groot_23.skywars.util.ResourceExtractor;
 import me.groot_23.skywars.util.Util;
 import me.groot_23.skywars.world.ArenaProvider;
@@ -37,6 +42,9 @@ public class Main extends JavaPlugin
 	public ArenaProvider arenaProvider;
 	public List<SkywarsKit> kits;
 	public Map<String, SkywarsKit> kitByName;
+	public LanguageManager langManager;
+	public NMS nms;
+	
 	private static Main instance;
 	
 	@Override
@@ -55,6 +63,9 @@ public class Main extends JavaPlugin
 		//lobbyManager = new WorldManager(this);
 		skywarsScoreboard = new SkywarsScoreboard(this);
 		arenaProvider = new ArenaProvider(this);
+		
+		langManager = new LanguageManager("de_de");
+		langManager.loadLanguages(new File(getDataFolder(), "lang"));
 
 		new SWjoin(this);
 		new SWleave(this);
@@ -70,32 +81,18 @@ public class Main extends JavaPlugin
 		new GameEvents(this);
 		new KitEvents(this);
 		
-//		new BukkitRunnable() {
-//			
-//			@Override
-//			public void run() {
-//				World memLeak = Bukkit.createWorld(new WorldCreator("memory_leak"));
-//				Bukkit.unloadWorld(memLeak, true);
-//			}
-//		}.runTaskTimer(this, 60, 100);
+		nms = NMSLoader.loadNMS(this);
 	}
 	
 	public void firstStart() {
 		File resources = Util.getDataPackResources("skywars");
 		if(!resources.exists()) {
 			getLogger().info("[Skywars] Extracting datapack-");
-			ResourceExtractor.extractResources("resources", resources.toPath(), true);
+			ResourceExtractor.extractResources("resources", resources.toPath(), true, false);
 		}
 		saveDefaultConfig();
 		
-		File kitFile = new File(getDataFolder().getAbsolutePath() + File.separator + "kits.yml");
-		if(!kitFile.exists()) {
-			try {
-				Files.copy(getResource("kits.yml"), kitFile.toPath());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		ResourceExtractor.extractResources("resources", getDataFolder().toPath(), true, false);
 	}
 	
 	public static Main getInstance() {

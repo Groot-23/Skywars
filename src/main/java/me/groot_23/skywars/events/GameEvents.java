@@ -26,6 +26,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.EnchantingInventory;
@@ -33,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.util.SWconstants;
@@ -168,4 +170,12 @@ public class GameEvents implements Listener {
 		}
 	}	
 	
+	@EventHandler
+	public void onLeaveClick(PlayerInteractEvent e) {
+		if(e.getItem() != null) {
+			if(new NBTItem(e.getItem()).hasKey("skywars_leave")) {
+				e.getPlayer().performCommand("swleave");
+			}
+		}
+	}
 }

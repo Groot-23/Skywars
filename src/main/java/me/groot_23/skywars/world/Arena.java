@@ -17,11 +17,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.game.SkyChest;
 import me.groot_23.skywars.language.LanguageKeys;
-import me.groot_23.skywars.nms.api.NMSnbt;
 import me.groot_23.skywars.util.Util;
 
 public class Arena {
@@ -89,16 +89,30 @@ public class Arena {
 		if(allowJoin) {
 			player.teleport(midSpawn);
 			Util.resetPlayer(player);
+			// =========== Kit slector item ======================
 			ItemStack kitSelector = new ItemStack(Material.CHEST);
 			// set nbt
-			NMSnbt nbt = plugin.nms.getNBT(kitSelector);
-			nbt.setBool(KitEvents.SELECTOR, true);
-			plugin.nms.setNBT(kitSelector, nbt);
+			NBTItem nbt = new NBTItem(kitSelector);
+			nbt.setBoolean(KitEvents.SELECTOR, true);
+			kitSelector = nbt.getItem();
 			// set display name
 			ItemMeta kitMeta = kitSelector.getItemMeta();
 			kitMeta.setDisplayName(Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.KIT_SELECTOR)));
 			kitSelector.setItemMeta(kitMeta);
 			player.getInventory().setItem(4, kitSelector);
+			
+			// =========== Lobby leave Item =====================
+			ItemStack lobbyLeave = new ItemStack(Material.MAGMA_CREAM);
+			// set nbt
+			nbt = new NBTItem(lobbyLeave);
+			nbt.setBoolean("skywars_leave", true);
+			lobbyLeave = nbt.getItem();
+			// set display name
+			ItemMeta leaveMeta = lobbyLeave.getItemMeta();
+			leaveMeta.setDisplayName(Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.LEAVE)));
+			lobbyLeave.setItemMeta(leaveMeta);
+			player.getInventory().setItem(8, lobbyLeave);
+			
 			plugin.skywarsScoreboard.resetKills(player);
 			plugin.skywarsScoreboard.init(player);
 			plugin.skywarsScoreboard.initPreGame(player, maxPlayers, 30, mapName);

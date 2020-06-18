@@ -19,6 +19,7 @@ game:
   fight_begins: "The fight begins!"
 
   victory: "WON!"
+  leave: "Leave game"
 
   no_teaming: "Teaming is forbidden!!!"
 

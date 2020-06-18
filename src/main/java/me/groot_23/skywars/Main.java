@@ -28,8 +28,6 @@ import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
 import me.groot_23.skywars.language.LanguageManager;
-import me.groot_23.skywars.nms.NMSLoader;
-import me.groot_23.skywars.nms.api.NMS;
 import me.groot_23.skywars.util.ResourceExtractor;
 import me.groot_23.skywars.util.Util;
 import me.groot_23.skywars.world.ArenaProvider;
@@ -43,7 +41,7 @@ public class Main extends JavaPlugin
 	public List<SkywarsKit> kits;
 	public Map<String, SkywarsKit> kitByName;
 	public LanguageManager langManager;
-	public NMS nms;
+//	public NMS nms;
 	
 	private static Main instance;
 	
@@ -81,7 +79,8 @@ public class Main extends JavaPlugin
 		new GameEvents(this);
 		new KitEvents(this);
 		
-		nms = NMSLoader.loadNMS(this);
+		
+//		nms = NMSLoader.loadNMS(this);
 	}
 	
 	public void firstStart() {

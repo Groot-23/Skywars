@@ -30,4 +30,6 @@ public class LanguageKeys {
 	public static final String KIT_DESCRIPTION = "kit.description";
 	public static final String KIT_ITEMS       = "kit.items";
 	public static final String KIT_EFFECTS     = "kit.effects";
+	
+	public static final String LEAVE = "game.leave";
 }

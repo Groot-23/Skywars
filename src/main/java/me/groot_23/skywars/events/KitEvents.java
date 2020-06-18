@@ -15,10 +15,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.SkywarsKit;
 import me.groot_23.skywars.language.LanguageKeys;
-import me.groot_23.skywars.nms.api.NMSnbt;
 import me.groot_23.skywars.util.Util;
 
 public class KitEvents implements Listener {
@@ -66,8 +66,8 @@ public class KitEvents implements Listener {
 					// set selected
 					if (player.hasMetadata("skywarsKit")) {
 						String selected = player.getMetadata("skywarsKit").get(0).asString();
-						NMSnbt nbt = plugin.nms.getNBT(stack);
-						if (nbt.contains("skywars_kit")) {
+						NBTItem nbt = new NBTItem(stack);
+						if (nbt.hasKey("skywars_kit")) {
 							String kitName = nbt.getString("skywars_kit");
 							if (kitName.equals(selected)) {
 								ItemMeta meta = stack.getItemMeta();
@@ -96,8 +96,8 @@ public class KitEvents implements Listener {
 			if (e.getCurrentItem().getType() == Material.BARRIER) {
 				e.getWhoClicked().closeInventory();
 			} else {
-				NMSnbt nbt = plugin.nms.getNBT(e.getCurrentItem());
-				if (nbt.contains("skywars_kit")) {
+				NBTItem nbt = new NBTItem(e.getCurrentItem());
+				if (nbt.hasKey("skywars_kit")) {
 					String kitName = nbt.getString("skywars_kit");
 					SkywarsKit kit = plugin.kitByName.get(kitName);
 					if (kit != null) {
@@ -130,7 +130,7 @@ public class KitEvents implements Listener {
 	@EventHandler
 	public void clickToOpen(PlayerInteractEvent e) {
 		if (e.getItem() != null) {
-			if (plugin.nms.getNBT(e.getItem()).contains(SELECTOR)) {
+			if (new NBTItem(e.getItem()).hasKey(SELECTOR)) {
 				openGui(e.getPlayer());
 			}
 		}
@@ -139,7 +139,7 @@ public class KitEvents implements Listener {
 	@EventHandler
 	public void preventDrop(PlayerDropItemEvent e) {
 		ItemStack stack = e.getItemDrop().getItemStack();
-		if (plugin.nms.getNBT(stack).contains(SELECTOR)) {
+		if (new NBTItem(stack).hasKey(SELECTOR)) {
 			e.setCancelled(true);
 		}
 	}

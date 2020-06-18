@@ -20,9 +20,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.language.LanguageManager;
-import me.groot_23.skywars.nms.api.NMSnbt;
 import me.groot_23.skywars.util.Util;
 
 public class SkywarsKit {
@@ -60,9 +60,9 @@ public class SkywarsKit {
 	public ItemStack getDisplayItem(Player player) {
 		LanguageManager lang = Main.getInstance().langManager;
 		ItemStack item = new ItemStack(displayMaterial);
-		NMSnbt nbt = Main.getInstance().nms.getNBT(item);
+		NBTItem nbt = new NBTItem(item);
 		nbt.setString("skywars_kit", name);
-		Main.getInstance().nms.setNBT(item, nbt);
+		item = nbt.getItem();
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.RESET + Util.chat(lang.getTranslation(player,"kits." + name + ".name")));
 		meta.setLore(getLore(player));

@@ -19,12 +19,13 @@ game:
   fight_begins: "Der Kampf beginnt!"
 
   victory: "HAT GEWONNEN!"
+  leave: "Spiel verlassen"
 
   no_teaming: "Teaming ist verboten!!!"
 
   event:
     start: "Start"
-    refill: "Kisten Befüllung"
+    refill: "Neue Kisten"
     next: "Nächstes Event"
 
 map:

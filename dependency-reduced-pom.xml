@@ -54,6 +54,10 @@
               <pattern>de.tr7zw.changeme.nbtapi</pattern>
               <shadedPattern>me.groot_23.skywars.libs.de.tr7zw.changeme.nbtapi</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>me.groot_23.ming</pattern>
+              <shadedPattern>me.groot_23.skywars.libs.mingapi</shadedPattern>
+            </relocation>
           </relocations>
         </configuration>
       </plugin>
@@ -67,6 +71,13 @@
     <repository>
       <id>codemc-repo</id>
       <url>https://repo.codemc.org/repository/maven-public/</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <id>MinG</id>
+      <url>https://github.com/LuCpp-Stackwalker/MinG/raw/mvn-repo</url>
     </repository>
   </repositories>
   <dependencies>

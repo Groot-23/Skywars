@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,6 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.groot_23.ming.config.ItemSerializer;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.language.LanguageManager;
 import me.groot_23.skywars.util.Util;
@@ -81,14 +83,21 @@ public class SkywarsKit {
 		}
 		lore.add(ChatColor.YELLOW + lang.getTranslation(player, LanguageKeys.KIT_ITEMS) + ":");
 		for(ItemStack stack : startItems) {
-			String itemString = stack.getType().toString().toLowerCase().replace("_", " ");
-			if(stack.getAmount() > 1) {
-				itemString += " x" + stack.getAmount();
-			}
-			if(stack.getItemMeta() instanceof PotionMeta) {
-				itemString += " Effekt: " + ((PotionMeta)stack.getItemMeta()).getBasePotionData().getType().toString().toLowerCase();
-			}
-			lore.add(ChatColor.RESET + " - " + itemString);
+			stack.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+			lore.add(ChatColor.RESET + " - " + ItemSerializer.asString(stack));
+			
+			Main.getInstance().getConfig().set("test_item_stack", stack);
+			System.out.println(Main.getInstance().getConfig().getItemStack("test_item_stack").toString());
+			Main.getInstance().saveConfig();
+			
+//			String itemString = stack.getType().toString().toLowerCase().replace("_", " ");
+//			if(stack.getAmount() > 1) {
+//				itemString += " x" + stack.getAmount();
+//			}
+//			if(stack.getItemMeta() instanceof PotionMeta) {
+//				itemString += " Effekt: " + ((PotionMeta)stack.getItemMeta()).getBasePotionData().getType().toString().toLowerCase();
+//			}
+//			lore.add(ChatColor.RESET + " - " + itemString);
 		}
 		lore.add(ChatColor.YELLOW + lang.getTranslation(player, LanguageKeys.KIT_EFFECTS) + ":");
 		for(PotionEffect effect : startEffects) {

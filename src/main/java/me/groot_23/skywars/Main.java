@@ -12,10 +12,15 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.skywars.commands.SWjoin;
+import me.groot_23.ming.MinGapi;
+import me.groot_23.ming.MiniGame;
+import me.groot_23.ming.gui.GuiRunnable;
 import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
 import me.groot_23.skywars.commands.SWleave;
@@ -27,6 +32,7 @@ import me.groot_23.skywars.events.GameEvents;
 import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
+import me.groot_23.skywars.game.SkywarsGame;
 import me.groot_23.skywars.language.LanguageManager;
 import me.groot_23.skywars.util.ResourceExtractor;
 import me.groot_23.skywars.util.Util;
@@ -38,10 +44,12 @@ public class Main extends JavaPlugin
 	//public GameManager gameManager;
 	public SkywarsScoreboard skywarsScoreboard;
 	public ArenaProvider arenaProvider;
-	public List<SkywarsKit> kits;
-	public Map<String, SkywarsKit> kitByName;
+	public static List<SkywarsKit> kits;
+	public static Map<String, SkywarsKit> kitByName;
 	public LanguageManager langManager;
 //	public NMS nms;
+
+	public static MiniGame game;
 	
 	private static Main instance;
 	
@@ -79,8 +87,8 @@ public class Main extends JavaPlugin
 		new GameEvents(this);
 		new KitEvents(this);
 		
-		
-//		nms = NMSLoader.loadNMS(this);
+		game = new SkywarsGame(this);
+
 	}
 	
 	public void firstStart() {

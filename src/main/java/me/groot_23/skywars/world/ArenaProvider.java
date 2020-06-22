@@ -40,7 +40,7 @@ public class ArenaProvider {
 	
 	public ArenaProvider(Main plugin) {
 		this.plugin = plugin;
-		update();
+//		update();
 	}
 	
 	public Arena getArenaById(UUID uid) {

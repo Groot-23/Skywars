@@ -1,13 +1,5 @@
 package me.groot_23.skywars.events;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -27,54 +19,53 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.groot_23.ming.events.MGameJoinEvent;
+import me.groot_23.ming.gui.GuiItem;
+import me.groot_23.ming.gui.GuiItem.UseAction;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.language.LanguageKeys;
+import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
 import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
 import me.groot_23.skywars.world.Arena;
 
 public class GameEvents implements Listener {
-	
+
 	private Main plugin;
-	
+
 	public GameEvents(Main plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.plugin = plugin;
 	}
-	
-	
+
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
-		if(e.getEntity().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+		if (e.getEntity().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			Player killer = e.getEntity().getKiller();
-			if(killer != null) {
-				if(killer.getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+			if (killer != null) {
+				if (killer.getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 					plugin.skywarsScoreboard.addKill(killer);
 				}
 			}
-			Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){
-			    @Override
-			    public void run(){
-			    	e.getEntity().setGameMode(GameMode.SPECTATOR);
-			    	e.getEntity().spigot().respawn();
-			    }
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				@Override
+				public void run() {
+					e.getEntity().setGameMode(GameMode.SPECTATOR);
+					e.getEntity().spigot().respawn();
+				}
 			}, 1);
 
 		}
 	}
-	
-	
+
 	@EventHandler
 	public void onWorldLeave(PlayerChangedWorldEvent e) {
-		if(e.getFrom().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+		if (e.getFrom().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			Player p = e.getPlayer();
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 				public void run() {
@@ -86,96 +77,116 @@ public class GameEvents implements Listener {
 
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockPlaced(BlockPlaceEvent e) {
-		if(e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+		if (e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			e.getBlock().setMetadata("skywars_player_placed", new FixedMetadataValue(plugin, true));
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockDamage(BlockDamageEvent e) {
-		if(e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-			if(!e.getBlock().hasMetadata("skywars_player_placed")) {
+		if (e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+			if (!e.getBlock().hasMetadata("skywars_player_placed")) {
 				Arena arena = plugin.arenaProvider.getArenaById(e.getBlock().getWorld().getUID());
-				if(arena != null) {
-					if(arena.isInsideMidSpawn(e.getBlock().getLocation())) {
+				if (arena != null) {
+					if (arena.isInsideMidSpawn(e.getBlock().getLocation())) {
 						e.setCancelled(true);
 					}
 				}
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
-		if(e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-			if(!e.getBlock().hasMetadata("skywars_player_placed")) {
+		if (e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+			if (!e.getBlock().hasMetadata("skywars_player_placed")) {
 				Arena arena = plugin.arenaProvider.getArenaById(e.getBlock().getWorld().getUID());
-				if(arena != null) {
-					if(arena.isInsideMidSpawn(e.getBlock().getLocation())) {
+				if (arena != null) {
+					if (arena.isInsideMidSpawn(e.getBlock().getLocation())) {
 						e.setCancelled(true);
 					}
 				}
 			}
 		}
 	}
-	
-	
+
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
-		if(e.getPlayer().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+		if (e.getPlayer().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			Arena arena = plugin.arenaProvider.getArenaById(e.getPlayer().getWorld().getUID());
-			if(arena != null) {
+			if (arena != null) {
 				e.setRespawnLocation(arena.getMidSpawn());
 			} else {
 				e.setRespawnLocation(e.getPlayer().getWorld().getSpawnLocation());
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void preventSpawn(CreatureSpawnEvent e) {
 		World world = e.getEntity().getWorld();
-		if(!world.getMetadata("skywars_edit_world").isEmpty() || world.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-			if(e.getSpawnReason() == SpawnReason.NATURAL) {
+		if (!world.getMetadata("skywars_edit_world").isEmpty()
+				|| world.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+			if (e.getSpawnReason() == SpawnReason.NATURAL) {
 				e.setCancelled(true);
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void lapisOpen(InventoryOpenEvent e) {
-		if(e.getInventory().getType() == InventoryType.ENCHANTING) {
+		if (e.getInventory().getType() == InventoryType.ENCHANTING) {
 			EnchantingInventory inv = (EnchantingInventory) e.getInventory();
 			inv.setSecondary(new ItemStack(Material.LAPIS_LAZULI, 64));
 		}
 	}
-	
+
 	@EventHandler
 	public void lapisClose(InventoryCloseEvent e) {
-		if(e.getInventory().getType() == InventoryType.ENCHANTING) {
+		if (e.getInventory().getType() == InventoryType.ENCHANTING) {
 			EnchantingInventory inv = (EnchantingInventory) e.getInventory();
 			inv.setSecondary(null);
 		}
 	}
-	
+
 	@EventHandler
 	public void lapisClick(InventoryClickEvent e) {
-		if(e.getInventory().getType() == InventoryType.ENCHANTING) {
-			if(e.getCurrentItem().getType() == Material.LAPIS_LAZULI) {
+		if (e.getInventory().getType() == InventoryType.ENCHANTING) {
+			if (e.getCurrentItem().getType() == Material.LAPIS_LAZULI) {
 				e.setCancelled(true);
 			}
 		}
-	}	
-	
+	}
+
 	@EventHandler
 	public void onLeaveClick(PlayerInteractEvent e) {
-		if(e.getItem() != null) {
-			if(new NBTItem(e.getItem()).hasKey("skywars_leave")) {
+		if (e.getItem() != null) {
+			if (new NBTItem(e.getItem()).hasKey("skywars_leave")) {
 				e.getPlayer().performCommand("swleave");
 			}
 		}
+	}
+
+	@EventHandler
+	public void onJoin(MGameJoinEvent e) {
+		e.getPlayer().getInventory().clear();
+		Player player = e.getPlayer();
+
+		GuiItem kitSelector = Main.game.createGuiItem(Material.CHEST,
+				Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.KIT_SELECTOR)));
+		kitSelector.addActionUseRunnable("openGui", UseAction.RIGHT_CLICK);
+		player.getInventory().setItem(4, kitSelector.getItem());
+
+		GuiItem lobbyLeave = Main.game.createGuiItem(Material.MAGMA_CREAM,
+				Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.LEAVE)));
+		lobbyLeave.addActionUse("swleave", UseAction.RIGHT_CLICK, UseAction.LEFT_CLICK);
+		player.getInventory().setItem(8, lobbyLeave.getItem());
+
+		SkywarsScoreboard.resetKills(player);
+		SkywarsScoreboard.init(player);
+		SkywarsScoreboard.initPreGame(player, 2, 30, "skywars_wueste");
 	}
 }

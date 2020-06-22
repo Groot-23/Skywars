@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.groot_23.ming.MinGapi;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.game.SkyChest;
@@ -89,6 +90,9 @@ public class Arena {
 		if(allowJoin) {
 			player.teleport(midSpawn);
 			Util.resetPlayer(player);
+			
+			MinGapi.test(player);
+			
 			// =========== Kit slector item ======================
 			ItemStack kitSelector = new ItemStack(Material.CHEST);
 			// set nbt

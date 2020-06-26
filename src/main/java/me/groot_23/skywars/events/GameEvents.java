@@ -27,12 +27,12 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.groot_23.ming.events.MGameJoinEvent;
 import me.groot_23.ming.gui.GuiItem;
 import me.groot_23.ming.gui.GuiItem.UseAction;
+import me.groot_23.ming.world.Arena;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
 import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
-import me.groot_23.skywars.world.Arena;
 
 public class GameEvents implements Listener {
 
@@ -49,7 +49,7 @@ public class GameEvents implements Listener {
 			Player killer = e.getEntity().getKiller();
 			if (killer != null) {
 				if (killer.getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-					plugin.skywarsScoreboard.addKill(killer);
+					SkywarsScoreboard.addKill(killer);
 				}
 			}
 			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
@@ -89,7 +89,7 @@ public class GameEvents implements Listener {
 	public void onBlockDamage(BlockDamageEvent e) {
 		if (e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			if (!e.getBlock().hasMetadata("skywars_player_placed")) {
-				Arena arena = plugin.arenaProvider.getArenaById(e.getBlock().getWorld().getUID());
+				Arena arena = Main.game.getArenaProvider().getArenaById(e.getBlock().getWorld().getUID());
 				if (arena != null) {
 					if (arena.isInsideMidSpawn(e.getBlock().getLocation())) {
 						e.setCancelled(true);
@@ -103,7 +103,7 @@ public class GameEvents implements Listener {
 	public void onBlockBreak(BlockBreakEvent e) {
 		if (e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			if (!e.getBlock().hasMetadata("skywars_player_placed")) {
-				Arena arena = plugin.arenaProvider.getArenaById(e.getBlock().getWorld().getUID());
+				Arena arena = Main.game.getArenaProvider().getArenaById(e.getBlock().getWorld().getUID());
 				if (arena != null) {
 					if (arena.isInsideMidSpawn(e.getBlock().getLocation())) {
 						e.setCancelled(true);
@@ -116,7 +116,7 @@ public class GameEvents implements Listener {
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
 		if (e.getPlayer().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-			Arena arena = plugin.arenaProvider.getArenaById(e.getPlayer().getWorld().getUID());
+			Arena arena = Main.game.getArenaProvider().getArenaById(e.getPlayer().getWorld().getUID());
 			if (arena != null) {
 				e.setRespawnLocation(arena.getMidSpawn());
 			} else {

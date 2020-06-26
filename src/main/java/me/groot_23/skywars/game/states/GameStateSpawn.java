@@ -14,6 +14,7 @@ import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
 import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
+import me.groot_23.skywars.world.SkyArena;
 
 public class GameStateSpawn extends GameState<SkywarsData>{
 
@@ -22,7 +23,7 @@ public class GameStateSpawn extends GameState<SkywarsData>{
 	}
 	
 	int counter = 10;
-	Arena arena;
+	SkyArena arena;
 	World world;
 	
 	@Override
@@ -42,7 +43,7 @@ public class GameStateSpawn extends GameState<SkywarsData>{
 					LanguageKeys.EVENT_START, counter, data.deathMatchBegin, SWconstants.LENGTH_OF_GAME,
 					arena.getMapName());
 		}
-		arena.removeArea(arena.getMidSpawn(), 20, 5);
+		arena.removeLobby();
 		arena.disableJoin();
 	}
 

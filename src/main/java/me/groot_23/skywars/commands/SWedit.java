@@ -34,7 +34,7 @@ public class SWedit implements CommandExecutor, TabCompleter{
 		List<String> list = new ArrayList<String>();
 		if(args.length == 1) {
 //			for(String s : plugin.lobbyManager.getRegisteredWorlds()) {
-			for(String s : plugin.arenaProvider.getRegisteredWorlds()) {
+			for(String s : Main.game.getArenaProvider().getRegisteredWorlds()) {
 				if(s.startsWith(args[0]))
 					list.add(s);
 			}
@@ -45,16 +45,16 @@ public class SWedit implements CommandExecutor, TabCompleter{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg2, String[] args) {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler können diesen Befehl ausführen");
+			sender.sendMessage("Nur Spieler kï¿½nnen diesen Befehl ausfï¿½hren");
 			return true;
 		}
 		Player player = (Player) sender;
 		if(!sender.hasPermission("skywars.edit")) {
-			player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.edit"));
+			player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszufï¿½hren! Benï¿½tigte Berechtigung: skywars.edit"));
 			return true;
 		}
 		if(args.length == 0) {
-			player.sendMessage(Util.chat("&cGib die Welt an, die du bearbeiten möchtest"));
+			player.sendMessage(Util.chat("&cGib die Welt an, die du bearbeiten mï¿½chtest"));
 			return true;
 		}
 		if(!plugin.getConfig().contains("worlds." + args[0])) {

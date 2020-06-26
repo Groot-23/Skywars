@@ -25,7 +25,7 @@ public class StopLobbyLeave implements Listener {
 	private void stopWorld(World w) {
 		// if world is lobby
 		if (w.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-			plugin.arenaProvider.stopLobby(w);
+			Main.game.getArenaProvider().stopArena(w);
 			System.out.println("[Skywars] lobby stopped: " + w.getName());
 		}
 		// if world is edited

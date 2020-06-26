@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.groot_23.ming.gui.GuiItem;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.SkywarsKit;
 import me.groot_23.skywars.language.LanguageKeys;
@@ -43,20 +44,18 @@ public class KitEvents implements Listener {
 
 		for (int y = 0; y <= 4; y += 4) {
 			for (int x = 0; x < 9; x++) {
-				inv.setItem(9 * y + x, new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
+				inv.setItem(9 * y + x, Main.game.createGuiItem(Material.BLACK_STAINED_GLASS_PANE).getItem());
 			}
 		}
 		for (int y = 1; y < 4; y++) {
 			for (int x = 0; x <= 8; x += 8) {
-				inv.setItem(9 * y + x, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
+				inv.setItem(9 * y + x, Main.game.createGuiItem(Material.WHITE_STAINED_GLASS_PANE).getItem());
 			}
 		}
 
-		ItemStack leaveItem = new ItemStack(Material.BARRIER);
-		ItemMeta leaveItemMeta = leaveItem.getItemMeta();
-		leaveItemMeta.setDisplayName("Kit Auswahl verlassen");
-		leaveItem.setItemMeta(leaveItemMeta);
-		inv.setItem(9 * 4 + 4, leaveItem);
+		GuiItem leaveItem = Main.game.createGuiItem(Material.BARRIER,  "Kit Auswahl verlassen");
+		leaveItem.addActionClickRunnable("ming_gui_close");
+		inv.setItem(9 * 4 + 4, leaveItem.getItem());
 
 		int i = 0;
 		for (int y = 1; y < 4; y++) {

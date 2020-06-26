@@ -3,6 +3,7 @@ package me.groot_23.skywars.game.states;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -14,10 +15,11 @@ import me.groot_23.ming.world.Arena;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.SkywarsKit;
 import me.groot_23.skywars.game.SkywarsData;
-import me.groot_23.skywars.game.GameState.Victory;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
+import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
+import me.groot_23.skywars.world.SkyArena;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -27,21 +29,23 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 		super(state);
 	}
 	
-	int counter = 10;
+	int counter;
 	int refillCounter;
 	int dynamicRefillTime;
 	int deathMatchCounter;
-	Arena arena;
+	SkyArena arena;
 	World world;
 	BossBar bossbar;
 	
 	@Override
 	protected void onStart() {
+		counter = SWconstants.LENGTH_OF_GAME;
 		refillCounter = data.refillTime;
 		dynamicRefillTime = refillCounter;
 		deathMatchCounter = data.deathMatchBegin;
 		
 		arena = data.arena;
+		arena.removeGlassSpawns();
 		world = data.arena.getWorld();
 		bossbar = Bukkit.createBossBar(
 				Util.chat(Main.game.getDefualtTranslation(LanguageKeys.BOSSBAR_TITLE)),
@@ -55,14 +59,6 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 			
 			Main.game.applyKitToPlayer(player);
 			
-//			SkywarsKit kit = null;		
-//			if (player.hasMetadata("skywarsKit")) {
-//				kit = Main.kitByName.get(player.getMetadata("skywarsKit").get(0).asString());
-//			}
-//			if (kit == null) {
-//				kit = Main.kits.get(0);
-//			}
-//			kit.applyToPlayer(player);
 		}
 	}
 
@@ -85,11 +81,11 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 			bossbar.removeAll();
 			return new GameStateVictory(this, potentialWinner);
 		}
-//		arena.updateChestTimer(refillCounter);
+		arena.updateChestTimer(refillCounter);
 		if (refillCounter <= 0) {
 			dynamicRefillTime += data.refillTimeChange;
 			refillCounter = dynamicRefillTime;
-//			arena.refillChests();
+			arena.refillChests();
 		}
 		if (deathMatchCounter == 1) {
 			arena.shrinkBorder(data.deathMatchBorderShrinkTime);

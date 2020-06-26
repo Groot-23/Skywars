@@ -20,8 +20,8 @@ public class GameStateLobby extends GameState<SkywarsData>{
 	
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
+		data.arena.initBorder();
+		data.arena.refillChests();
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package me.groot_23.skywars.game;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -11,6 +12,7 @@ import me.groot_23.ming.gui.GuiRunnable;
 import me.groot_23.ming.world.Arena;
 import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.game.states.GameStateLobby;
+import me.groot_23.skywars.world.SkyArena;
 
 public class SkywarsGame extends MiniGame {
 
@@ -21,13 +23,18 @@ public class SkywarsGame extends MiniGame {
 	@Override
 	public GameState<?> getStartingState(Arena arena) {
 		SkywarsData data = new SkywarsData();
-		data.arena = arena;
-		data.deathMatchBegin = 30;
-		data.deathMatchBorderShrinkTime = 10;
-		data.refillTime = 20;
-		data.refillTimeChange = 1;
+		data.arena = (SkyArena) arena;
+		data.deathMatchBegin = plugin.getConfig().getInt("deathMatchBegin");
+		data.deathMatchBorderShrinkTime = plugin.getConfig().getInt("deathMatchBorderShrinkTime");
+		data.refillTime = plugin.getConfig().getInt("refillTime");
+		data.refillTimeChange = plugin.getConfig().getInt("refillTimeChange");
 
 		return new GameStateLobby(data);
+	}
+	
+	@Override
+	public Arena createArena(World world, String map) {
+		return new SkyArena(this, world, map);
 	}
 
 	@Override

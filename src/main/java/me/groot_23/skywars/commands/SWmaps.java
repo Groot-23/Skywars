@@ -54,7 +54,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 					list.add(f.getName());
 				}
 			} else if (args[0].equals("remove")) {
-				for (String s : plugin.arenaProvider.getRegisteredWorlds()) {
+				for (String s : Main.game.getArenaProvider().getRegisteredWorlds()) {
 					if (s.startsWith(args[1]))
 						list.add(s);
 				}
@@ -80,7 +80,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg2, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler können diesen Befehl ausführen");
+			sender.sendMessage("Nur Spieler kï¿½nnen diesen Befehl ausfï¿½hren");
 			return true;
 		}
 		Player player = (Player) sender;
@@ -93,12 +93,12 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 		if (mode.equals("register")) {
 			if (!sender.hasPermission("skywars.maps.register")) {
 				player.sendMessage(Util.chat(
-						"&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.register"));
+						"&cDu hast nicht die Berechtigung, diesen Befehl auszufï¿½hren! Benï¿½tigte Berechtigung: skywars.maps.register"));
 				return true;
 			}
 			// get world
 			if (args.length == 1) {
-				player.sendMessage(Util.chat("&cDu musst die Welt angeben, die du registrieren möchtest"));
+				player.sendMessage(Util.chat("&cDu musst die Welt angeben, die du registrieren mï¿½chtest"));
 				return false;
 			}
 			String world = args[1];
@@ -113,7 +113,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 		} else if (mode.equals("list")) {
 			if (!sender.hasPermission("skywars.maps.list")) {
 				player.sendMessage(Util.chat(
-						"&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.list"));
+						"&cDu hast nicht die Berechtigung, diesen Befehl auszufï¿½hren! Benï¿½tigte Berechtigung: skywars.maps.list"));
 				return true;
 			}
 
@@ -134,12 +134,12 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 		} else if (mode.equals("remove")) {
 			if (!sender.hasPermission("skywars.maps.remove")) {
 				player.sendMessage(Util.chat(
-						"&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.remove"));
+						"&cDu hast nicht die Berechtigung, diesen Befehl auszufï¿½hren! Benï¿½tigte Berechtigung: skywars.maps.remove"));
 				return true;
 			}
 
 			if (args.length == 1) {
-				player.sendMessage(Util.chat("&cDu musst die Welt angeben, die du entfernen möchtest"));
+				player.sendMessage(Util.chat("&cDu musst die Welt angeben, die du entfernen mï¿½chtest"));
 				return false;
 			}
 			String world = args[1];
@@ -158,7 +158,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 		} else if (mode.equals("set")) {
 			if (!sender.hasPermission("skywars.maps.set")) {
 				player.sendMessage(Util.chat(
-						"&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.set"));
+						"&cDu hast nicht die Berechtigung, diesen Befehl auszufï¿½hren! Benï¿½tigte Berechtigung: skywars.maps.set"));
 				return true;
 			}
 			// get world

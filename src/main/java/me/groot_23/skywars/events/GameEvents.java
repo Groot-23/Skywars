@@ -24,6 +24,7 @@ import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.groot_23.ming.MinG;
 import me.groot_23.ming.events.MGameJoinEvent;
 import me.groot_23.ming.gui.GuiItem;
 import me.groot_23.ming.gui.GuiItem.UseAction;
@@ -70,7 +71,7 @@ public class GameEvents implements Listener {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 				public void run() {
 					p.setGameMode(GameMode.ADVENTURE);
-					Util.resetPlayer(p);
+					MinG.resetPlayer(p);
 					p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 				}
 			}, 5);
@@ -174,7 +175,7 @@ public class GameEvents implements Listener {
 	public void onJoin(MGameJoinEvent e) {
 		e.getPlayer().getInventory().clear();
 		Player player = e.getPlayer();
-
+		
 		GuiItem kitSelector = Main.game.createGuiItem(Material.CHEST,
 				Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.KIT_SELECTOR)));
 		kitSelector.addActionUseRunnable("openGui", UseAction.RIGHT_CLICK);

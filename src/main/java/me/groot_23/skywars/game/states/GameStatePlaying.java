@@ -10,6 +10,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
+import me.groot_23.ming.display.BossBarManager;
 import me.groot_23.ming.game.GameState;
 import me.groot_23.ming.world.Arena;
 import me.groot_23.skywars.Main;
@@ -55,7 +56,8 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 		for (Player player : world.getPlayers()) {
 			player.setGameMode(GameMode.SURVIVAL);
 			player.getInventory().clear();
-			bossbar.addPlayer(player);
+			
+			BossBarManager.addPlayer(bossbar, player);
 			
 			Main.game.applyKitToPlayer(player);
 			

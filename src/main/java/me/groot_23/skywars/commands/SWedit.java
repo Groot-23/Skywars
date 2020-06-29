@@ -45,16 +45,16 @@ public class SWedit implements CommandExecutor, TabCompleter{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg2, String[] args) {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler k�nnen diesen Befehl ausf�hren");
+			sender.sendMessage("Nur Spieler können diesen Befehl ausf�hren");
 			return true;
 		}
 		Player player = (Player) sender;
 		if(!sender.hasPermission("skywars.edit")) {
-			player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuf�hren! Ben�tigte Berechtigung: skywars.edit"));
+			player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.edit"));
 			return true;
 		}
 		if(args.length == 0) {
-			player.sendMessage(Util.chat("&cGib die Welt an, die du bearbeiten m�chtest"));
+			player.sendMessage(Util.chat("&cGib die Welt an, die du bearbeiten möchtest"));
 			return true;
 		}
 		if(!plugin.getConfig().contains("worlds." + args[0])) {

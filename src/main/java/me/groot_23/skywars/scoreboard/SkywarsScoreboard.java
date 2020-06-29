@@ -1,24 +1,26 @@
 package me.groot_23.skywars.scoreboard;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import de.tr7zw.changeme.nbtapi.NBTEntity;
+import me.groot_23.ming.display.ScoreboardApi;
 import me.groot_23.ming.kits.Kit;
 import me.groot_23.skywars.Main;
-import me.groot_23.skywars.SkywarsKit;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.util.Util;
 
 public class SkywarsScoreboard {
-	
+
 	public static void init(Player player) {
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		Scoreboard board = manager.getNewScoreboard();
@@ -29,7 +31,7 @@ public class SkywarsScoreboard {
 
 		player.setScoreboard(board);
 	}
-	
+
 	public static void resetKills(Player player) {
 		player.setMetadata("Skywars_kills", new FixedMetadataValue(Main.getInstance(), 0));
 	}
@@ -43,21 +45,11 @@ public class SkywarsScoreboard {
 		System.out.println(kills);
 		ScoreboardApi.setValue(player, "kills", ChatColor.RED + "Kills: " + kills);
 	}
-	
+
 	public static String getKit(Player player) {
-		String kit = null;
-		if (player.hasMetadata("ming_kit")) {
-			Kit skyKit = Main.game.getKit(player.getMetadata("ming_kit").get(0).asString());
-			if (skyKit != null) {
-				kit = skyKit.getDisplayName(player);
-			}
-		}
-		if (kit == null) {
-			kit = Main.game.getDefaultKit().getDisplayName(player);
-		}
-		return kit;
+		return Main.game.getKit(player).getDisplayName(player);
 	}
-	
+
 	public static void initPreGame(Player player, int maxPlayers, int timeLeft, String map) {
 		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 		int playerCount = player.getWorld().getPlayers().size();
@@ -66,30 +58,31 @@ public class SkywarsScoreboard {
 
 		ScoreboardApi.init(objective, "server", null, "map", null, "kit", "time", null, "players", null);
 
-		ScoreboardApi.setValue(player, "players", Integer.toString(playerCount) + "/" + maxPlayers + " "
-				+ Main.game.getTranslation(player, LanguageKeys.PLAYER));
-		ScoreboardApi.setValue(player, "time",
-				Main.game.getTranslation(player, LanguageKeys.TIME_UNTILL_START) + ": " + timeLeft);
+		ScoreboardApi.setValue(player, "players", ChatColor.GOLD + Integer.toString(playerCount) + "/" + ChatColor.WHITE
+				+ maxPlayers + " " + Main.game.getTranslation(player, LanguageKeys.PLAYER));
+		ScoreboardApi.setValue(player, "time", ChatColor.GREEN
+				+ Main.game.getTranslation(player, LanguageKeys.TIME_UNTILL_START) + ":" + ChatColor.WHITE + timeLeft);
 		ScoreboardApi.setValue(player, "kit", ChatColor.LIGHT_PURPLE + "Kit: " + kit);
-		ScoreboardApi.setValue(player, "map", ChatColor.GOLD + "Map: " + ChatColor.WHITE +
-				Main.game.getTranslation(player, "map." + map));
+		ScoreboardApi.setValue(player, "map",
+				ChatColor.GOLD + "Map: " + ChatColor.WHITE + Main.game.getTranslation(player, "map." + map));
 		ScoreboardApi.setValue(player, "server", ChatColor.YELLOW + "Groot23.mcserv.me");
 
 	}
+
 	public static void updatePreGame(World world, int maxPlayers, int timeLeft) {
 		int playerCount = world.getPlayers().size();
 		for (Player player : world.getPlayers()) {
 			String kit = getKit(player);
 
-			ScoreboardApi.setValue(player, "players", Integer.toString(playerCount) + "/" + maxPlayers + " "
-					+ Main.game.getTranslation(player, LanguageKeys.PLAYER));
-			ScoreboardApi.setValue(player, "time",
-					Main.game.getTranslation(player, LanguageKeys.TIME_UNTILL_START) + ": " + timeLeft);
+			ScoreboardApi.setValue(player, "players", ChatColor.GOLD + Integer.toString(playerCount) + "/"
+					+ ChatColor.WHITE + maxPlayers + " " + Main.game.getTranslation(player, LanguageKeys.PLAYER));
+			ScoreboardApi.setValue(player, "time", ChatColor.GREEN
+					+ Main.game.getTranslation(player, LanguageKeys.TIME_UNTILL_START) + ": " + ChatColor.WHITE + timeLeft);
 			ScoreboardApi.setValue(player, "kit", ChatColor.LIGHT_PURPLE + "Kit: " + kit);
 
 		}
 	}
-	
+
 	public static void initGame(Player player, int playersLeft, String nextEvent, int timeTillEvent, int deathMatch,
 			int remainingTime, String map) {
 		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
@@ -100,8 +93,8 @@ public class SkywarsScoreboard {
 				"event", "eventHeader", null, "deathMatch", "remainingTime", null);
 
 		ScoreboardApi.setValue(player, "server", ChatColor.YELLOW + "Groot23.mcserv.me");
-		ScoreboardApi.setValue(player, "map", ChatColor.GOLD + "Map: " + ChatColor.WHITE +
-				Main.game.getTranslation(player, "map." + map));
+		ScoreboardApi.setValue(player, "map",
+				ChatColor.GOLD + "Map: " + ChatColor.WHITE + Main.game.getTranslation(player, "map." + map));
 		ScoreboardApi.setValue(player, "kit", ChatColor.LIGHT_PURPLE + "Kit: " + kit);
 		ScoreboardApi.setValue(player, "playersLeft",
 				Main.game.getTranslation(player, LanguageKeys.PLAYERS_LEFT) + ":  " + playersLeft);
@@ -112,9 +105,10 @@ public class SkywarsScoreboard {
 		ScoreboardApi.setValue(player, "deathMatch",
 				ChatColor.RED + "Death Match:   " + ChatColor.WHITE + Util.minuteSeconds(deathMatch));
 		ScoreboardApi.setValue(player, "remainingTime",
-				ChatColor.AQUA + Main.game.getTranslation(player, LanguageKeys.TIME_LEFT) + ":   "
-						+ ChatColor.WHITE + Util.minuteSeconds(remainingTime));
+				ChatColor.AQUA + Main.game.getTranslation(player, LanguageKeys.TIME_LEFT) + ":   " + ChatColor.WHITE
+						+ Util.minuteSeconds(remainingTime));
 	}
+
 	public static void updateGame(World world, int playersLeft, String nextEvent, int timeTillEvent, int deathMatch,
 			int remainingTime) {
 
@@ -130,8 +124,8 @@ public class SkywarsScoreboard {
 			ScoreboardApi.setValue(player, "deathMatch",
 					ChatColor.RED + "Death Match:   " + ChatColor.WHITE + Util.minuteSeconds(deathMatch));
 			ScoreboardApi.setValue(player, "remainingTime",
-					ChatColor.AQUA + Main.game.getTranslation(player, LanguageKeys.TIME_LEFT) + ":   "
-							+ ChatColor.WHITE + Util.minuteSeconds(remainingTime));
+					ChatColor.AQUA + Main.game.getTranslation(player, LanguageKeys.TIME_LEFT) + ":   " + ChatColor.WHITE
+							+ Util.minuteSeconds(remainingTime));
 
 		}
 	}

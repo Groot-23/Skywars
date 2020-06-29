@@ -36,6 +36,10 @@ commands:
   swset:
     description: Bearbeite die Einstellungen von skywars
     usage: /<command> [refillTime | persistentLobbies | allowDynamic] <value>
+    
+  swkits:
+    description: Bearbeite Kits
+    usage: /<command> [list | create | delete | set] <kit>
 
 permissions:
   skywars.*:

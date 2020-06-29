@@ -40,16 +40,16 @@ public class KitEvents implements Listener {
 
 	public static void openGui(Player player) {
 		Inventory inv = Bukkit.createInventory(player, 45,
-				Util.chat(Main.game.getTranslation(player, LanguageKeys.KIT_SELECTOR)));
+				Main.game.getTranslation(player, LanguageKeys.KIT_SELECTOR));
 
 		for (int y = 0; y <= 4; y += 4) {
 			for (int x = 0; x < 9; x++) {
-				inv.setItem(9 * y + x, Main.game.createGuiItem(Material.BLACK_STAINED_GLASS_PANE).getItem());
+				inv.setItem(9 * y + x, Main.game.createGuiItem(Material.BLACK_STAINED_GLASS_PANE, " ").getItem());
 			}
 		}
 		for (int y = 1; y < 4; y++) {
 			for (int x = 0; x <= 8; x += 8) {
-				inv.setItem(9 * y + x, Main.game.createGuiItem(Material.WHITE_STAINED_GLASS_PANE).getItem());
+				inv.setItem(9 * y + x, Main.game.createGuiItem(Material.WHITE_STAINED_GLASS_PANE, " ").getItem());
 			}
 		}
 
@@ -59,7 +59,7 @@ public class KitEvents implements Listener {
 
 		int i = 0;
 		for (int y = 1; y < 4; y++) {
-			for (int x = 1; x < 9; x++) {
+			for (int x = 1; x < 8; x++) {
 				
 				if(i < Main.game.getKits().size()) {
 					inv.setItem(9 * y + x, Main.game.getKits().get(i).getDisplayItem(player));

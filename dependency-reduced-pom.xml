@@ -73,11 +73,9 @@
       <url>https://repo.codemc.org/repository/maven-public/</url>
     </repository>
     <repository>
-      <snapshots>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
-      <id>MinG</id>
-      <url>https://github.com/LuCpp-Stackwalker/MinG/raw/mvn-repo</url>
+      <id>github</id>
+      <name>GitHub LuCpp-Stackwalker Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/LuCpp-Stackwalker/MinG</url>
     </repository>
   </repositories>
   <dependencies>

@@ -108,13 +108,18 @@
 			<layout>default</layout>
 		</repository>
 		<!-- MinG -->
-		<repository>
+		<!-- <repository>
 			<id>MinG</id>
 			<url>https://github.com/LuCpp-Stackwalker/MinG/raw/mvn-repo</url>
 			<snapshots>
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
+		</repository> -->
+		<repository>
+			<id>github</id>
+			<name>GitHub LuCpp-Stackwalker Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/LuCpp-Stackwalker/MinG</url>
 		</repository>
 	</repositories>
 

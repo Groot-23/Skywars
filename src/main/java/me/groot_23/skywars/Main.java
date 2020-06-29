@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import me.groot_23.skywars.commands.SWjoin;
+import me.groot_23.skywars.commands.SWkits;
 import me.groot_23.ming.MiniGame;
 import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
@@ -40,6 +41,7 @@ public class Main extends JavaPlugin
 	public void onEnable() 
 	{
 		instance = this;
+		game = new SkywarsGame(this);
 		
 		firstStart();
 		
@@ -61,13 +63,12 @@ public class Main extends JavaPlugin
 		new SWchest(this);
 		new SWspawns(this);
 		new SWset(this);
+		new SWkits(game);
 		
 		new StopLobbyLeave(this);
 		new ChestEvents(this);
 		new GameEvents(this);
 		new KitEvents(this);
-		
-		game = new SkywarsGame(this);
 
 	}
 	

@@ -25,7 +25,7 @@ public class GameStateVictory extends GameState<SkywarsData>{
 	public void onStart() {
 		for (Player player : data.arena.getWorld().getPlayers()) {
 			player.sendTitle(Util.chat("&c" + winner.getName()), ChatColor.DARK_PURPLE + 
-					Main.game.getTranslation(player, LanguageKeys.VICTORY), 3, 50, 3);
+					game.getTranslation(player, LanguageKeys.VICTORY), 3, 50, 3);
 			player.setGameMode(GameMode.SPECTATOR);
 		}
 	}

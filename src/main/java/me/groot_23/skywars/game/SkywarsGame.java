@@ -29,7 +29,7 @@ public class SkywarsGame extends MiniGame {
 		data.refillTime = plugin.getConfig().getInt("refillTime");
 		data.refillTimeChange = plugin.getConfig().getInt("refillTimeChange");
 
-		return new GameStateLobby(data);
+		return new GameStateLobby(data, this);
 	}
 	
 	@Override

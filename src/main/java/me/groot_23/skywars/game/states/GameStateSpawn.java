@@ -27,7 +27,7 @@ public class GameStateSpawn extends GameState<SkywarsData>{
 	World world;
 	
 	@Override
-	protected void onStart() {
+	public void onStart() {
 		arena = data.arena;
 		world = data.arena.getWorld();
 		
@@ -53,19 +53,19 @@ public class GameStateSpawn extends GameState<SkywarsData>{
 				data.deathMatchBegin, SWconstants.LENGTH_OF_GAME);
 		if (counter % 10 == 0) {
 			for (Player p : world.getPlayers()) {
-				p.sendMessage(Main.game.getTranslation(p, LanguageKeys.START_IN) +  " " + ChatColor.RED + counter);
+				p.sendMessage(game.getTranslation(p, LanguageKeys.START_IN) +  " " + ChatColor.RED + counter);
 			}
 		}
 		if (counter <= 5) {
 			for (Player p : world.getPlayers()) {
 				if (counter != 0) {
-					p.sendMessage(Main.game.getTranslation(p, LanguageKeys.START_IN) +  " " + ChatColor.RED + counter);
+					p.sendMessage(game.getTranslation(p, LanguageKeys.START_IN) +  " " + ChatColor.RED + counter);
 					p.sendTitle(ChatColor.GREEN + "" + counter, ChatColor.LIGHT_PURPLE + 
-							Main.game.getTranslation(p, LanguageKeys.GET_READY), 3, 14, 3);
+							game.getTranslation(p, LanguageKeys.GET_READY), 3, 14, 3);
 				} else {
-					String started = ChatColor.GREEN + Main.game.getTranslation(p, LanguageKeys.STARTED);
+					String started = ChatColor.GREEN + game.getTranslation(p, LanguageKeys.STARTED);
 					p.sendMessage(started);
-					p.sendTitle(started, ChatColor.LIGHT_PURPLE + Main.game.getTranslation(p, 
+					p.sendTitle(started, ChatColor.LIGHT_PURPLE + game.getTranslation(p, 
 							LanguageKeys.FIGHT_BEGINS), 3, 20, 3);
 					// remove falldamage
 					p.setFallDistance(-1000);

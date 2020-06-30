@@ -8,7 +8,10 @@ import java.util.Map;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.groot_23.skywars.commands.SWjoin;
 import me.groot_23.skywars.commands.SWkits;
+import me.groot_23.skywars.commands.SWlang;
 import me.groot_23.ming.MiniGame;
+import me.groot_23.ming.commands.KitCommands;
+import me.groot_23.ming.commands.LangCommand;
 import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
 import me.groot_23.skywars.commands.SWleave;
@@ -63,7 +66,12 @@ public class Main extends JavaPlugin
 		new SWchest(this);
 		new SWspawns(this);
 		new SWset(this);
-		new SWkits(game);
+		
+		new KitCommands(game, "swkits", "skywars.kits");
+		new LangCommand(game, "swlang", "skywars.lang");
+		
+//		new SWkits(game);
+//		new SWlang(game);
 		
 		new StopLobbyLeave(this);
 		new ChestEvents(this);

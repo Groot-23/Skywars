@@ -4,7 +4,8 @@ public class LanguageKeys {
 	
 	public static final String TEST = "test";
 	
-	public static final String PLAYER = "general.player";
+	public static final String PLAYER  = "general.player";
+	public static final String SECONDS = "general.seconds";
 	
 	public static final String TIME_UNTILL_START = "game.time_until_start";
 	public static final String PLAYERS_LEFT      = "game.players_left";
@@ -12,6 +13,7 @@ public class LanguageKeys {
 	
 	public static final String GO_TO_MID = "game.go_to_mid";
 	public static final String BOSSBAR_TITLE = "game.bossbar_title";
+	public static final String BOSSBAR_START = "game.bossbar_start";
 	
 	public static final String NEXT_EVENT   = "game.event.next";
 	public static final String EVENT_START  = "game.event.start";

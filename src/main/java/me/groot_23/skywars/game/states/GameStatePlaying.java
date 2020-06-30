@@ -39,7 +39,7 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 	BossBar bossbar;
 	
 	@Override
-	protected void onStart() {
+	public void onStart() {
 		counter = SWconstants.LENGTH_OF_GAME;
 		refillCounter = data.refillTime;
 		dynamicRefillTime = refillCounter;
@@ -49,7 +49,7 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 		arena.removeGlassSpawns();
 		world = data.arena.getWorld();
 		bossbar = Bukkit.createBossBar(
-				Util.chat(Main.game.getDefualtTranslation(LanguageKeys.BOSSBAR_TITLE)),
+				Util.chat(game.getDefaultTranslation(LanguageKeys.BOSSBAR_TITLE)),
 				BarColor.PURPLE, BarStyle.SEGMENTED_20);
 		bossbar.setProgress(1);
 		arena.getWorld().setPVP(true);
@@ -93,7 +93,7 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 			arena.shrinkBorder(data.deathMatchBorderShrinkTime);
 			for (Player p : world.getPlayers()) {
 				p.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "Death Match!", ChatColor.RED + ""
-						+ ChatColor.BOLD + Main.game.getTranslation(p, LanguageKeys.GO_TO_MID), 3, 100, 3);
+						+ ChatColor.BOLD + game.getTranslation(p, LanguageKeys.GO_TO_MID), 3, 100, 3);
 			}
 		} else {
 			bossbar.setProgress((double) deathMatchCounter / data.deathMatchBegin);

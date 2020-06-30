@@ -40,6 +40,10 @@ commands:
   swkits:
     description: Bearbeite Kits
     usage: /<command> [list | create | delete | set] <kit>
+    
+  swlang:
+    description: Bearbeite Sprachwerte
+    usage: /<command> <language> <key> <value>
 
 permissions:
   skywars.*:

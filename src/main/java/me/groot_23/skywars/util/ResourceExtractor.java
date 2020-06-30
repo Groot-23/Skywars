@@ -40,7 +40,9 @@ public class ResourceExtractor {
 							}
 							if(entry.isDirectory()) {
 								Path dir = dest.resolve(name);
-								Files.createDirectory(dir);
+								if(!Files.exists(dir)) {
+									Files.createDirectory(dir);
+								}
 							} else {
 								Path file = dest.resolve(name);
 								if(!file.toFile().exists() || replace) {

@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.MetadataValue;
 
+import me.groot_23.ming.world.Arena;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.SWconstants;
 
@@ -25,7 +26,11 @@ public class StopLobbyLeave implements Listener {
 	private void stopWorld(World w) {
 		// if world is lobby
 		if (w.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-			Main.game.getArenaProvider().stopArena(w);
+			Arena arena = Main.game.getArenaById(w.getUID());
+			if(arena != null) {
+				arena.getMode().getArenaProvider().stopArena(w);
+			}
+//			Main.game.getArenaProvider().stopArena(w);
 			System.out.println("[Skywars] lobby stopped: " + w.getName());
 		}
 		// if world is edited

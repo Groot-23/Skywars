@@ -15,12 +15,12 @@ public class SWupdate implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] arg3) {
-		if(!sender.hasPermission("skywars.update")) {
-			sender.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.update"));
-			return true;
-		}
-		Main.game.getArenaProvider().update();
-		sender.sendMessage(Util.chat("Änderungen erfolgreich übernommen!"));
+//		if(!sender.hasPermission("skywars.update")) {
+//			sender.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.update"));
+//			return true;
+//		}
+//		Main.game.getArenaProvider().update();
+//		sender.sendMessage(Util.chat("Änderungen erfolgreich übernommen!"));
 		return true;
 	}
 

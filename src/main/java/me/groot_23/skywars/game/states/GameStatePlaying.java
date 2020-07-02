@@ -1,10 +1,10 @@
 package me.groot_23.skywars.game.states;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -12,21 +12,19 @@ import org.bukkit.entity.Player;
 
 import me.groot_23.ming.display.BossBarManager;
 import me.groot_23.ming.game.GameState;
-import me.groot_23.ming.world.Arena;
+import me.groot_23.ming.player.GameTeam;
 import me.groot_23.skywars.Main;
-import me.groot_23.skywars.SkywarsKit;
 import me.groot_23.skywars.game.SkywarsData;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
 import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
-import me.groot_23.skywars.world.SkyArena;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class GameStatePlaying extends GameState<SkywarsData>{
+public class GameStatePlaying extends SkyGameState{
 
-	public GameStatePlaying(GameState<SkywarsData> state) {
+	public GameStatePlaying(SkyGameState state) {
 		super(state);
 	}
 	
@@ -34,8 +32,7 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 	int refillCounter;
 	int dynamicRefillTime;
 	int deathMatchCounter;
-	SkyArena arena;
-	World world;
+
 	BossBar bossbar;
 	
 	@Override
@@ -44,15 +41,14 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 		refillCounter = data.refillTime;
 		dynamicRefillTime = refillCounter;
 		deathMatchCounter = data.deathMatchBegin;
-		
-		arena = data.arena;
+
 		arena.removeGlassSpawns();
-		world = data.arena.getWorld();
+		world = arena.getWorld();
 		bossbar = Bukkit.createBossBar(
-				Util.chat(game.getDefaultTranslation(LanguageKeys.BOSSBAR_TITLE)),
+				Util.chat(miniGame.getDefaultTranslation(LanguageKeys.BOSSBAR_TITLE)),
 				BarColor.PURPLE, BarStyle.SEGMENTED_20);
 		bossbar.setProgress(1);
-		arena.getWorld().setPVP(true);
+		world.setPVP(true);
 		for (Player player : world.getPlayers()) {
 			player.setGameMode(GameMode.SURVIVAL);
 			player.getInventory().clear();
@@ -66,22 +62,26 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 
 	@Override
 	protected GameState<SkywarsData> onUpdate() {
-		int playersLeft = 0;
-		Player potentialWinner = null;
+		List<GameTeam> teamsLeft = game.getTeamsAlive();
+//		int playersLeft = 0;
+//		Player potentialWinner = null;
 		for (Player p : world.getPlayers()) {
 			if (p.getGameMode() == GameMode.SURVIVAL) {
-				playersLeft++;
-				potentialWinner = p;
+//				playersLeft++;
+//				potentialWinner = p;
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR,
 						new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + 
 								Main.game.getTranslation(p, LanguageKeys.NO_TEAMING)));
 			}
 		}
-		SkywarsScoreboard.updateGame(world, playersLeft, LanguageKeys.EVENT_REFILL, refillCounter,
+		SkywarsScoreboard.updateGame(world, teamsLeft.size(), LanguageKeys.EVENT_REFILL, refillCounter,
 				deathMatchCounter, counter);
-		if (playersLeft == 1) {
+		if (teamsLeft.size() == 1) {
 			bossbar.removeAll();
-			return new GameStateVictory(this, potentialWinner);
+			return new GameStateVictory(this, teamsLeft.get(0));
+		} else if(teamsLeft.size() == 0) {
+			// cancel game
+			return null;
 		}
 		arena.updateChestTimer(refillCounter);
 		if (refillCounter <= 0) {
@@ -93,7 +93,7 @@ public class GameStatePlaying extends GameState<SkywarsData>{
 			arena.shrinkBorder(data.deathMatchBorderShrinkTime);
 			for (Player p : world.getPlayers()) {
 				p.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "Death Match!", ChatColor.RED + ""
-						+ ChatColor.BOLD + game.getTranslation(p, LanguageKeys.GO_TO_MID), 3, 100, 3);
+						+ ChatColor.BOLD + miniGame.getTranslation(p, LanguageKeys.GO_TO_MID), 3, 100, 3);
 			}
 		} else {
 			bossbar.setProgress((double) deathMatchCounter / data.deathMatchBegin);

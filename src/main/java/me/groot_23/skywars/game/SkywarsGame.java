@@ -8,9 +8,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.game.GameState;
+import me.groot_23.ming.game.MiniGameMode;
 import me.groot_23.ming.gui.GuiRunnable;
 import me.groot_23.ming.world.Arena;
 import me.groot_23.skywars.events.KitEvents;
+import me.groot_23.skywars.game.modes.SkyModeClassic;
 import me.groot_23.skywars.game.states.GameStateLobby;
 import me.groot_23.skywars.world.SkyArena;
 
@@ -20,22 +22,6 @@ public class SkywarsGame extends MiniGame {
 		super(plugin);
 	}
 
-	@Override
-	public GameState<?> getStartingState(Arena arena) {
-		SkywarsData data = new SkywarsData();
-		data.arena = (SkyArena) arena;
-		data.deathMatchBegin = plugin.getConfig().getInt("deathMatchBegin");
-		data.deathMatchBorderShrinkTime = plugin.getConfig().getInt("deathMatchBorderShrinkTime");
-		data.refillTime = plugin.getConfig().getInt("refillTime");
-		data.refillTimeChange = plugin.getConfig().getInt("refillTimeChange");
-
-		return new GameStateLobby(data, this);
-	}
-	
-	@Override
-	public Arena createArena(World world, String map) {
-		return new SkyArena(this, world, map);
-	}
 
 	@Override
 	public void registerGuiRunnables() {
@@ -61,6 +47,21 @@ public class SkywarsGame extends MiniGame {
 	@Override
 	public String getName() {
 		return "skywars";
+	}
+
+	private MiniGameMode defaultMode;
+
+	@Override
+	public void registerModes() {
+		defaultMode = new SkyModeClassic(this, 1, "normal");
+		registerMode(defaultMode);
+		registerMode(new SkyModeClassic(this, 2, "duo"));
+	}
+
+
+	@Override
+	public MiniGameMode getDefaultMode() {
+		return defaultMode;
 	}
 
 }

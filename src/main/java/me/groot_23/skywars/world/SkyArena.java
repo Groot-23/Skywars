@@ -10,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import me.groot_23.ming.MiniGame;
+import me.groot_23.ming.game.MiniGameMode;
 import me.groot_23.skywars.game.SkyChest;
 import me.groot_23.skywars.util.Util;
 
@@ -17,8 +18,8 @@ public class SkyArena extends me.groot_23.ming.world.Arena{
 
 	private List<SkyChest> chests;
 	
-	public SkyArena(MiniGame game, World world, String mapName) {
-		super(game, world, mapName);
+	public SkyArena(MiniGameMode mode, World world, String mapName) {
+		super(mode, world, mapName);
 		findChests();
 	}
 	

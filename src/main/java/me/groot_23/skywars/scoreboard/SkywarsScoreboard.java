@@ -52,13 +52,13 @@ public class SkywarsScoreboard {
 		return Main.game.getKit(player).getDisplayName(player);
 	}
 
-	public static void initPreGame(Player player, int maxPlayers, int timeLeft, String map) {
+	public static void initPreGame(Player player, int maxPlayers, int timeLeft, String map, String mode) {
 		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 		int playerCount = player.getWorld().getPlayers().size();
 
 		String kit = getKit(player);
 
-		ScoreboardApi.init(objective, "server", null, "map", null, "kit", "time", null, "players", null);
+		ScoreboardApi.init(objective, "server", null, "mode", null, "map", null, "kit", "time", null, "players", null);
 
 		ScoreboardApi.setValue(player, "players", ChatColor.GOLD + Integer.toString(playerCount) + "/" + maxPlayers
 				+ ChatColor.WHITE + " " + Main.game.getTranslation(player, LanguageKeys.PLAYER));
@@ -67,6 +67,7 @@ public class SkywarsScoreboard {
 		ScoreboardApi.setValue(player, "kit", ChatColor.LIGHT_PURPLE + "Kit" + COLON + kit);
 		ScoreboardApi.setValue(player, "map",
 				ChatColor.GOLD + "Map" + COLON + ChatColor.WHITE + Main.game.getTranslation(player, "map." + map));
+		ScoreboardApi.setValue(player, "mode", "Modus: " + mode);
 		ScoreboardApi.setValue(player, "server", ChatColor.YELLOW + "Groot23.mcserv.me");
 
 	}

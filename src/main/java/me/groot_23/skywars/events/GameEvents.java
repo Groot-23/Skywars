@@ -90,7 +90,7 @@ public class GameEvents implements Listener {
 	public void onBlockDamage(BlockDamageEvent e) {
 		if (e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			if (!e.getBlock().hasMetadata("skywars_player_placed")) {
-				Arena arena = Main.game.getArenaProvider().getArenaById(e.getBlock().getWorld().getUID());
+				Arena arena = Main.game.getArenaById(e.getBlock().getWorld().getUID());
 				if (arena != null) {
 					if (arena.isInsideMidSpawn(e.getBlock().getLocation())) {
 						e.setCancelled(true);
@@ -104,7 +104,7 @@ public class GameEvents implements Listener {
 	public void onBlockBreak(BlockBreakEvent e) {
 		if (e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
 			if (!e.getBlock().hasMetadata("skywars_player_placed")) {
-				Arena arena = Main.game.getArenaProvider().getArenaById(e.getBlock().getWorld().getUID());
+				Arena arena = Main.game.getArenaById(e.getBlock().getWorld().getUID());
 				if (arena != null) {
 					if (arena.isInsideMidSpawn(e.getBlock().getLocation())) {
 						e.setCancelled(true);
@@ -117,7 +117,7 @@ public class GameEvents implements Listener {
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
 		if (e.getPlayer().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-			Arena arena = Main.game.getArenaProvider().getArenaById(e.getPlayer().getWorld().getUID());
+			Arena arena = Main.game.getArenaById(e.getPlayer().getWorld().getUID());
 			if (arena != null) {
 				e.setRespawnLocation(arena.getMidSpawn());
 			} else {
@@ -185,9 +185,17 @@ public class GameEvents implements Listener {
 				Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.LEAVE)));
 		lobbyLeave.addActionUse("swleave", UseAction.RIGHT_CLICK, UseAction.LEFT_CLICK);
 		player.getInventory().setItem(8, lobbyLeave.getItem());
+		
+		String mode;
+		Arena arena = Main.game.getArenaById(player.getWorld().getUID());
+		if(arena != null) {
+			mode = arena.getMode().getName();
+		} else {
+			mode = Main.game.getDefaultMode().getName();
+		}
 
 		SkywarsScoreboard.resetKills(player);
 		SkywarsScoreboard.init(player);
-		SkywarsScoreboard.initPreGame(player, 2, 30, "skywars_wueste");
+		SkywarsScoreboard.initPreGame(player, 2, 30, "skywars_wueste", mode);
 	}
 }

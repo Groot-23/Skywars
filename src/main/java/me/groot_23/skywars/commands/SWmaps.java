@@ -54,7 +54,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 					list.add(f.getName());
 				}
 			} else if (args[0].equals("remove")) {
-				for (String s : Main.game.getArenaProvider().getRegisteredWorlds()) {
+				for (String s : Main.game.getDefaultMode().getArenaProvider().getRegisteredWorlds()) {
 					if (s.startsWith(args[1]))
 						list.add(s);
 				}

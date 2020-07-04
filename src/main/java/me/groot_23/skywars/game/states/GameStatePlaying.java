@@ -45,7 +45,7 @@ public class GameStatePlaying extends SkyGameState{
 		arena.removeGlassSpawns();
 		world = arena.getWorld();
 		bossbar = Bukkit.createBossBar(
-				Util.chat(miniGame.getDefaultTranslation(LanguageKeys.BOSSBAR_TITLE)),
+				miniGame.getDefaultTranslation(LanguageKeys.BOSSBAR_TITLE),
 				BarColor.PURPLE, BarStyle.SEGMENTED_20);
 		bossbar.setProgress(1);
 		world.setPVP(true);
@@ -97,6 +97,7 @@ public class GameStatePlaying extends SkyGameState{
 			}
 		} else {
 			bossbar.setProgress((double) deathMatchCounter / data.deathMatchBegin);
+			bossbar.setTitle(miniGame.getDefaultTranslation(LanguageKeys.BOSSBAR_TITLE) + " " + Util.minuteSeconds(deathMatchCounter));
 		}
 //		if(counter <= 0) {
 //			draw();

@@ -7,14 +7,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.groot_23.ming.MiniGame;
-import me.groot_23.ming.game.GameState;
+import me.groot_23.ming.game.Game;
 import me.groot_23.ming.game.MiniGameMode;
 import me.groot_23.ming.gui.GuiRunnable;
-import me.groot_23.ming.world.Arena;
 import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.game.modes.SkyModeClassic;
-import me.groot_23.skywars.game.states.GameStateLobby;
-import me.groot_23.skywars.world.SkyArena;
 
 public class SkywarsGame extends MiniGame {
 
@@ -30,6 +27,15 @@ public class SkywarsGame extends MiniGame {
 			@Override
 			public void run(Player player, ItemStack item, Inventory inv, MiniGame game) {
 				KitEvents.openGui(player);
+			}
+		});
+		registerGuiRunnable("open_kit_selector", new GuiRunnable() {
+			@Override
+			public void run(Player player, ItemStack item, Inventory inv, MiniGame game) {
+				Game g = getGameById(player.getWorld().getUID());
+				if(g != null) {
+					player.openInventory(g.getTeamSelectorInv());
+				}
 			}
 		});
 	}
@@ -53,7 +59,7 @@ public class SkywarsGame extends MiniGame {
 
 	@Override
 	public void registerModes() {
-		defaultMode = new SkyModeClassic(this, 1, "normal");
+		defaultMode = new SkyModeClassic(this, 1, "solo");
 		registerMode(defaultMode);
 		registerMode(new SkyModeClassic(this, 2, "duo"));
 	}

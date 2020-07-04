@@ -71,7 +71,7 @@ public class GameEvents implements Listener {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 				public void run() {
 					p.setGameMode(GameMode.ADVENTURE);
-					MinG.resetPlayer(p);
+					MinG.resetPlayer(p, plugin);
 					p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 				}
 			}, 5);
@@ -185,6 +185,10 @@ public class GameEvents implements Listener {
 				Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.LEAVE)));
 		lobbyLeave.addActionUse("swleave", UseAction.RIGHT_CLICK, UseAction.LEFT_CLICK);
 		player.getInventory().setItem(8, lobbyLeave.getItem());
+		
+		GuiItem teamSelector = Main.game.createGuiItem(Material.OAK_SIGN);
+		teamSelector.addActionUseRunnable("open_kit_selector");
+		player.getInventory().setItem(0, teamSelector.getItem());
 		
 		String mode;
 		Arena arena = Main.game.getArenaById(player.getWorld().getUID());

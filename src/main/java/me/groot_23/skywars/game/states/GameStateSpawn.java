@@ -32,15 +32,15 @@ public class GameStateSpawn extends SkyGameState{
 			return;
 		}
 		
-		game.createRandomTeams(world.getPlayers());
+		game.fillTeams(world.getPlayers());
 		
 		int i = 0;
 		for(GameTeam team : game.getTeams()) {
 			for(Player p : team.getPlayers()) {
 				p.teleport(arena.getSpawns().get(i));
-				SkywarsScoreboard.initGame(p, arena.getWorld().getPlayers().size(),
+				SkywarsScoreboard.initGame(p, game.getTeamsAliveCount(),
 						LanguageKeys.EVENT_START, counter, data.deathMatchBegin, SWconstants.LENGTH_OF_GAME,
-						arena.getMapName());
+						arena.getMapName(), game.getMode().getName());
 			}
 			i++;
 		}

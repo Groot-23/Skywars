@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.groot_23.skywars.commands.SWjoin;
 import me.groot_23.skywars.commands.SWkits;
 import me.groot_23.skywars.commands.SWlang;
+import me.groot_23.ming.MinG;
 import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.commands.KitCommands;
 import me.groot_23.ming.commands.LangCommand;
@@ -43,6 +44,7 @@ public class Main extends JavaPlugin
 	@Override
 	public void onEnable() 
 	{
+		MinG.init(this);
 		instance = this;
 		game = new SkywarsGame(this);
 		

@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
-import me.groot_23.ming.config.ItemSerializer;
+import me.groot_23.ming.util.ItemSerializer;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.language.LanguageManager;
 import me.groot_23.skywars.util.Util;

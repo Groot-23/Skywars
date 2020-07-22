@@ -3,6 +3,7 @@ package me.groot_23.skywars.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
@@ -21,6 +22,10 @@ public class SWupdate implements CommandExecutor {
 //		}
 //		Main.game.getArenaProvider().update();
 //		sender.sendMessage(Util.chat("Änderungen erfolgreich übernommen!"));
+		Player player = (Player) sender;
+		player.sendMessage(Main.game.getLangManager().getTranslation(player, "ming"));
+		player.sendMessage(Main.game.getLangManager().getTranslation(player, "test"));
+		
 		return true;
 	}
 

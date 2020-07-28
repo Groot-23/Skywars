@@ -1,6 +1,7 @@
 package me.groot_23.skywars.world;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -9,18 +10,20 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.game.MiniGameMode;
+import me.groot_23.ming.world.WorldMarker;
 import me.groot_23.skywars.game.SkyChest;
 import me.groot_23.skywars.util.Util;
 
 public class SkyArena extends me.groot_23.ming.world.Arena{
 
 	private List<SkyChest> chests;
+	protected List<Location> spawns;
 	
 	public SkyArena(MiniGameMode mode, World world, String mapName) {
 		super(mode, world, mapName);
 		findChests();
+		findPlayerSpawns();
 	}
 	
 	private void findChests() {
@@ -62,4 +65,19 @@ public class SkyArena extends me.groot_23.ming.world.Arena{
 
 	}
 
+	public List<Location> getSpawns() {
+		return spawns;
+	}
+	
+	protected void findPlayerSpawns() {
+		spawns = WorldMarker.findMarkers(world, "sky_spawn");
+//		for (Entity entity : world.getEntities()) {
+//			if (entity.getType() == EntityType.ARMOR_STAND) {
+//				if (entity.getCustomName().equals("skywars_spawn")) {
+//					spawns.add(entity.getLocation());
+//				}
+//			}
+//		}
+		Collections.shuffle(spawns);
+	}
 }

@@ -52,6 +52,12 @@ public class GameStatePlaying extends SkyGameState{
 		for (Player player : world.getPlayers()) {
 			player.setGameMode(GameMode.SURVIVAL);
 			player.getInventory().clear();
+			player.setFallDistance(-1000);
+			
+			String started = ChatColor.GREEN + miniGame.getTranslation(player, LanguageKeys.STARTED);
+			player.sendMessage(started);
+			player.sendTitle(started, ChatColor.LIGHT_PURPLE + miniGame.getTranslation(player, 
+					LanguageKeys.FIGHT_BEGINS), 3, 20, 3);
 			
 			BossBarManager.addPlayer(bossbar, player);
 			

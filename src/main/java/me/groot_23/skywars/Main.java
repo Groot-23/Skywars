@@ -13,6 +13,7 @@ import me.groot_23.ming.MinG;
 import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.commands.KitCommands;
 import me.groot_23.ming.commands.LangCommand;
+import me.groot_23.ming.commands.MarkerCommand;
 import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
 import me.groot_23.skywars.commands.SWleave;
@@ -32,8 +33,8 @@ import me.groot_23.skywars.util.Util;
 public class Main extends JavaPlugin
 {
 
-	public static List<SkywarsKit> kits;
-	public static Map<String, SkywarsKit> kitByName;
+//	public static List<SkywarsKit> kits;
+//	public static Map<String, SkywarsKit> kitByName;
 	public LanguageManager langManager;
 //	public NMS nms;
 
@@ -50,11 +51,11 @@ public class Main extends JavaPlugin
 		
 		firstStart();
 		
-		kits = SkywarsKit.loadKits();
-		kitByName = new HashMap<String, SkywarsKit>();
-		for(SkywarsKit kit : kits) {
-			kitByName.put(kit.getName(), kit);
-		}
+//		kits = SkywarsKit.loadKits();
+//		kitByName = new HashMap<String, SkywarsKit>();
+//		for(SkywarsKit kit : kits) {
+//			kitByName.put(kit.getName(), kit);
+//		}
 		
 		
 		langManager = new LanguageManager("de_de");
@@ -66,11 +67,12 @@ public class Main extends JavaPlugin
 		new SWmaps(this);
 		new SWupdate(this);
 		new SWchest(this);
-		new SWspawns(this);
+//		new SWspawns(this);
 		new SWset(this);
 		
 		new KitCommands(game, "swkits", "skywars.kits");
 		new LangCommand(game, "swlang", "skywars.lang");
+		new MarkerCommand("swspawns", "sky_spawn");
 		
 //		new SWkits(game);
 //		new SWlang(game);

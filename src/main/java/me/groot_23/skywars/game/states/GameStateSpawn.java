@@ -65,15 +65,6 @@ public class GameStateSpawn extends SkyGameState{
 					p.sendTitle(ChatColor.GREEN + "" + counter, ChatColor.LIGHT_PURPLE + 
 							miniGame.getTranslation(p, LanguageKeys.GET_READY), 3, 14, 3);
 				} else {
-					String started = ChatColor.GREEN + miniGame.getTranslation(p, LanguageKeys.STARTED);
-					p.sendMessage(started);
-					p.sendTitle(started, ChatColor.LIGHT_PURPLE + miniGame.getTranslation(p, 
-							LanguageKeys.FIGHT_BEGINS), 3, 20, 3);
-					// remove falldamage
-					p.setFallDistance(-1000);
-					for(Location l : arena.getSpawns()) {
-						arena.removeArea(l, 3, 3);
-					}
 					return new GameStatePlaying(this);
 				}
 

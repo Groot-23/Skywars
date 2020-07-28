@@ -84,7 +84,7 @@ public class SkywarsKit {
 		lore.add(ChatColor.YELLOW + lang.getTranslation(player, LanguageKeys.KIT_ITEMS) + ":");
 		for(ItemStack stack : startItems) {
 			stack.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
-			lore.add(ChatColor.RESET + " - " + ItemSerializer.asString(stack));
+			lore.add(ChatColor.RESET + " - " + ItemSerializer.asString(stack, null, null));
 			
 			Main.getInstance().getConfig().set("test_item_stack", stack);
 			System.out.println(Main.getInstance().getConfig().getItemStack("test_item_stack").toString());

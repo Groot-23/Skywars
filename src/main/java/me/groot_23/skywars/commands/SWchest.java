@@ -38,12 +38,12 @@ public class SWchest implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler dürfen diesen Befehl ausführen");
+			sender.sendMessage("Nur Spieler dÃ¼rfen diesen Befehl ausfï¿½hren");
 			return true;
 		}
 		Player player = (Player) sender;
 		if(!sender.hasPermission("skywars.chest")) {
-			player.sendMessage(Util.chat("&cDu hast nicht die benötigte Berechtigung: skywars.chest"));
+			player.sendMessage(Util.chat("&cDu hast nicht die benÃ¶tigte Berechtigung: skywars.chest"));
 			return true;
 		}
 

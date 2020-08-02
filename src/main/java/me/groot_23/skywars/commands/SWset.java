@@ -26,18 +26,10 @@ public class SWset implements CommandExecutor, TabCompleter{
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
 		List<String> list = new ArrayList<String>();
 		if(args.length == 1) {
-			String[] modes = new String[] {"refillTime", "persistentLobbies", "allowDynamic", "refillTimeChange",
+			String[] modes = new String[] {"refillTime", "refillTimeChange",
 					"deathMatchBegin", "deathMatchBorderShrinkTime"};
 			for(String s : modes) {
 				if(s.startsWith(args[0])) list.add(s);
-			}
-		}
-		if(args.length == 2) {
-			if(args[0].equals("allowDynamic")) {
-				String[] options = new String[] {"true", "false"};
-				for(String s : options) {
-					if(s.startsWith(args[0])) list.add(s);
-				}
 			}
 		}
 		return list;
@@ -46,7 +38,7 @@ public class SWset implements CommandExecutor, TabCompleter{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler können diesen Befehl ausführen");
+			sender.sendMessage("Nur Spieler kÃ¶nnen diesen Befehl ausfÃ¼hren");
 			return true;
 		}
 		Player player = (Player) sender;
@@ -56,7 +48,7 @@ public class SWset implements CommandExecutor, TabCompleter{
 			return false;
 		}
 		if(!player.hasPermission("skywars.set")) {
-			player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.set"));
+			player.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszufÃ¼hren! BenÃ¶tigte Berechtigung: skywars.set"));
 			return true;
 		}
 		String mode = args[0];

@@ -1,15 +1,10 @@
 package me.groot_23.skywars.game.modes;
 
-import org.bukkit.World;
-
 import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.game.Game;
-import me.groot_23.ming.game.GameState;
 import me.groot_23.ming.game.MiniGameMode;
-import me.groot_23.ming.world.Arena;
-import me.groot_23.skywars.game.SkywarsData;
-import me.groot_23.skywars.game.states.GameStateLobby;
-import me.groot_23.skywars.world.SkyArena;
+import me.groot_23.skywars.game.SkyGame;
+import me.groot_23.skywars.game.tasks.SkyTasksRepeated;
 
 public class SkyModeClassic extends MiniGameMode {
 
@@ -27,24 +22,22 @@ public class SkyModeClassic extends MiniGameMode {
 		return name;
 	}
 
-	@Override
-	public GameState<?> getStartingState(Game game) {
-		SkywarsData data = new SkywarsData();
-		data.deathMatchBegin = plugin.getConfig().getInt("deathMatchBegin");
-		data.deathMatchBorderShrinkTime = plugin.getConfig().getInt("deathMatchBorderShrinkTime");
-		data.refillTime = plugin.getConfig().getInt("refillTime");
-		data.refillTimeChange = plugin.getConfig().getInt("refillTimeChange");
 
-		return new GameStateLobby(data, game);
-	}
-
-	@Override
-	public Arena createArena(World world, String map) {
-		return new SkyArena(this, world, map);
-	}
+//	@Override
+//	public Arena createArena(World world, String map) {
+//		return new SkyArena(this, world, map);
+//	}
 
 	@Override
 	public int getPlayersPerTeam() {
 		return teamSize;
+	}
+
+	@Override
+	public Game createNewGame() {
+		Game game = new SkyGame(this, "default");
+		game.taskManager.addRepeated(new SkyTasksRepeated.Lobby1(game), "lobby1");
+		game.taskManager.addRepeated(new SkyTasksRepeated.Lobby20(game), "lobby20");
+		return game;
 	}
 }

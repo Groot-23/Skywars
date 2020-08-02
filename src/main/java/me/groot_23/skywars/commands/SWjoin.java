@@ -10,11 +10,8 @@ import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 
 public class SWjoin implements CommandExecutor {
-	private Main plugin;
 
 	public SWjoin(Main plugin) {
-		this.plugin = plugin;
-
 		plugin.getCommand("swjoin").setExecutor(this);
 	}
 
@@ -33,7 +30,8 @@ public class SWjoin implements CommandExecutor {
 			} if(mode == null) {
 				mode = Main.game.getDefaultMode();
 			}
-			mode.getArenaProvider().joinPlayer(p);
+//			mode.getArenaProvider().joinPlayer(p);
+			mode.gameProvider.joinPlayer(p);
 		}
 		return true;
 	}

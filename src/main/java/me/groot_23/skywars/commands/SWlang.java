@@ -9,7 +9,6 @@ import org.bukkit.command.TabCompleter;
 
 import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.commands.LangCommand;
-import me.groot_23.skywars.Main;
 
 public class SWlang implements CommandExecutor, TabCompleter {
 

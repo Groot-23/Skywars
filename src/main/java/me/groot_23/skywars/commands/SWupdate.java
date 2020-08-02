@@ -1,19 +1,13 @@
 package me.groot_23.skywars.commands;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
-import me.groot_23.ming.commands.MarkerCommand;
-import me.groot_23.ming.language.LanguageHolder;
-import me.groot_23.ming.util.Utf8Config;
 import me.groot_23.ming.world.WorldMarker;
 import me.groot_23.skywars.Main;
-import me.groot_23.skywars.util.Util;
 
 public class SWupdate implements CommandExecutor {
 

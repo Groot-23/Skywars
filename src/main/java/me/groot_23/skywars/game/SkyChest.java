@@ -1,6 +1,12 @@
 package me.groot_23.skywars.game;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,12 +15,18 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 import org.bukkit.loot.Lootable;
 import org.bukkit.metadata.FixedMetadataValue;
+
+import com.google.common.primitives.Ints;
 
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.SWconstants;
@@ -62,5 +74,34 @@ public class SkyChest {
 		lootable.setLootTable(lootTable);
 		state.update(true);
 		hologram.setCustomName(ChatColor.GREEN + "Kiste voll!");
+		
+		// Rearrange items:
+		// 1. combine stacks if possible
+		Inventory inv = ((Chest)state).getBlockInventory();
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		for(int i = 0; i < inv.getSize(); ++i) {
+			ItemStack item = inv.getItem(i);
+			if(item != null) {
+				int remaining = item.getAmount();
+				for(int k = 0; k < list.size(); ++k) {
+					if(list.get(k).isSimilar(item)) {
+						int move = Math.min(remaining, item.getMaxStackSize() - list.get(k).getAmount());
+						remaining -= move;
+						list.get(k).setAmount(list.get(k).getAmount() + move);
+					}
+				}
+				if(remaining != 0) {
+					item.setAmount(remaining);
+					list.add(item);
+				}
+			}
+		}
+		inv.clear();
+		// 2. shuffle items
+		List<Integer> slots = Ints.asList(IntStream.range(0, inv.getSize()).toArray());
+		Collections.shuffle(slots);
+		for(int i = 0; i < list.size(); ++i) {
+			inv.setItem(slots.get(i), list.get(i));
+		}
 	}
 }

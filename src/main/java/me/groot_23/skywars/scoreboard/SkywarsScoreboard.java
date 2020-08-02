@@ -1,20 +1,16 @@
 package me.groot_23.skywars.scoreboard;
 
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import me.groot_23.ming.display.ScoreboardApi;
-import me.groot_23.ming.kits.Kit;
 import me.groot_23.ming.player.GameTeam;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.language.LanguageKeys;
@@ -45,7 +41,6 @@ public class SkywarsScoreboard {
 		}
 		int kills = player.getMetadata("Skywars_kills").get(0).asInt() + 1;
 		player.setMetadata("Skywars_kills", new FixedMetadataValue(Main.getInstance(), kills));
-		System.out.println(kills);
 		ScoreboardApi.setValue(player, "kills", ChatColor.RED + "Kills" + COLON + kills);
 	}
 

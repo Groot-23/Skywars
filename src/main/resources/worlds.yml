@@ -1,0 +1,16 @@
+# Note that this is just an example. It is very likely that you have different world names
+
+groups:
+  default:
+  - skywars_wueste
+  
+worlds:
+ skywars_wueste:
+  minPlayers: 1
+  maxPlayers: 2
+  midRadius: 20
+  mapRadius: 100
+  midSpawn:
+    x: 0
+    y: 117.0
+    z: 0

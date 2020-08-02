@@ -1,13 +1,9 @@
 package me.groot_23.skywars.util;
 
 import java.io.File;
-import java.io.IOException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -24,40 +20,9 @@ public class Util {
 		return Bukkit.getWorldContainer().getAbsolutePath() + File.separator + world;
 	}
 	
-	public static boolean worldExists(String name) {
-		return new File(getWorldPath(name)).exists();
-	}
-	
 	public static File getDataPackResources(String namespace) {
 		return new File(Bukkit.getWorlds().get(0).getWorldFolder().getPath() + File.separator + "datapacks" +
 				File.separator + "bukkit" + File.separator + "data" + File.separator + namespace);
-	}
-	
-	public static boolean copyWorld(String src, String dst) {
-		if(worldExists(src) && !worldExists(dst)) {
-			try {
-				FileUtil.copyFileOrFolder(new File(getWorldPath(src)), new File(getWorldPath(dst)));
-				// IMPORTANT: DELETE uid.dat or world will NOT be loaded!
-				new File(getWorldPath(dst + File.separator + "uid.dat")).delete();
-				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
-	}
-	
-	public static void deleteWorld(String name) {
-		if(worldExists(name)) {
-			World w = Bukkit.getWorld(name);
-			if(w != null) {
-				for(Player p : w.getPlayers()) {
-					p.teleport(Bukkit.getWorld("world").getSpawnLocation());
-				}
-				Bukkit.unloadWorld(w, false);
-			}
-			FileUtil.delete(new File(getWorldPath(name)));
-		}
 	}
 	
 	public static String repeat(int count, String with) {

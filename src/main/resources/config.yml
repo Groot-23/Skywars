@@ -1,5 +1,4 @@
-persistentLobbies: 4
-allowDynamicLobbies: true
-refillTime: 180
-refillTimeChange: 20
-worlds: []
+refillTime: 3600
+refillTimeChange: 0
+deathMatchBegin: 12000
+deathMacthBorderShrinkTime: 1200

@@ -19,7 +19,7 @@ commands:
 
   swmaps:
     description: Verwalte die Skywarsmaps
-    usage: /<command> [register | list | remove] <world> <weight>
+    usage: /<command> [register | list | remove | set] <world | group>
 
   swupdate:
     description: Lese die Config neu ein
@@ -35,7 +35,7 @@ commands:
 
   swset:
     description: Bearbeite die Einstellungen von skywars
-    usage: /<command> [refillTime | persistentLobbies | allowDynamic] <value>
+    usage: /<command> <option> <value>
     
   swkits:
     description: Bearbeite Kits

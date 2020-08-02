@@ -10,18 +10,19 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-import me.groot_23.ming.game.MiniGameMode;
+import me.groot_23.ming.game.Game;
+import me.groot_23.ming.world.Arena;
 import me.groot_23.ming.world.WorldMarker;
 import me.groot_23.skywars.game.SkyChest;
 import me.groot_23.skywars.util.Util;
 
-public class SkyArena extends me.groot_23.ming.world.Arena{
+public class SkyArena extends Arena{
 
 	private List<SkyChest> chests;
 	protected List<Location> spawns;
 	
-	public SkyArena(MiniGameMode mode, World world, String mapName) {
-		super(mode, world, mapName);
+	public SkyArena(Game game, World world, String mapName) {
+		super(game, world, mapName);
 		findChests();
 		findPlayerSpawns();
 	}

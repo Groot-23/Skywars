@@ -3,24 +3,12 @@ package me.groot_23.skywars.events;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
-
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.groot_23.ming.gui.GuiItem;
 import me.groot_23.skywars.Main;
-import me.groot_23.skywars.SkywarsKit;
 import me.groot_23.skywars.language.LanguageKeys;
-import me.groot_23.skywars.util.Util;
 
 public class KitEvents implements Listener {
 

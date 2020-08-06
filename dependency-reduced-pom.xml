@@ -51,8 +51,8 @@
         <configuration>
           <relocations>
             <relocation>
-              <pattern>de.tr7zw.changeme.nbtapi</pattern>
-              <shadedPattern>me.groot_23.skywars.libs.de.tr7zw.changeme.nbtapi</shadedPattern>
+              <pattern>de.tr7zw.nbtapi</pattern>
+              <shadedPattern>me.groot_23.skywars.libs.de.tr7zw.nbtapi</shadedPattern>
             </relocation>
             <relocation>
               <pattern>me.groot_23.ming</pattern>

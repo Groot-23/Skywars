@@ -6,6 +6,7 @@ groups:
   
 worlds:
  skywars_wueste:
+  builder: test
   minPlayers: 1
   maxPlayers: 2
   midRadius: 20

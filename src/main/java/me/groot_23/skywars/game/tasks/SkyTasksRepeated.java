@@ -7,11 +7,13 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
+import me.groot_23.ming.MinG;
 import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.display.BossBarManager;
 import me.groot_23.ming.game.Game;
 import me.groot_23.ming.game.task.GameTaskDelayed;
 import me.groot_23.ming.game.task.GameTaskRepeated;
+import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.SkyGame;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
@@ -58,7 +60,7 @@ public class SkyTasksRepeated {
 		BossBar bb;
 		public Lobby1(Game game) {
 			super(game, 1);
-			bb = Bukkit.createBossBar(miniGame.getDefaultTranslation(LanguageKeys.BOSSBAR_START), BarColor.BLUE,
+			bb = Bukkit.createBossBar(MinG.getLanguageManager().getDefault(LanguageKeys.BOSSBAR_START), BarColor.BLUE,
 					BarStyle.SOLID);
 			bb.setProgress(1);
 		}
@@ -68,8 +70,8 @@ public class SkyTasksRepeated {
 			GameTaskDelayed task = game.taskManager.getTask(SkyTasksDelayed.GoToSpawn.id);
 			if(task != null) {
 				bb.setProgress(task.getRemainingProgress());
-				bb.setTitle(miniGame.getDefaultTranslation(LanguageKeys.BOSSBAR_START) + " " + ChatColor.YELLOW + ChatColor.BOLD
-						+ task.getRemainingSeconds() + " " + miniGame.getDefaultTranslation(LanguageKeys.SECONDS).toUpperCase());
+				bb.setTitle(MinG.getLanguageManager().getDefault(LanguageKeys.BOSSBAR_START) + " " + ChatColor.YELLOW + ChatColor.BOLD
+						+ task.getRemainingSeconds() + " " + MinG.getLanguageManager().getDefault(LanguageKeys.SECONDS).toUpperCase());
 				for (Player player : arena.getWorld().getPlayers()) {
 					BossBarManager.addPlayer(bb, player);
 				}
@@ -122,7 +124,7 @@ public class SkyTasksRepeated {
 		public Game1(Game game) {
 			super(game, 5);
 			bb = Bukkit.createBossBar(
-					miniGame.getDefaultTranslation(LanguageKeys.BOSSBAR_TITLE),
+					ChatColor.LIGHT_PURPLE + "SKYWARS",
 					BarColor.RED, BarStyle.SOLID);
 			bb.setProgress(1);
 			for(Player player : game.players) {
@@ -134,22 +136,18 @@ public class SkyTasksRepeated {
 		protected void onUpdate() {
 			GameTaskDelayed deathMatch = game.taskManager.getTask(SkyTasksDelayed.DeathMatch.id);
 			if(deathMatch != null) {
-				bb.setTitle(miniGame.getDefaultTranslation(LanguageKeys.BOSSBAR_TITLE) + " " + ChatColor.WHITE + ChatColor.BOLD
+				bb.setTitle(MinG.getLanguageManager().getDefault(LanguageKeys.BOSSBAR_TITLE) + " " + ChatColor.WHITE + ChatColor.BOLD
 					+ Util.minuteSeconds(deathMatch.getRemainingSeconds()));
 				bb.setProgress(deathMatch.getRemainingProgress());
+			} else {
+				GameTaskDelayed enablePVP = game.taskManager.getTask(SkyTasksDelayed.EnablePVP.id);
+				if(enablePVP != null) {
+					bb.setTitle(ChatColor.RED + "SCHUTZ Zeit" + ChatColor.WHITE + " " 
+							+ Util.minuteSeconds(enablePVP.getRemainingSeconds()));
+						bb.setProgress(enablePVP.getRemainingProgress());
+				}
 			}
 		}
 		
-		@Override
-		protected void onStop() {
-			BossBar newbb = Bukkit.createBossBar(ChatColor.YELLOW + "Überlebe das " + ChatColor.DARK_RED + "Death Match" + 
-					ChatColor.GRAY + "!", BarColor.RED, BarStyle.SOLID);
-			for (Player p : game.players) {
-				p.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "Death Match!", ChatColor.RED + ""
-						+ ChatColor.BOLD + miniGame.getTranslation(p, LanguageKeys.GO_TO_MID), 3, 100, 3);
-				BossBarManager.removePlayer(p);
-				BossBarManager.addPlayer(newbb, p);
-			}
-		}
 	}
 }

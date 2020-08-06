@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,7 +20,8 @@ import me.groot_23.ming.game.MiniGameMode;
 import me.groot_23.ming.gui.GuiItem;
 import me.groot_23.ming.gui.GuiItem.UseAction;
 import me.groot_23.ming.language.LanguageManager;
-import me.groot_23.ming.player.GameTeam;
+import me.groot_23.ming.player.PlayerUtil;
+import me.groot_23.ming.player.team.GameTeam;
 import me.groot_23.ming.world.Arena;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.tasks.SkyTasksDelayed;
@@ -59,20 +61,20 @@ public class SkyGame extends Game {
 
 	@Override
 	public void onJoin(Player player) {
-		MinG.resetPlayer(player, plugin);
-		LanguageManager langManager = miniGame.getLangManager();
+		PlayerUtil.resetPlayer(player, plugin);
+		LanguageManager langManager = MinG.getLanguageManager();
 		// init hotbar
-		GuiItem kitSelector = Main.game.createGuiItem(Material.CHEST,
+		GuiItem kitSelector = new GuiItem(Material.CHEST,
 				Util.chat(langManager.getTranslation(player, LanguageKeys.KIT_SELECTOR)));
 		kitSelector.addActionUseRunnable("openGui", UseAction.RIGHT_CLICK);
 		player.getInventory().setItem(4, kitSelector.getItem());
 
-		GuiItem lobbyLeave = Main.game.createGuiItem(Material.MAGMA_CREAM,
+		GuiItem lobbyLeave = new GuiItem(Material.MAGMA_CREAM,
 				Util.chat(langManager.getTranslation(player, LanguageKeys.LEAVE)));
 		lobbyLeave.addActionUse("swleave", UseAction.RIGHT_CLICK, UseAction.LEFT_CLICK);
 		player.getInventory().setItem(8, lobbyLeave.getItem());
 
-		GuiItem teamSelector = Main.game.createGuiItem(Material.OAK_SIGN);
+		GuiItem teamSelector = new GuiItem(Material.OAK_SIGN);
 		teamSelector.addActionUseRunnable("open_kit_selector");
 		player.getInventory().setItem(0, teamSelector.getItem());
 		
@@ -100,13 +102,14 @@ public class SkyGame extends Game {
 			tnt.setFuseTicks(40);
 		}
 	}
+	
 
 	@Override
 	public void onDeath(PlayerDeathEvent event) {
 //		System.out.println("onDeath from SkyGame!");
 		Player killer = event.getEntity().getKiller();
 		if(killer == null) {
-			killer = MinG.getLastAttacker(event.getEntity());
+			killer = PlayerUtil.getLastAttacker(event.getEntity());
 		}
 		if (killer != null) {
 //			System.out.println("Killer: " + killer.getName());
@@ -117,7 +120,6 @@ public class SkyGame extends Game {
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override
 			public void run() {
-				event.getEntity().setGameMode(GameMode.SPECTATOR);
 				event.getEntity().spigot().respawn();
 			}
 		}, 1);
@@ -133,12 +135,20 @@ public class SkyGame extends Game {
 					taskManager.addTask(new SkyTasksDelayed.Draw(SkyGame.this, 0), SkyTasksDelayed.Draw.id);
 				}
 			}
-		}.runTaskLater(plugin, 2);
+		}.runTaskLater(plugin, 5);
 	}
 	
 	@Override
 	public void onRespawn(PlayerRespawnEvent event) {
 		event.setRespawnLocation(arena.getMidSpawn());
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				event.getPlayer().setGameMode(GameMode.ADVENTURE);
+				MinG.setSpectator(event.getPlayer(), true);
+			}
+		}.runTaskLater(plugin, 2);
+
 	}
 
 	@Override
@@ -152,7 +162,7 @@ public class SkyGame extends Game {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 			public void run() {
 				player.setGameMode(GameMode.ADVENTURE);
-				MinG.resetPlayer(player, plugin);
+				PlayerUtil.resetPlayer(player, plugin);
 				player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 			}
 		}, 5);

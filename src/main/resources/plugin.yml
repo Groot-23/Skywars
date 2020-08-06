@@ -3,6 +3,7 @@ version: 1.0
 author: Groot_23
 main: me.groot_23.skywars.Main
 api-version: 1.14
+depend: [MinG]
 
 commands:
   swjoin:
@@ -44,6 +45,14 @@ commands:
   swlang:
     description: Bearbeite Sprachwerte
     usage: /<command> <language> <key> <value>
+    
+  swstart:
+    description: Starte ein Spiel früher
+    usage: /<command>
+    
+  swforce:
+    description: Zwinge einen Spieler dazu, einen Befehl auszuführen
+    usage: /<command> <player> <other command>
 
 permissions:
   skywars.*:

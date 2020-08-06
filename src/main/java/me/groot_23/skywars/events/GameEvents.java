@@ -19,8 +19,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import de.tr7zw.changeme.nbtapi.NBTItem;
-import me.groot_23.ming.MinG;
+import de.tr7zw.nbtapi.NBTItem;
+import me.groot_23.ming.player.PlayerUtil;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.SWconstants;
 
@@ -60,7 +60,7 @@ public class GameEvents implements Listener {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 				public void run() {
 					p.setGameMode(GameMode.ADVENTURE);
-					MinG.resetPlayer(p, plugin);
+					PlayerUtil.resetPlayer(p, plugin);
 					p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 				}
 			}, 5);
@@ -159,6 +159,7 @@ public class GameEvents implements Listener {
 			}
 		}
 	}
+
 
 //	@EventHandler
 //	public void onJoin(GameJoinEvent e) {

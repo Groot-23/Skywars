@@ -1,12 +1,17 @@
 package me.groot_23.skywars.events;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
+
+import me.groot_23.ming.MinG;
 import me.groot_23.ming.gui.GuiItem;
+import me.groot_23.ming.kits.Kit;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.language.LanguageKeys;
 
@@ -23,25 +28,25 @@ public class KitEvents implements Listener {
 
 	public static String getSelectedSuffix(Player player) {
 		return ChatColor.RESET + "    " + ChatColor.GRAY + "(" + ChatColor.GREEN
-				+ Main.game.getTranslation(player, LanguageKeys.KIT_SELECTED) + ChatColor.GRAY + ")";
+				+ MinG.getLanguageManager().getTranslation(player, LanguageKeys.KIT_SELECTED) + ChatColor.GRAY + ")";
 	}
 
 	public static void openGui(Player player) {
 		Inventory inv = Bukkit.createInventory(player, 45,
-				Main.game.getTranslation(player, LanguageKeys.KIT_SELECTOR));
+				MinG.getLanguageManager().getTranslation(player, LanguageKeys.KIT_SELECTOR));
 
 		for (int y = 0; y <= 4; y += 4) {
 			for (int x = 0; x < 9; x++) {
-				inv.setItem(9 * y + x, Main.game.createGuiItem(Material.BLACK_STAINED_GLASS_PANE, " ").getItem());
+				inv.setItem(9 * y + x, new GuiItem(Material.BLACK_STAINED_GLASS_PANE, " ").getItem());
 			}
 		}
 		for (int y = 1; y < 4; y++) {
 			for (int x = 0; x <= 8; x += 8) {
-				inv.setItem(9 * y + x, Main.game.createGuiItem(Material.WHITE_STAINED_GLASS_PANE, " ").getItem());
+				inv.setItem(9 * y + x, new GuiItem(Material.WHITE_STAINED_GLASS_PANE, " ").getItem());
 			}
 		}
 
-		GuiItem leaveItem = Main.game.createGuiItem(Material.BARRIER,  "Kit Auswahl verlassen");
+		GuiItem leaveItem = new GuiItem(Material.BARRIER,  "Kit Auswahl verlassen");
 		leaveItem.addActionClickRunnable("ming_gui_close");
 		inv.setItem(9 * 4 + 4, leaveItem.getItem());
 
@@ -49,8 +54,9 @@ public class KitEvents implements Listener {
 		for (int y = 1; y < 4; y++) {
 			for (int x = 1; x < 8; x++) {
 				
-				if(i < Main.game.getKits().size()) {
-					inv.setItem(9 * y + x, Main.game.getKits().get(i).getDisplayItem(player));
+				List<Kit> kits = MinG.getKits("skywars");
+				if(i < kits.size()) {
+					inv.setItem(9 * y + x, kits.get(i).getDisplayItem(player));
 					i++;
 				
 //				if (i < Main.kits.size()) {

@@ -26,6 +26,8 @@ import org.bukkit.loot.LootTable;
 import org.bukkit.loot.Lootable;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import me.groot_23.ming.MinG;
+import me.groot_23.ming.player.PlayerUtil;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
@@ -51,6 +53,8 @@ public class ChestEvents implements Listener {
 
 	@EventHandler
 	public void onChestOpen(PlayerInteractEvent event) {
+		if(MinG.isSpectator(event.getPlayer())) return;
+		
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
 			if (block.getType() == Material.CHEST) {

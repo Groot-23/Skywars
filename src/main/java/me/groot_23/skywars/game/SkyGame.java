@@ -1,9 +1,13 @@
 package me.groot_23.skywars.game;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -16,15 +20,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.ming.MinG;
 import me.groot_23.ming.game.Game;
-import me.groot_23.ming.game.MiniGameMode;
 import me.groot_23.ming.gui.GuiItem;
 import me.groot_23.ming.gui.GuiItem.UseAction;
 import me.groot_23.ming.language.LanguageManager;
 import me.groot_23.ming.player.PlayerUtil;
 import me.groot_23.ming.player.team.GameTeam;
+import me.groot_23.ming.player.team.TeamHandler;
 import me.groot_23.ming.world.Arena;
+import me.groot_23.ming.world.ArenaCreator;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.tasks.SkyTasksDelayed;
+import me.groot_23.skywars.game.tasks.SkyTasksRepeated;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
 import me.groot_23.skywars.util.Util;
@@ -39,29 +45,35 @@ public class SkyGame extends Game {
 	public int deathMatchBegin;
 	public int deathMatchBorderShrinkTime;
 
-	public SkyGame(MiniGameMode mode, String group) {
-		super(mode, group);
+	public SkyGame(String name, String option, int teamSize) {
+		super(name, option, Main.getInstance(), teamSize);
+		
+
+		arena = MinG.WorldProvider.provideArena(option, this, new ArenaCreator() {
+			@Override
+			public Arena createArena(Game game, World world, String map) {
+				return new SkyArena(SkyGame.this, world, map);
+			}
+		});
 		skyArena = (SkyArena) arena;
+		teamHandler = new TeamHandler(arena.getMaxPlayers(), teamSize);
 		
 		skyArena.initBorder();
 		skyArena.refillChests();
 		arena.getWorld().setPVP(false);
 
-		JavaPlugin plugin = mode.getPlugin();
 		deathMatchBegin = plugin.getConfig().getInt("deathMatchBegin");
 		deathMatchBorderShrinkTime = plugin.getConfig().getInt("deathMatchBorderShrinkTime");
 		refillTime = plugin.getConfig().getInt("refillTime");
 		refillTimeChange = plugin.getConfig().getInt("refillTimeChange");
-	}
-
-	@Override
-	public Arena createArena(World world, String mapName) {
-		return new SkyArena(this, world, mapName);
+		
+		taskManager.addRepeated(new SkyTasksRepeated.Lobby1(this), "lobby1");
+		taskManager.addRepeated(new SkyTasksRepeated.Lobby20(this), "lobby20");
 	}
 
 	@Override
 	public void onJoin(Player player) {
-		PlayerUtil.resetPlayer(player, plugin);
+		PlayerUtil.resetPlayer(player);
 		LanguageManager langManager = MinG.getLanguageManager();
 		// init hotbar
 		GuiItem kitSelector = new GuiItem(Material.CHEST,
@@ -80,7 +92,7 @@ public class SkyGame extends Game {
 		
 		SkywarsScoreboard.resetKills(player);
 		SkywarsScoreboard.init(player);
-		SkywarsScoreboard.initPreGame(player, arena.getMaxPlayers(), 30, arena.getMapName(), mode.getName());
+		SkywarsScoreboard.initPreGame(player, arena.getMaxPlayers(), 30, arena.getMapName(), name);
 
 		
 		if(players.size() == arena.getMinPlayers()) {
@@ -162,7 +174,7 @@ public class SkyGame extends Game {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 			public void run() {
 				player.setGameMode(GameMode.ADVENTURE);
-				PlayerUtil.resetPlayer(player, plugin);
+				PlayerUtil.resetPlayer(player);
 				player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 			}
 		}, 5);

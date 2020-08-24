@@ -53,6 +53,11 @@ commands:
   swforce:
     description: Zwinge einen Spieler dazu, einen Befehl auszuführen
     usage: /<command> <player> <other command>
+    
+  toggleSpectate:
+    description: Wechsle zu Spectator Modus oder verlasse ihn. DEBUG ONLY!
+    usage: /<command>
+    
 
 permissions:
   skywars.*:

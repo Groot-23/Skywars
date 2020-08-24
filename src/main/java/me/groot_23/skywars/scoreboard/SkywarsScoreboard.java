@@ -94,7 +94,7 @@ public class SkywarsScoreboard {
 		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
 		String kit = getKit(player);
-		ChatColor team = GameTeam.getTeamOfPlayer(player, Main.getInstance());
+		ChatColor team = GameTeam.toChatColor(GameTeam.getTeamOfPlayer(player));
 		String teamStr = team == null ? "" : team + MinG.getLanguageManager().getTranslation(player, "color." + team.name().toLowerCase());
 
 		ScoreboardApi.init(objective, "server", null, "map", null, "kit", "kills", null, "team", "mode", null,

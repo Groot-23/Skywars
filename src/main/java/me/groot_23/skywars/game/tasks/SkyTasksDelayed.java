@@ -10,7 +10,6 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import me.groot_23.ming.MinG;
-import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.display.BossBarManager;
 import me.groot_23.ming.game.Game;
 import me.groot_23.ming.game.task.GameTaskDelayed;
@@ -30,14 +29,12 @@ public class SkyTasksDelayed {
 		public SkyGame skyGame;
 		public SkyArena arena;
 		public World world;
-		public MiniGame miniGame;
 		
 		public Base(Game game, long delay) {
 			super(game, delay);
 			this.skyGame = (SkyGame) game;
 			this.arena = skyGame.skyArena;
 			this.world = arena.getWorld();
-			this.miniGame = game.miniGame;
 		}
 	}
 	

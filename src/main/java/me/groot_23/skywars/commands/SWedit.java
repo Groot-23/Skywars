@@ -1,5 +1,6 @@
 package me.groot_23.skywars.commands;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +12,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import me.groot_23.ming.MinG;
 import me.groot_23.ming.world.ChunkGeneratorVoid;
 import me.groot_23.ming.world.WorldUtil;
 import me.groot_23.skywars.Main;
@@ -34,12 +35,9 @@ public class SWedit implements CommandExecutor, TabCompleter{
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
 		List<String> list = new ArrayList<String>();
 		if(args.length == 1) {
-			ConfigurationSection sec = Main.game.worldProvider.getConfig().getConfigurationSection("worlds");
-			if(sec != null) {
-				for(String s : sec.getKeys(false)) {
-					if(s.startsWith(args[0]))
-						list.add(s);
-				}
+			for(File f : Bukkit.getWorldContainer().listFiles()) {
+				if(!f.getName().startsWith(MinG.WorldProvider.WORLD_PREFIX) && f.getName().startsWith(args[0]))
+					list.add(f.getName());
 			}
 		}
 		return list;

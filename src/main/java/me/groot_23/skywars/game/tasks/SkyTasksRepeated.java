@@ -8,12 +8,10 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import me.groot_23.ming.MinG;
-import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.display.BossBarManager;
 import me.groot_23.ming.game.Game;
 import me.groot_23.ming.game.task.GameTaskDelayed;
 import me.groot_23.ming.game.task.GameTaskRepeated;
-import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.SkyGame;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
@@ -24,12 +22,10 @@ import net.md_5.bungee.api.ChatColor;
 
 public class SkyTasksRepeated {
 	public abstract static class Base extends GameTaskRepeated {
-		public MiniGame miniGame;
 		public SkyGame skyGame;
 		public SkyArena arena;
 		public Base(Game game, long tickRate) {
 			super(game, tickRate);
-			miniGame = game.miniGame;
 			skyGame = (SkyGame) game;
 			arena = skyGame.skyArena;
 		}
@@ -93,7 +89,7 @@ public class SkyTasksRepeated {
 			for(Player player : game.players) {
 				SkywarsScoreboard.initGame(player, skyGame.teamHandler.getTeamsAliveCount(),
 						LanguageKeys.EVENT_START, 10, skyGame.deathMatchBegin, SWconstants.LENGTH_OF_GAME,
-						arena.getMapName(), game.mode.getName());
+						arena.getMapName(), game.name);
 			}
 		}
 

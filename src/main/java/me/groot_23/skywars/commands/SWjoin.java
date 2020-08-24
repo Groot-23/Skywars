@@ -5,7 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.groot_23.ming.game.MiniGameMode;
+import me.groot_23.ming.MinG;
+import me.groot_23.ming.game.Game;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 
@@ -24,14 +25,17 @@ public class SWjoin implements CommandExecutor {
 				p.sendMessage(Util.chat("&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.join"));
 				return true;
 			}
-			MiniGameMode mode = null;
+			String name = "skywars-solo";
 			if(args.length > 0) {
-				mode = Main.game.getMode(args[0]);
-			} if(mode == null) {
-				mode = Main.game.getDefaultMode();
+				if(args[0].equals("duo")) name = "skywars-duo";
 			}
-//			mode.getArenaProvider().joinPlayer(p);
-			mode.gameProvider.joinPlayer(p);
+			Game game = null;
+			if(args.length > 1) {
+				game = MinG.GameProvider.provideGame(name, args[1]);
+			} else {
+				game = MinG.GameProvider.provideGame(name, MinG.GameProvider.ProvideType.MOST_PLAYERS);
+			}
+			if(game != null) game.joinPlayer(p);
 		}
 		return true;
 	}

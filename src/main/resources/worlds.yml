@@ -1,11 +1,4 @@
-# Note that this is just an example. It is very likely that you have different world names
-
-groups:
-  default:
-  - skywars_wueste
-  
-worlds:
- skywars_wueste:
+skywars_wueste:
   builder: test
   minPlayers: 1
   maxPlayers: 2

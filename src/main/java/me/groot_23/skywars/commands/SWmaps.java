@@ -3,6 +3,7 @@ package me.groot_23.skywars.commands;
 import java.util.List;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -13,8 +14,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
+import me.groot_23.ming.util.Utf8Config;
 import me.groot_23.ming.world.WorldUtil;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.SWconstants;
@@ -52,7 +55,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 					list.add(f.getName());
 				}
 			} else if (args[0].equals("remove")) {
-				ConfigurationSection sec = Main.game.worldProvider.getConfig().getConfigurationSection("groups");
+				ConfigurationSection sec = getGroupConfig();
 				if(sec != null) {
 					for (String s : sec.getKeys(false)) {
 						if (s.startsWith(args[1]))
@@ -60,7 +63,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 					}
 				}
 			} else if (args[0].equals("set")) {
-				ConfigurationSection sec = Main.game.worldProvider.getConfig().getConfigurationSection("worlds");
+				ConfigurationSection sec = getWorldConfig();
 				if(sec != null) {
 					for(String s : sec.getKeys(false)) {
 						if(s.startsWith(args[1]))  {
@@ -78,7 +81,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 				}
 			}
 			else if(args[0].equals("register")) {
-				ConfigurationSection sec = Main.game.worldProvider.getConfig().getConfigurationSection("groups");
+				ConfigurationSection sec = getGroupConfig();
 				if(sec != null) {
 					for (String s : sec.getKeys(false)) {
 						if (s.startsWith(args[2]))
@@ -87,7 +90,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 				}
 			}
 			else if(args[0].equals("remove")) {
-				List<String> l = Main.game.worldProvider.getConfig().getStringList("groups." + args[1]);
+				List<String> l = getGroupConfig().getStringList(args[1]);
 				for (String s : l) {
 					if (s.startsWith(args[2]))
 						list.add(s);
@@ -128,7 +131,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 				return true;
 			}
 
-			Main.game.worldProvider.addWorldToGroup(world, group);
+			addWorldToGroup(world, group);
 			
 		} else if (mode.equals("list")) {
 			if (!sender.hasPermission("skywars.maps.list")) {
@@ -137,7 +140,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 				return true;
 			}
 
-			ConfigurationSection groups = Main.game.worldProvider.getConfig().getConfigurationSection("groups");
+			ConfigurationSection groups = getGroupConfig();
 			if (groups == null) {
 				player.sendMessage("Es sind keine Daten vorhanden");
 				return true;
@@ -161,7 +164,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 			}
 			String group = args[1];
 			String world = args[2];
-			Main.game.worldProvider.removeWorldFromGroup(world, group);
+			removeWorldFromGroup(world, group);
 			return true;
 		} else if (mode.equals("set")) {
 			if (!sender.hasPermission("skywars.maps.set")) {
@@ -209,11 +212,76 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 		return true;
 	}
 	
+	public Utf8Config getGroupConfig() {
+		Utf8Config cfg = new Utf8Config();
+		try {
+			cfg.load(new File(Main.getInstance().getDataFolder(), "groups.yml"));
+			return cfg;
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public void saveGroupConfig(Utf8Config cfg) {
+		try {
+			cfg.save(new File(Main.getInstance().getDataFolder(), "groups.yml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void addWorldToGroup(String world, String group) {
+		Utf8Config cfg = getGroupConfig();
+		if(cfg != null) {
+			List<String> strings =  cfg.getStringList(group);
+			if(!strings.contains(world)) {			
+				strings.add(world);
+				cfg.set(group, strings);
+			}
+			saveGroupConfig(cfg);
+		}
+	}
+	
+	public void removeWorldFromGroup(String world, String group) {
+		Utf8Config cfg = getGroupConfig();
+		if(cfg != null) {
+			List<String> strings =  cfg.getStringList(group);
+			if(!strings.contains(world)) {			
+				strings.remove(world);
+				cfg.set(group, strings);
+			}
+			saveGroupConfig(cfg);
+		}
+	}
+	
+	public Utf8Config getWorldConfig() {
+		Utf8Config cfg = new Utf8Config();
+		try {
+			cfg.load(new File(Main.getInstance().getDataFolder(), "worlds.yml"));
+			return cfg;
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public void saveWorldConfig(Utf8Config cfg) {
+		try {
+			cfg.save(new File(Main.getInstance().getDataFolder(), "worlds.yml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void setWorldProperty(String world, String property, String intStr, Player sender) {
 		try {
 			int val = Integer.parseInt(intStr);
-			Main.game.worldProvider.getWorldSection(world).set(property, val);
-			Main.game.worldProvider.saveConfig();
+			Utf8Config cfg = getWorldConfig();
+			if(cfg != null) {	
+				ConfigurationSection sec = cfg.getConfigurationSection(world);
+				if(sec == null) sec = cfg.createSection(world);
+				sec.set(property, val);
+				saveWorldConfig(cfg);
+			}
 		} catch(NumberFormatException e) {
 			if(sender != null)
 				sender.sendMessage(Util.chat("&c\"" + intStr + "\" ist keine erlaubte Zahl"));
@@ -222,11 +290,15 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 	}
 	
 	public void setMidSpawn(String world, int x, int y, int z) {
-		ConfigurationSection section = Main.game.worldProvider.getWorldSection(world);
-		section.set("midSpawn.x", x);
-		section.set("midSpawn.y", y);
-		section.set("midSpawn.z", z);
-		Main.game.worldProvider.saveConfig();
+		Utf8Config cfg = getWorldConfig();
+		if(cfg != null) {	
+			ConfigurationSection sec = cfg.getConfigurationSection(world);
+			if(sec == null) sec = cfg.createSection(world);
+			sec.set("midSpawn.x", x);
+			sec.set("midSpawn.y", y);
+			sec.set("midSpawn.z", z);
+			saveWorldConfig(cfg);
+		}
 	}
 
 }

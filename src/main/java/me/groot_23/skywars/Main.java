@@ -1,21 +1,24 @@
 package me.groot_23.skywars;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.groot_23.skywars.commands.SWjoin;
 import me.groot_23.ming.MinG;
-import me.groot_23.ming.MiniGame;
 import me.groot_23.ming.commands.KitCommands;
 import me.groot_23.ming.commands.LangCommand;
 import me.groot_23.ming.commands.MarkerCommand;
+import me.groot_23.ming.game.Game;
+import me.groot_23.ming.game.GameCreator;
 import me.groot_23.ming.gui.GuiRunnable;
 import me.groot_23.ming.language.LanguageHolder;
-import me.groot_23.ming.language.LanguageManager;
 import me.groot_23.ming.util.ResourceExtractor;
+import me.groot_23.ming.util.Utf8Config;
 import me.groot_23.ming.world.Arena;
 import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
@@ -25,18 +28,17 @@ import me.groot_23.skywars.commands.SWmaps;
 import me.groot_23.skywars.commands.SWset;
 import me.groot_23.skywars.commands.SWstart;
 import me.groot_23.skywars.commands.SWupdate;
+import me.groot_23.skywars.commands.ToggleSpectator;
 import me.groot_23.skywars.events.GameEvents;
 import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
 import me.groot_23.skywars.game.SkyGame;
-import me.groot_23.skywars.game.SkywarsGame;
 import me.groot_23.skywars.util.Util;
 
 public class Main extends JavaPlugin
 {
 
-	public static MiniGame game;
 	public static LanguageHolder langHolder;
 	
 	private static Main instance;
@@ -46,8 +48,29 @@ public class Main extends JavaPlugin
 	{
 		firstStart();
 		instance = this;
-
-		game = new SkywarsGame(this);
+		
+		MinG.registerGame("skywars-solo", new GameCreator() {
+			@Override
+			public Game createGame(String options) {
+				return new SkyGame("skywars-solo", options, 1);
+			}
+		});
+		MinG.registerGame("skywars-duo", new GameCreator() {
+			@Override
+			public Game createGame(String options) {
+				return new SkyGame("skywars-duo", options, 2);
+			}
+		});
+		Utf8Config cfg = new Utf8Config();
+		try {
+			cfg.load(new File(this.getDataFolder(), "groups.yml"));
+			for(String s : cfg.getStringList("default")) {
+				MinG.registerGameOption("skywars-solo", s);
+				MinG.registerGameOption("skywars-duo", s);
+			}
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 		
 		langHolder = MinG.getLanguageManager().addLanguageHolder(new File(getDataFolder(), "lang"));
 		
@@ -64,6 +87,8 @@ public class Main extends JavaPlugin
 		new SWset(this);
 		new SWforce(this);
 		new SWstart(this);
+		
+		new ToggleSpectator(this);
 		
 		new KitCommands(this, langHolder, kitFile, "skywars", "swkits", "skywars.kits");
 		new LangCommand(this, langHolder, "swlang", "skywars.lang");

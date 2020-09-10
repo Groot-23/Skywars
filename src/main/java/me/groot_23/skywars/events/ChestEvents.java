@@ -1,6 +1,7 @@
 package me.groot_23.skywars.events;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -19,7 +20,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootTable;
@@ -27,8 +30,8 @@ import org.bukkit.loot.Lootable;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import me.groot_23.ming.MinG;
-import me.groot_23.ming.player.PlayerUtil;
 import me.groot_23.skywars.Main;
+import me.groot_23.skywars.game.SkyGame;
 import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
 
@@ -126,8 +129,21 @@ public class ChestEvents implements Listener {
 	public void onChestHit(BlockDamageEvent event) {
 		if(event.getBlock().getType() == Material.CHEST) {
 			if(event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-				if(event.getPlayer().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+				if(MinG.getGame(event.getPlayer().getWorld().getUID()) instanceof SkyGame) {
 					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onExplode(EntityExplodeEvent event) {
+		if(MinG.getGame(event.getEntity().getWorld().getUID()) instanceof SkyGame) {
+			List<Block> list = event.blockList();
+			for(int i = 0; i < list.size(); ++i) {
+				if(list.get(i).getType() == Material.CHEST) {
+					list.remove(i);
+					i--;
 				}
 			}
 		}

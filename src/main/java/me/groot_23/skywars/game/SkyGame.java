@@ -1,21 +1,15 @@
 package me.groot_23.skywars.game;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.ming.MinG;
@@ -144,7 +138,9 @@ public class SkyGame extends Game {
 					GameTeam winner = teamHandler.getTeamsAlive().get(0);
 					taskManager.addTask(new SkyTasksDelayed.Victory(SkyGame.this, 0, winner), SkyTasksDelayed.Victory.id);
 				} else if(teamHandler.getTeamsAliveCount() == 0) {
-					taskManager.addTask(new SkyTasksDelayed.Draw(SkyGame.this, 0), SkyTasksDelayed.Draw.id);
+					if(taskManager.getTask(SkyTasksDelayed.Draw.id) != null) {
+						taskManager.getTask(SkyTasksDelayed.Draw.id).runTaskEarly();
+					}
 				}
 			}
 		}.runTaskLater(plugin, 5);

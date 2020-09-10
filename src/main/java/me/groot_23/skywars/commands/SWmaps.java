@@ -10,30 +10,28 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
+import me.groot_23.ming.MinG;
+import me.groot_23.ming.commands.CommandBase;
 import me.groot_23.ming.util.Utf8Config;
 import me.groot_23.ming.world.WorldUtil;
 import me.groot_23.skywars.Main;
-import me.groot_23.skywars.util.SWconstants;
 import me.groot_23.skywars.util.Util;
 
-public class SWmaps implements CommandExecutor, TabCompleter {
+public class SWmaps extends CommandBase {
 
 	public static final String PERMISSION = "skywars.maps";
 
 	public SWmaps(Main plugin) {
-		plugin.getCommand("swmaps").setExecutor(this);
-		plugin.getCommand("swmaps").setTabCompleter(this);
+		super(plugin, "swmaps", "skywars.maps");
 	}
 
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
+	public List<String> tabComplete(CommandSender sender, Command cmd, String arg2, String[] args) {
 		List<String> list = new ArrayList<String>();
 		if (args.length == 1) {
 			String[] modes = new String[] { "register", "list", "remove", "set"};
@@ -48,7 +46,7 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 					@Override
 					public boolean accept(File pathname) {
 						return pathname.getName().startsWith(args[1])
-								&& !pathname.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX);
+								&& !pathname.getName().startsWith(MinG.WorldProvider.WORLD_PREFIX);
 					}
 				});
 				for (File f : worlds) {
@@ -101,44 +99,25 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String arg2, String[] args) {
+	public boolean execute(CommandSender sender, Command cmd, String arg2, String[] args) {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("Nur Spieler können diesen Befehl ausf�hren");
 			return true;
 		}
 		Player player = (Player) sender;
 
-		if (args.length == 0) {
-			player.sendMessage(Util.chat("&cZu wenige Argumente"));
-			return false;
-		}
+		if (args.length == 0) return false;
 		String mode = args[0];
-		if (mode.equals("register")) {
-			if (!sender.hasPermission("skywars.maps.register")) {
-				player.sendMessage(Util.chat(
-						"&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.register"));
-				return true;
-			}
-			// get world
-			if (args.length < 3) {
-				player.sendMessage(Util.chat("&cZu wenige Argumente. Gib Welt und Gruppe an"));
-				return false;
-			}
+		if (args.length == 3 && mode.equals("register")) {
 			String world = args[1];
 			String group = args[2];
 			if (!WorldUtil.worldExists(world)) {
 				player.sendMessage(Util.chat("&cDie Welt \"" + args[1] + "\" wurde nicht gefunden!"));
 				return true;
 			}
-
 			addWorldToGroup(world, group);
 			
 		} else if (mode.equals("list")) {
-			if (!sender.hasPermission("skywars.maps.list")) {
-				player.sendMessage(Util.chat(
-						"&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.list"));
-				return true;
-			}
 
 			ConfigurationSection groups = getGroupConfig();
 			if (groups == null) {
@@ -151,32 +130,12 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 					player.sendMessage(" - " + s);
 				}
 			}
-		} else if (mode.equals("remove")) {
-			if (!sender.hasPermission("skywars.maps.remove")) {
-				player.sendMessage(Util.chat(
-						"&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.remove"));
-				return true;
-			}
-
-			if (args.length < 3) {
-				player.sendMessage(Util.chat("&cZu wenige Argumente. Gib Gruppe und Welt an"));
-				return false;
-			}
+		} else if (args.length == 3 && mode.equals("remove")) {
 			String group = args[1];
 			String world = args[2];
 			removeWorldFromGroup(world, group);
 			return true;
-		} else if (mode.equals("set")) {
-			if (!sender.hasPermission("skywars.maps.set")) {
-				player.sendMessage(Util.chat(
-						"&cDu hast nicht die Berechtigung, diesen Befehl auszuführen! Benötigte Berechtigung: skywars.maps.set"));
-				return true;
-			}
-			// get world
-			if (args.length <= 3 && !(args.length == 3 && args[2].equals("midSpawn"))) {
-				player.sendMessage(Util.chat("&cZu wenige Argumente"));
-				return false;
-			}
+		} else if (mode.equals("set") && (args.length > 3 || (args.length == 3 && args[2].equals("midSpawn")))) {
 			String world = args[1];
 			
 			if(args[2].equals("minPlayers")) {
@@ -205,11 +164,8 @@ public class SWmaps implements CommandExecutor, TabCompleter {
 					player.sendMessage(ChatColor.RED + "Zu wenige Argumente für die Koordinaten. Gib keine an, wenn es deine Position sein soll!");
 				}
 			}
-		} else {
-			player.sendMessage(Util.chat("&c\"" + mode + "\" ist ein unbekannter Befehl"));
-			return false;
 		}
-		return true;
+		return false;
 	}
 	
 	public Utf8Config getGroupConfig() {

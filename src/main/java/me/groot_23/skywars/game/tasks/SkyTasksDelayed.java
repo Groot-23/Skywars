@@ -181,10 +181,11 @@ public class SkyTasksDelayed {
 		@Override
 		public void run() {
 			for (Player player : world.getPlayers()) {
-				player.sendTitle(Util.chat(winner.getColor() + "Team " + winner.getColor().name()), ChatColor.DARK_PURPLE + 
+				player.sendTitle(GameTeam.toChatColor(winner.getColor()) + "Team " + winner.getColor().name(), ChatColor.DARK_PURPLE + 
 						MinG.getLanguageManager().getTranslation(player, LanguageKeys.VICTORY), 3, 50, 3);
 				MinG.setSpectator(player, true);
 			}
+			game.taskManager.removeTask(Draw.id);
 			game.taskManager.addTask(new EndGame(game, 200), EndGame.id);
 		}
 	}

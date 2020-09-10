@@ -7,7 +7,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,14 +14,12 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import de.tr7zw.nbtapi.NBTItem;
+import me.groot_23.ming.MinG;
 import me.groot_23.ming.player.PlayerUtil;
 import me.groot_23.skywars.Main;
-import me.groot_23.skywars.util.SWconstants;
+import me.groot_23.skywars.game.SkyGame;
 
 public class GameEvents implements Listener {
 
@@ -55,7 +52,7 @@ public class GameEvents implements Listener {
 
 	@EventHandler
 	public void onWorldLeave(PlayerChangedWorldEvent e) {
-		if (e.getFrom().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+		if (MinG.getGame(e.getFrom().getUID()) instanceof SkyGame) {
 			Player p = e.getPlayer();
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 				public void run() {
@@ -68,13 +65,13 @@ public class GameEvents implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onBlockPlaced(BlockPlaceEvent e) {
-		if (e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
-			e.getBlock().setMetadata("skywars_player_placed", new FixedMetadataValue(plugin, true));
-		}
-	}
-
+//	@EventHandler
+//	public void onBlockPlaced(BlockPlaceEvent e) {
+//		if (MinG.getGame(e.getPlayer().getWorld().getUID()) instanceof SkyGame) {
+//			e.getBlock().setMetadata("skywars_player_placed", new FixedMetadataValue(plugin, true));
+//		}
+//	}
+//
 //	@EventHandler
 //	public void onBlockDamage(BlockDamageEvent e) {
 //		if (e.getBlock().getWorld().getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
@@ -119,7 +116,7 @@ public class GameEvents implements Listener {
 	public void preventSpawn(CreatureSpawnEvent e) {
 		World world = e.getEntity().getWorld();
 		if (!world.getMetadata("skywars_edit_world").isEmpty()
-				|| world.getName().startsWith(SWconstants.SW_GAME_WORLD_PREFIX)) {
+				|| MinG.getGame(e.getEntity().getWorld().getUID()) instanceof SkyGame) {
 			if (e.getSpawnReason() == SpawnReason.NATURAL) {
 				e.setCancelled(true);
 			}
@@ -150,50 +147,4 @@ public class GameEvents implements Listener {
 			}
 		}
 	}
-
-	@EventHandler
-	public void onLeaveClick(PlayerInteractEvent e) {
-		if (e.getItem() != null) {
-			if (new NBTItem(e.getItem()).hasKey("skywars_leave")) {
-				e.getPlayer().performCommand("swleave");
-			}
-		}
-	}
-
-
-//	@EventHandler
-//	public void onJoin(GameJoinEvent e) {
-//		e.getPlayer().getInventory().clear();
-//		Player player = e.getPlayer();
-//		
-//		// init hotbar
-//		GuiItem kitSelector = Main.game.createGuiItem(Material.CHEST,
-//				Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.KIT_SELECTOR)));
-//		kitSelector.addActionUseRunnable("openGui", UseAction.RIGHT_CLICK);
-//		player.getInventory().setItem(4, kitSelector.getItem());
-//
-//		GuiItem lobbyLeave = Main.game.createGuiItem(Material.MAGMA_CREAM,
-//				Util.chat(plugin.langManager.getTranslation(player, LanguageKeys.LEAVE)));
-//		lobbyLeave.addActionUse("swleave", UseAction.RIGHT_CLICK, UseAction.LEFT_CLICK);
-//		player.getInventory().setItem(8, lobbyLeave.getItem());
-//		
-//		GuiItem teamSelector = Main.game.createGuiItem(Material.OAK_SIGN);
-//		teamSelector.addActionUseRunnable("open_kit_selector");
-//		player.getInventory().setItem(0, teamSelector.getItem());
-//		
-//
-//		Arena arena = ((ArenaGame)e.getGame()).getArena();
-//		if(e.getPlayerCount() == arena.getMaxPlayers()) {
-//			// end lobby task sooner
-//			e.getGame().runTaskEarly(SkyGameTasks.GoToSpawn.id);
-//		} else if(e.getPlayerCount() == arena.getMinPlayers()) {
-//			// start lobby task
-//			e.getGame().addTask(new SkyGameTasks.GoToSpawn(e.getGame(), 30 * 20), SkyGameTasks.GoToSpawn.id);
-//		}
-//		
-//		String mode = e.getGame().mode.getName();
-//		SkywarsScoreboard.resetKills(player);
-//		SkywarsScoreboard.init(player);
-//		SkywarsScoreboard.initPreGame(player, 2, 30, arena.getMapName(), mode);
-//	}
 }

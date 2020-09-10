@@ -6,10 +6,6 @@ api-version: 1.14
 depend: [MinG]
 
 commands:
-  swjoin:
-    description: Trete einem Skywars Spiel bei
-    usage: /<command>
-
   swleave:
     description: Verlasse die Lobby
     usage: /<command>
@@ -22,9 +18,6 @@ commands:
     description: Verwalte die Skywarsmaps
     usage: /<command> [register | list | remove | set] <world | group>
 
-  swupdate:
-    description: Lese die Config neu ein
-    usage: /<command>
 
   swchest:
     description: Platziere eine Skywars Truhe
@@ -32,7 +25,7 @@ commands:
 
   swspawns:
     description: Verwalte die Spawns einer Skywars Welt
-    usage: /<command> [add | show]
+    usage: /<command> [add | show | remove]
 
   swset:
     description: Bearbeite die Einstellungen von skywars
@@ -48,16 +41,7 @@ commands:
     
   swstart:
     description: Starte ein Spiel früher
-    usage: /<command>
-    
-  swforce:
-    description: Zwinge einen Spieler dazu, einen Befehl auszuführen
-    usage: /<command> <player> <other command>
-    
-  toggleSpectate:
-    description: Wechsle zu Spectator Modus oder verlasse ihn. DEBUG ONLY!
-    usage: /<command>
-    
+    usage: /<command>  
 
 permissions:
   skywars.*:

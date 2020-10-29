@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.groot_23.ming.commands.CommandBase;
+import me.groot_23.pixel.commands.CommandBase;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 

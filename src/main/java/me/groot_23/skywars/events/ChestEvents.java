@@ -29,7 +29,7 @@ import org.bukkit.loot.LootTable;
 import org.bukkit.loot.Lootable;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import me.groot_23.ming.MinG;
+import me.groot_23.pixel.Pixel;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.SkyGame;
 import me.groot_23.skywars.util.SWconstants;
@@ -56,7 +56,7 @@ public class ChestEvents implements Listener {
 
 	@EventHandler
 	public void onChestOpen(PlayerInteractEvent event) {
-		if(MinG.isSpectator(event.getPlayer())) return;
+		if(Pixel.isSpectator(event.getPlayer())) return;
 		
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
@@ -129,7 +129,7 @@ public class ChestEvents implements Listener {
 	public void onChestHit(BlockDamageEvent event) {
 		if(event.getBlock().getType() == Material.CHEST) {
 			if(event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-				if(MinG.getGame(event.getPlayer().getWorld().getUID()) instanceof SkyGame) {
+				if(Pixel.getGame(event.getPlayer().getWorld().getUID()) instanceof SkyGame) {
 					event.setCancelled(true);
 				}
 			}
@@ -138,7 +138,7 @@ public class ChestEvents implements Listener {
 	
 	@EventHandler
 	public void onExplode(EntityExplodeEvent event) {
-		if(MinG.getGame(event.getEntity().getWorld().getUID()) instanceof SkyGame) {
+		if(Pixel.getGame(event.getEntity().getWorld().getUID()) instanceof SkyGame) {
 			List<Block> list = event.blockList();
 			for(int i = 0; i < list.size(); ++i) {
 				if(list.get(i).getType() == Material.CHEST) {

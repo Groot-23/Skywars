@@ -13,10 +13,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import me.groot_23.ming.MinG;
-import me.groot_23.ming.commands.CommandBase;
-import me.groot_23.ming.world.ChunkGeneratorVoid;
-import me.groot_23.ming.world.WorldUtil;
+import me.groot_23.pixel.Pixel;
+import me.groot_23.pixel.commands.CommandBase;
+import me.groot_23.pixel.world.ChunkGeneratorVoid;
+import me.groot_23.pixel.world.WorldUtil;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 
@@ -34,7 +34,7 @@ public class SWedit extends CommandBase {
 		List<String> list = new ArrayList<String>();
 		if(args.length == 1) {
 			for(File f : Bukkit.getWorldContainer().listFiles()) {
-				if(!f.getName().startsWith(MinG.WorldProvider.WORLD_PREFIX) && f.getName().startsWith(args[0]))
+				if(!f.getName().startsWith(Pixel.WorldProvider.WORLD_PREFIX) && f.getName().startsWith(args[0]))
 					list.add(f.getName());
 			}
 		}

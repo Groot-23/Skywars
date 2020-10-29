@@ -10,9 +10,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-import me.groot_23.ming.game.Game;
-import me.groot_23.ming.world.Arena;
-import me.groot_23.ming.world.WorldMarker;
+import me.groot_23.pixel.game.Game;
+import me.groot_23.pixel.world.Arena;
+import me.groot_23.pixel.world.WorldMarker;
 import me.groot_23.skywars.game.SkyChest;
 import me.groot_23.skywars.util.Util;
 
@@ -56,7 +56,7 @@ public class SkyArena extends Arena{
 	}
 	
 	public void removeLobby() {
-		removeArea(midSpawn, 20, 5);
+		removeArea(midSpawn, 20, 7);
 	}
 	
 	public void removeGlassSpawns() {

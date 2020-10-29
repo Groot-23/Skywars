@@ -2,6 +2,7 @@ package me.groot_23.skywars.scoreboard;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -10,10 +11,13 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import me.groot_23.ming.MinG;
-import me.groot_23.ming.display.ScoreboardApi;
-import me.groot_23.ming.kits.Kit;
-import me.groot_23.ming.player.team.GameTeam;
+import me.groot_23.pixel.Pixel;
+import me.groot_23.pixel.display.ScoreboardApi;
+import me.groot_23.pixel.kits.Kit;
+import me.groot_23.pixel.kits.KitApi;
+import me.groot_23.pixel.language.LanguageApi;
+import me.groot_23.pixel.language.PixelLangKeys;
+import me.groot_23.pixel.player.team.GameTeam;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.util.Util;
@@ -47,7 +51,7 @@ public class SkywarsScoreboard {
 	}
 
 	public static String getKit(Player player) {
-		Kit kit = MinG.getSelectedKit(player, "skywars");
+		Kit kit = KitApi.getSelectedKit(player, "skywars");
 		if(kit != null) {
 			return kit.getDisplayName(player);
 		}
@@ -63,14 +67,14 @@ public class SkywarsScoreboard {
 		ScoreboardApi.init(objective, "server", null, "mode", null, "map", null, "kit", "time", null, "players", null);
 
 		ScoreboardApi.setValue(player, "players", ChatColor.GOLD + Integer.toString(playerCount) + "/" + maxPlayers
-				+ ChatColor.WHITE + " " + MinG.getLanguageManager().getTranslation(player, LanguageKeys.PLAYER));
+				+ ChatColor.WHITE + " " + LanguageApi.getTranslation(player, PixelLangKeys.PLAYER));
 		ScoreboardApi.setValue(player, "time",
-				ChatColor.GREEN + MinG.getLanguageManager().getTranslation(player, LanguageKeys.TIME_UNTILL_START) + COLON + timeLeft);
+				ChatColor.GREEN + LanguageApi.getTranslation(player, LanguageKeys.TIME_UNTILL_START) + COLON + timeLeft);
 		ScoreboardApi.setValue(player, "kit", ChatColor.GREEN + "Kit" + COLON + kit);
 		ScoreboardApi.setValue(player, "map",
-				ChatColor.GOLD + "Map" + COLON + ChatColor.WHITE + MinG.getLanguageManager().getTranslation(player, "map." + map));
+				ChatColor.GOLD + "Map" + COLON + ChatColor.WHITE + LanguageApi.getTranslation(player, "map." + map));
 		ScoreboardApi.setValue(player, "mode", ChatColor.GREEN + "Modus" + COLON + ChatColor.WHITE +
-				MinG.getLanguageManager().getTranslation(player, "mode." + mode));
+				LanguageApi.getTranslation(player, "mode." + mode));
 		ScoreboardApi.setValue(player, "server", ChatColor.YELLOW + "Groot23.mcserv.me");
 
 	}
@@ -81,9 +85,9 @@ public class SkywarsScoreboard {
 			String kit = getKit(player);
 
 			ScoreboardApi.setValue(player, "players", ChatColor.GOLD + Integer.toString(playerCount) + "/" + maxPlayers
-					+ ChatColor.WHITE + " " + MinG.getLanguageManager().getTranslation(player, LanguageKeys.PLAYER));
+					+ ChatColor.WHITE + " " + LanguageApi.getTranslation(player, PixelLangKeys.PLAYER));
 			ScoreboardApi.setValue(player, "time", ChatColor.GREEN
-					+ MinG.getLanguageManager().getTranslation(player, LanguageKeys.TIME_UNTILL_START) + COLON + timeLeft);
+					+ LanguageApi.getTranslation(player, LanguageKeys.TIME_UNTILL_START) + COLON + timeLeft);
 			ScoreboardApi.setValue(player, "kit", ChatColor.GREEN + "Kit" + COLON + kit);
 
 		}
@@ -94,18 +98,18 @@ public class SkywarsScoreboard {
 		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
 		String kit = getKit(player);
-		ChatColor team = GameTeam.toChatColor(GameTeam.getTeamOfPlayer(player));
-		String teamStr = team == null ? "" : team + MinG.getLanguageManager().getTranslation(player, "color." + team.name().toLowerCase());
+		DyeColor team = GameTeam.getTeamOfPlayer(player);
+		String teamStr = team == null ? "" : GameTeam.toChatColor(team) + LanguageApi.translateColor(player, team);
 
 		ScoreboardApi.init(objective, "server", null, "map", null, "kit", "kills", null, "team", "mode", null,
 				"playersLeft", null, "event", "remainingTime", null);
 
 		ScoreboardApi.setValue(player, "server", ChatColor.YELLOW + "Groot23.mcserv.me");
 		ScoreboardApi.setValue(player, "map",
-				ChatColor.GOLD + "Map" + COLON + ChatColor.WHITE + MinG.getLanguageManager().getTranslation(player, "map." + map));
+				ChatColor.GOLD + "Map" + COLON + ChatColor.WHITE + LanguageApi.getTranslation(player, "map." + map));
 		ScoreboardApi.setValue(player, "kit", ChatColor.GREEN + "Kit" + COLON + kit);
 		ScoreboardApi.setValue(player, "playersLeft",
-				ChatColor.GREEN + MinG.getLanguageManager().getTranslation(player, LanguageKeys.PLAYERS_LEFT) + COLON + playersLeft);
+				ChatColor.GREEN + LanguageApi.getTranslation(player, LanguageKeys.PLAYERS_LEFT) + COLON + playersLeft);
 		ScoreboardApi.setValue(player, "kills", ChatColor.RED + "Kills" + COLON + 0);
 		ScoreboardApi.setValue(player, "event", nextEvent + COLON + Util.minuteSeconds(timeTillEvent));
 //		ScoreboardApi.setValue(player, "eventHeader",
@@ -113,10 +117,10 @@ public class SkywarsScoreboard {
 //		ScoreboardApi.setValue(player, "deathMatch",
 //				ChatColor.RED + "Death Match" + COLON + Util.minuteSeconds(deathMatch));
 		ScoreboardApi.setValue(player, "remainingTime", ChatColor.GREEN
-				+ MinG.getLanguageManager().getTranslation(player, LanguageKeys.TIME_LEFT) + COLON + Util.minuteSeconds(remainingTime));
+				+ LanguageApi.getTranslation(player, LanguageKeys.TIME_LEFT) + COLON + Util.minuteSeconds(remainingTime));
 
 		ScoreboardApi.setValue(player, "mode", ChatColor.GREEN + "Modus" + COLON + ChatColor.WHITE + 
-				MinG.getLanguageManager().getTranslation(player, "mode." + mode));
+				LanguageApi.getTranslation(player, "mode." + mode));
 		ScoreboardApi.setValue(player, "team", "Team" + COLON  + teamStr);
 	}
 
@@ -129,13 +133,13 @@ public class SkywarsScoreboard {
 
 			ScoreboardApi.setValue(player, "kit", ChatColor.GREEN + "Kit" + COLON + kit);
 			ScoreboardApi.setValue(player, "playersLeft", ChatColor.GREEN
-					+ MinG.getLanguageManager().getTranslation(player, LanguageKeys.PLAYERS_LEFT) + COLON + playersLeft);
+					+ LanguageApi.getTranslation(player, LanguageKeys.PLAYERS_LEFT) + COLON + playersLeft);
 			ScoreboardApi.setValue(player, "event",
-					MinG.getLanguageManager().getTranslation(player, nextEvent) + COLON + Util.minuteSeconds(timeTillEvent));
+					LanguageApi.getTranslation(player, nextEvent) + COLON + Util.minuteSeconds(timeTillEvent));
 //			ScoreboardApi.setValue(player, "deathMatch",
 //					ChatColor.RED + "Death Match" + COLON + Util.minuteSeconds(deathMatch));
 			ScoreboardApi.setValue(player, "remainingTime",
-					ChatColor.GREEN + MinG.getLanguageManager().getTranslation(player, LanguageKeys.TIME_LEFT) + COLON
+					ChatColor.GREEN + LanguageApi.getTranslation(player, LanguageKeys.TIME_LEFT) + COLON
 							+ Util.minuteSeconds(remainingTime));
 
 		}

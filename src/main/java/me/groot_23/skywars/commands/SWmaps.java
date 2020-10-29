@@ -15,10 +15,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
-import me.groot_23.ming.MinG;
-import me.groot_23.ming.commands.CommandBase;
-import me.groot_23.ming.util.Utf8Config;
-import me.groot_23.ming.world.WorldUtil;
+import me.groot_23.pixel.Pixel;
+import me.groot_23.pixel.commands.CommandBase;
+import me.groot_23.pixel.util.Utf8Config;
+import me.groot_23.pixel.world.WorldUtil;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 
@@ -46,7 +46,7 @@ public class SWmaps extends CommandBase {
 					@Override
 					public boolean accept(File pathname) {
 						return pathname.getName().startsWith(args[1])
-								&& !pathname.getName().startsWith(MinG.WorldProvider.WORLD_PREFIX);
+								&& !pathname.getName().startsWith(Pixel.WorldProvider.WORLD_PREFIX);
 					}
 				});
 				for (File f : worlds) {
@@ -164,8 +164,8 @@ public class SWmaps extends CommandBase {
 					player.sendMessage(ChatColor.RED + "Zu wenige Argumente für die Koordinaten. Gib keine an, wenn es deine Position sein soll!");
 				}
 			}
-		}
-		return false;
+		}else return false;
+		return true;
 	}
 	
 	public Utf8Config getGroupConfig() {

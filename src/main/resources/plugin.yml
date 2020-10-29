@@ -3,7 +3,7 @@ version: 1.0
 author: Groot_23
 main: me.groot_23.skywars.Main
 api-version: 1.14
-depend: [MinG]
+depend: [Pixel]
 
 commands:
   swleave:

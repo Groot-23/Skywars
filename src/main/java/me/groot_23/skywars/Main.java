@@ -8,17 +8,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import me.groot_23.ming.MinG;
-import me.groot_23.ming.commands.KitCommands;
-import me.groot_23.ming.commands.LangCommand;
-import me.groot_23.ming.commands.MarkerCommand;
-import me.groot_23.ming.game.Game;
-import me.groot_23.ming.game.GameCreator;
-import me.groot_23.ming.gui.GuiRunnable;
-import me.groot_23.ming.language.LanguageHolder;
-import me.groot_23.ming.util.ResourceExtractor;
-import me.groot_23.ming.util.Utf8Config;
-import me.groot_23.ming.world.Arena;
+
+import me.groot_23.pixel.Pixel;
+import me.groot_23.pixel.commands.KitCommands;
+import me.groot_23.pixel.commands.LangCommand;
+import me.groot_23.pixel.commands.MarkerCommand;
+import me.groot_23.pixel.game.Game;
+import me.groot_23.pixel.game.GameCreator;
+import me.groot_23.pixel.gui.GuiRunnable;
+import me.groot_23.pixel.kits.KitApi;
+import me.groot_23.pixel.language.LanguageApi;
+import me.groot_23.pixel.language.LanguageFolder;
+import me.groot_23.pixel.player.DataManager;
+import me.groot_23.pixel.util.ResourceExtractor;
+import me.groot_23.pixel.util.Utf8Config;
+import me.groot_23.pixel.world.Arena;
 import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
 import me.groot_23.skywars.commands.SWleave;
@@ -26,32 +30,29 @@ import me.groot_23.skywars.commands.SWmaps;
 import me.groot_23.skywars.commands.SWset;
 import me.groot_23.skywars.commands.SWstart;
 import me.groot_23.skywars.events.GameEvents;
-import me.groot_23.skywars.events.KitEvents;
 import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
 import me.groot_23.skywars.game.SkyGame;
 import me.groot_23.skywars.util.Util;
 
-public class Main extends JavaPlugin
-{
+public class Main extends JavaPlugin {
 
-	public static LanguageHolder langHolder;
-	
+	public static LanguageFolder langFolder;
+
 	private static Main instance;
-	
+
 	@Override
-	public void onEnable() 
-	{
+	public void onEnable() {
 		firstStart();
 		instance = this;
-		
-		MinG.registerGame("skywars-solo", new GameCreator() {
+
+		Pixel.registerGame("skywars-solo", new GameCreator() {
 			@Override
 			public Game createGame(String options) {
 				return new SkyGame("skywars-solo", options, 1);
 			}
 		});
-		MinG.registerGame("skywars-duo", new GameCreator() {
+		Pixel.registerGame("skywars-duo", new GameCreator() {
 			@Override
 			public Game createGame(String options) {
 				return new SkyGame("skywars-duo", options, 2);
@@ -60,18 +61,27 @@ public class Main extends JavaPlugin
 		Utf8Config cfg = new Utf8Config();
 		try {
 			cfg.load(new File(this.getDataFolder(), "groups.yml"));
-			for(String s : cfg.getStringList("default")) {
-				MinG.registerGameOption("skywars-solo", s);
-				MinG.registerGameOption("skywars-duo", s);
+			for (String s : cfg.getStringList("default")) {
+				Pixel.registerGameOption("skywars-solo", s);
+				Pixel.registerGameOption("skywars-duo", s);
 			}
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		
-		langHolder = MinG.getLanguageManager().addLanguageHolder(new File(getDataFolder(), "lang"));
-		
+
+		langFolder = LanguageApi.addLanguageFolder(new File(getDataFolder(), "lang"));
+
 		File kitFile = new File(getDataFolder(), "kits.yml");
-		MinG.loadKits(kitFile, "skywars");
+		KitApi.loadKits(kitFile, "skywars");
+		
+		File kitUnlockFile = new File(getDataFolder(), "kit_unlock.yml");
+		try {
+			kitUnlockFile.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		DataManager.loadFile(kitUnlockFile, "skywars_kit_unlock");
+		KitApi.setUnlockedDataId("skywars", "skywars_kit_unlock");
 
 		new SWleave(this);
 		new SWedit(this);
@@ -79,26 +89,25 @@ public class Main extends JavaPlugin
 		new SWchest(this);
 		new SWset(this);
 		new SWstart(this);
-		
-		new KitCommands(this, langHolder, kitFile, "skywars", "swkits", "skywars.kits");
-		new LangCommand(this, langHolder, "swlang", "skywars.lang");
+
+		new KitCommands(this, langFolder, kitFile, "skywars", "swkits", "skywars.kits");
+		new LangCommand(this, langFolder, "swlang", "skywars.lang");
 		new MarkerCommand(this, "swspawns", "skywars.spawns", "sky_spawn");
-		
+
 		new StopLobbyLeave(this);
 		new ChestEvents(this);
 		new GameEvents(this);
-		new KitEvents(this);
-		
-		MinG.registerGuiRunnable("openGui", new GuiRunnable() {
+
+		Pixel.registerGuiRunnable("openKitGui", new GuiRunnable() {
 			@Override
 			public void run(Player player, ItemStack item, Inventory inv) {
-				KitEvents.openGui(player);
+				KitApi.openGui(player, "skywars");
 			}
 		});
-		MinG.registerGuiRunnable("open_kit_selector", new GuiRunnable() {
+		Pixel.registerGuiRunnable("open_kit_selector", new GuiRunnable() {
 			@Override
 			public void run(Player player, ItemStack item, Inventory inv) {
-				Arena arena = MinG.getArena(player.getWorld().getUID());
+				Arena arena = Pixel.getArena(player.getWorld().getUID());
 				if (arena != null) {
 					if (arena.getGame() instanceof SkyGame) {
 						player.openInventory(((SkyGame) arena.getGame()).teamHandler.getTeamSelectorInv());
@@ -108,20 +117,20 @@ public class Main extends JavaPlugin
 		});
 
 	}
-	
+
 	public void firstStart() {
 		File resources = Util.getDataPackResources("skywars");
 		File lootTables = new File(resources, "loot_tables");
-		if(!resources.exists()) {
+		if (!resources.exists()) {
 			lootTables.mkdirs();
 			getLogger().info("[Skywars] Extracting datapack-");
 			ResourceExtractor.extractResources("resources/loot_tables", lootTables.toPath(), false, this.getClass());
 		}
 		saveDefaultConfig();
-		
-		ResourceExtractor.extractResources("resources", getDataFolder().toPath(), false, this.getClass());
+
+		ResourceExtractor.extractResources("resources/data", getDataFolder().toPath(), false, this.getClass());
 	}
-	
+
 	public static Main getInstance() {
 		return instance;
 	}

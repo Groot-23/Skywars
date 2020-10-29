@@ -2,11 +2,6 @@ package me.groot_23.skywars.language;
 
 public class LanguageKeys {
 	
-	public static final String TEST = "test";
-	
-	public static final String PLAYER  = "general.player";
-	public static final String SECONDS = "general.seconds";
-	
 	public static final String TIME_UNTILL_START = "game.time_until_start";
 	public static final String PLAYERS_LEFT      = "game.players_left";
 	public static final String TIME_LEFT         = "game.time_left";
@@ -27,11 +22,6 @@ public class LanguageKeys {
 	public static final String VICTORY = "game.victory";
 	public static final String NO_TEAMING = "game.no_teaming";
 	
-	public static final String KIT_SELECTOR    = "kit.selector";
-	public static final String KIT_SELECTED    = "kit.selected";
-	public static final String KIT_DESCRIPTION = "kit.description";
-	public static final String KIT_ITEMS       = "kit.items";
-	public static final String KIT_EFFECTS     = "kit.effects";
 	
 	public static final String LEAVE = "game.leave";
 }

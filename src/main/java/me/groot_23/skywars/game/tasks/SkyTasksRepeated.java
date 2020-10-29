@@ -7,11 +7,13 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
-import me.groot_23.ming.MinG;
-import me.groot_23.ming.display.BossBarManager;
-import me.groot_23.ming.game.Game;
-import me.groot_23.ming.game.task.GameTaskDelayed;
-import me.groot_23.ming.game.task.GameTaskRepeated;
+import me.groot_23.pixel.Pixel;
+import me.groot_23.pixel.display.BossBarApi;
+import me.groot_23.pixel.game.Game;
+import me.groot_23.pixel.game.task.GameTaskDelayed;
+import me.groot_23.pixel.game.task.GameTaskRepeated;
+import me.groot_23.pixel.language.LanguageApi;
+import me.groot_23.pixel.language.PixelLangKeys;
 import me.groot_23.skywars.game.SkyGame;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
@@ -56,7 +58,7 @@ public class SkyTasksRepeated {
 		BossBar bb;
 		public Lobby1(Game game) {
 			super(game, 1);
-			bb = Bukkit.createBossBar(MinG.getLanguageManager().getDefault(LanguageKeys.BOSSBAR_START), BarColor.BLUE,
+			bb = Bukkit.createBossBar(LanguageApi.getDefault(LanguageKeys.BOSSBAR_START), BarColor.BLUE,
 					BarStyle.SOLID);
 			bb.setProgress(1);
 		}
@@ -66,10 +68,10 @@ public class SkyTasksRepeated {
 			GameTaskDelayed task = game.taskManager.getTask(SkyTasksDelayed.GoToSpawn.id);
 			if(task != null) {
 				bb.setProgress(task.getRemainingProgress());
-				bb.setTitle(MinG.getLanguageManager().getDefault(LanguageKeys.BOSSBAR_START) + " " + ChatColor.YELLOW + ChatColor.BOLD
-						+ task.getRemainingSeconds() + " " + MinG.getLanguageManager().getDefault(LanguageKeys.SECONDS).toUpperCase());
+				bb.setTitle(LanguageApi.getDefault(LanguageKeys.BOSSBAR_START) + " " + ChatColor.YELLOW + ChatColor.BOLD
+						+ task.getRemainingSeconds() + " " + LanguageApi.getDefault(PixelLangKeys.SECONDS).toUpperCase());
 				for (Player player : arena.getWorld().getPlayers()) {
-					BossBarManager.addPlayer(bb, player);
+					BossBarApi.addPlayer(bb, player);
 				}
 			}
 		}
@@ -77,7 +79,7 @@ public class SkyTasksRepeated {
 		@Override
 		protected void onStop() {
 			for (Player p : arena.getWorld().getPlayers()) {
-				BossBarManager.removePlayer(p);
+				BossBarApi.removePlayer(p);
 			}
 		}
 	}
@@ -124,7 +126,7 @@ public class SkyTasksRepeated {
 					BarColor.RED, BarStyle.SOLID);
 			bb.setProgress(1);
 			for(Player player : game.players) {
-				BossBarManager.addPlayer(bb, player);
+				BossBarApi.addPlayer(bb, player);
 			}
 		}
 
@@ -132,17 +134,18 @@ public class SkyTasksRepeated {
 		protected void onUpdate() {
 			GameTaskDelayed deathMatch = game.taskManager.getTask(SkyTasksDelayed.DeathMatch.id);
 			if(deathMatch != null) {
-				bb.setTitle(MinG.getLanguageManager().getDefault(LanguageKeys.BOSSBAR_TITLE) + " " + ChatColor.WHITE + ChatColor.BOLD
+				bb.setTitle(LanguageApi.getDefault(LanguageKeys.BOSSBAR_TITLE) + " " + ChatColor.WHITE + ChatColor.BOLD
 					+ Util.minuteSeconds(deathMatch.getRemainingSeconds()));
 				bb.setProgress(deathMatch.getRemainingProgress());
-			} else {
-				GameTaskDelayed enablePVP = game.taskManager.getTask(SkyTasksDelayed.EnablePVP.id);
-				if(enablePVP != null) {
-					bb.setTitle(ChatColor.RED + "SCHUTZ Zeit" + ChatColor.WHITE + " " 
-							+ Util.minuteSeconds(enablePVP.getRemainingSeconds()));
-						bb.setProgress(enablePVP.getRemainingProgress());
-				}
-			}
+			} 
+//			else {
+//				GameTaskDelayed enablePVP = game.taskManager.getTask(SkyTasksDelayed.EnablePVP.id);
+//				if(enablePVP != null) {
+//					bb.setTitle(ChatColor.RED + "SCHUTZ Zeit" + ChatColor.WHITE + " " 
+//							+ Util.minuteSeconds(enablePVP.getRemainingSeconds()));
+//						bb.setProgress(enablePVP.getRemainingProgress());
+//				}
+//			}
 		}
 		
 	}

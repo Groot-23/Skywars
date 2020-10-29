@@ -1,0 +1,418 @@
+standard_kit:
+  material: wooden_sword
+  items:
+    item_0:
+      slot: 0
+      type: WOODEN_SWORD
+      amount: 1
+    item_1:
+      slot: 1
+      type: WOODEN_PICKAXE
+      amount: 1
+    item_2:
+      slot: 2
+      type: OAK_PLANKS
+      amount: 32
+    item_3:
+      slot: 3
+      type: BREAD
+      amount: 5
+    item_38:
+      slot: 38
+      type: CHAINMAIL_CHESTPLATE
+      amount: 1
+    item_39:
+      slot: 39
+      type: CHAINMAIL_HELMET
+      amount: 1
+builder_kit:
+  material: golden_pickaxe
+  items:
+    item_0:
+      slot: 0
+      type: GOLDEN_PICKAXE
+      amount: 1
+    item_1:
+      slot: 1
+      type: BRICKS
+      amount: 64
+    item_2:
+      slot: 2
+      type: BRICKS
+      amount: 64
+    item_3:
+      slot: 3
+      type: BREAD
+      amount: 3
+    item_39:
+      slot: 39
+      type: GOLDEN_HELMET
+      amount: 1
+lumber_kit:
+  material: stone_axe
+  items:
+    item_0:
+      slot: 0
+      type: WOODEN_SWORD
+      amount: 1
+    item_1:
+      slot: 1
+      type: STONE_AXE
+      amount: 1
+    item_2:
+      slot: 2
+      type: OAK_LOG
+      amount: 16
+    item_3:
+      slot: 3
+      type: BREAD
+      amount: 3
+bow_kit:
+  material: bow
+  items:
+    item_0:
+      slot: 0
+      type: BOW
+      amount: 1
+      enchants:
+        infinity: 1
+        power: 2
+        punch: 1
+    item_1:
+      slot: 1
+      type: ARROW
+      amount: 1
+    item_2:
+      slot: 2
+      type: BREAD
+      amount: 3
+    item_3:
+      slot: 3
+      type: OAK_PLANKS
+      amount: 25
+mlg_kit:
+  material: water_bucket
+  items:
+    item_0:
+      slot: 0
+      type: WATER_BUCKET
+      amount: 1
+    item_1:
+      slot: 1
+      type: OAK_PLANKS
+      amount: 40
+    item_2:
+      slot: 2
+      type: LADDER
+      amount: 40
+    item_3:
+      slot: 3
+      type: APPLE
+      amount: 5
+bomb_kit:
+  material: tnt
+  items:
+    item_0:
+      slot: 0
+      type: TNT
+      amount: 16
+    item_1:
+      slot: 1
+      type: APPLE
+      amount: 4
+    item_2:
+      slot: 2
+      type: OAK_PLANKS
+      amount: 20
+    item_37:
+      slot: 37
+      type: CHAINMAIL_LEGGINGS
+      amount: 1
+    item_38:
+      slot: 38
+      type: CHAINMAIL_CHESTPLATE
+      amount: 1
+poseidon_kit:
+  material: trident
+  items:
+    item_0:
+      slot: 0
+      type: TRIDENT
+      amount: 1
+      enchants:
+        loyalty: 3
+    item_1:
+      slot: 1
+      type: TROPICAL_FISH
+      amount: 6
+    item_2:
+      slot: 2
+      type: COOKED_COD
+      amount: 3
+    item_37:
+      slot: 37
+      type: CHAINMAIL_LEGGINGS
+      amount: 1
+    item_38:
+      slot: 38
+      type: CHAINMAIL_CHESTPLATE
+      amount: 1
+    item_39:
+      slot: 39
+      type: GOLDEN_HELMET
+      amount: 1
+wizard_kit:
+  material: potion
+  items:
+    item_0:
+      slot: 0
+      type: POTION
+      amount: 1
+      effect: STRENGTH
+    item_1:
+      slot: 1
+      type: POTION
+      amount: 1
+      effect: JUMP
+    item_2:
+      slot: 2
+      type: POTION
+      amount: 1
+      effect: INVISIBILITY
+    item_3:
+      slot: 3
+      type: POTION
+      amount: 1
+      effect: FIRE_RESISTANCE
+    item_4:
+      slot: 4
+      type: POTION
+      amount: 1
+      effect: SPEED
+    item_5:
+      slot: 5
+      type: POTION
+      amount: 1
+      effect: REGEN
+    item_6:
+      slot: 6
+      type: SPLASH_POTION
+      amount: 1
+      effect: WEAKNESS
+    item_7:
+      slot: 7
+      type: SPLASH_POTION
+      amount: 1
+      effect: INSTANT_DAMAGE
+    item_8:
+      slot: 8
+      type: SPLASH_POTION
+      amount: 1
+      effect: POISON
+    item_36:
+      slot: 36
+      type: LEATHER_BOOTS
+      amount: 1
+    item_37:
+      slot: 37
+      type: LEATHER_LEGGINGS
+      amount: 1
+    item_38:
+      slot: 38
+      type: LEATHER_CHESTPLATE
+      amount: 1
+    item_39:
+      slot: 39
+      type: LEATHER_HELMET
+      amount: 1
+pyro_kit:
+  material: blaze_powder
+  items:
+    item_0:
+      slot: 0
+      type: GOLDEN_SWORD
+      amount: 1
+      enchants:
+        fire_aspect: 1
+        unbreaking: 3
+    item_1:
+      slot: 1
+      type: FLINT_AND_STEEL
+      amount: 1
+    item_2:
+      slot: 2
+      type: COOKED_BEEF
+      amount: 4
+    item_3:
+      slot: 3
+      type: NETHER_BRICKS
+      amount: 64
+    item_36:
+      slot: 36
+      type: IRON_BOOTS
+      amount: 1
+      enchants:
+        fire_protection: 1
+    item_37:
+      slot: 37
+      type: IRON_LEGGINGS
+      amount: 1
+      enchants:
+        fire_protection: 1
+    item_38:
+      slot: 38
+      type: CHAINMAIL_CHESTPLATE
+      amount: 1
+      enchants:
+        fire_protection: 1
+tank_kit:
+  material: diamond_chestplate
+  items:
+    item_0:
+      slot: 0
+      type: STONE_SWORD
+      amount: 1
+    item_1:
+      slot: 1
+      type: SHIELD
+      amount: 1
+    item_2:
+      slot: 2
+      type: STONE
+      amount: 32
+    item_36:
+      slot: 36
+      type: IRON_BOOTS
+      amount: 1
+    item_37:
+      slot: 37
+      type: IRON_LEGGINGS
+      amount: 1
+    item_38:
+      slot: 38
+      type: DIAMOND_CHESTPLATE
+      amount: 1
+    item_39:
+      slot: 39
+      type: CHAINMAIL_HELMET
+      amount: 1
+thor_kit:
+  material: iron_axe
+  items:
+    item_0:
+      slot: 0
+      type: IRON_AXE
+      amount: 1
+      enchants:
+        efficiency: 5
+        sharpness: 2
+    item_36:
+      slot: 36
+      type: IRON_BOOTS
+      amount: 1
+    item_37:
+      slot: 37
+      type: IRON_LEGGINGS
+      amount: 1
+    item_38:
+      slot: 38
+      type: IRON_CHESTPLATE
+      amount: 1
+glados:
+  material: barrier
+  items:
+    item_0:
+      slot: 0
+      type: PLAYER_HEAD
+      amount: 64
+      name: Companion Cube
+      skull_nbt: '{Id:"aa974e80-ae00-4ae2-90cf-56e158576445",Properties:{textures:[{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWI3OGU1NWUzZWE2YjM2ODJiZDdjZWFkNDNlYjFjOTFiMjUyN2E4MWFhMjg5NGYwOTU4MDFmNmVlNDdhMyJ9fX0="}]}}'
+    item_1:
+      slot: 1
+      type: POTATO
+      amount: 64
+      name: POTAOS
+    item_2:
+      slot: 2
+      type: ENDER_PEARL
+      amount: 16
+      name: 'apenture sience quantum tunneling '
+    item_3:
+      slot: 3
+      type: SPLASH_POTION
+      amount: 1
+      name: nurotoxin
+      effect: UNCRAFTABLE
+      effect_data:
+        extended: false
+        upgraded: false
+      custom_effects:
+        '0':
+          type: SPEED
+          duration: 72000
+          amplifier: 100
+        '1':
+          type: JUMP
+          duration: 72000
+          amplifier: 20
+        '2':
+          type: CONFUSION
+          duration: 72000
+          amplifier: 20
+        '3':
+          type: BLINDNESS
+          duration: 72000
+          amplifier: 5
+        '4':
+          type: ABSORPTION
+          duration: 72000
+          amplifier: 127
+        '5':
+          type: SLOW_FALLING
+          duration: 72000
+          amplifier: 127
+        '6':
+          type: GLOWING
+          duration: 72000
+          amplifier: 1
+    item_5:
+      slot: 5
+      type: DIAMOND_SWORD
+      amount: 1
+      name: making sience now
+      enchants:
+        sharpness: 5
+    item_7:
+      slot: 7
+      type: POTION
+      amount: 1
+      name: Weatly
+      effect: WEAKNESS
+      effect_data:
+        extended: true
+        upgraded: false
+    item_8:
+      slot: 8
+      type: TOTEM_OF_UNDYING
+      amount: 1
+      name: still alive
+    item_36:
+      slot: 36
+      type: DIAMOND_BOOTS
+      amount: 1
+      name: 'null'
+    item_37:
+      slot: 37
+      type: DIAMOND_LEGGINGS
+      amount: 1
+      name: nullpointer()
+    item_38:
+      slot: 38
+      type: DIAMOND_CHESTPLATE
+      amount: 1
+      name: -2-new_order_refuse_this_order
+    item_39:
+      slot: 39
+      type: DIAMOND_HELMET
+      amount: 1
+      name: Paradox-1- this statment is false

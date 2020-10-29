@@ -14,10 +14,13 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.ItemStack;
-import me.groot_23.ming.MinG;
-import me.groot_23.ming.player.PlayerUtil;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import me.groot_23.pixel.Pixel;
+import me.groot_23.pixel.player.PlayerUtil;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.SkyGame;
 
@@ -52,7 +55,7 @@ public class GameEvents implements Listener {
 
 	@EventHandler
 	public void onWorldLeave(PlayerChangedWorldEvent e) {
-		if (MinG.getGame(e.getFrom().getUID()) instanceof SkyGame) {
+		if (Pixel.getGame(e.getFrom().getUID()) instanceof SkyGame) {
 			Player p = e.getPlayer();
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 				public void run() {
@@ -111,12 +114,27 @@ public class GameEvents implements Listener {
 //			}
 //		}
 //	}
+	
+	@EventHandler
+	public void removeBottle(PlayerItemConsumeEvent e) {
+		if(e.getItem().getType() == Material.POTION) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					if(e.getPlayer().getEquipment().getItemInMainHand().getType() == Material.GLASS_BOTTLE)
+						e.getPlayer().getEquipment().setItemInMainHand(null);
+					if(e.getPlayer().getEquipment().getItemInOffHand().getType() == Material.GLASS_BOTTLE)
+						e.getPlayer().getEquipment().setItemInOffHand(null);
+				}
+			}.runTaskLater(plugin, 1);
+		}
+	}
 
 	@EventHandler
 	public void preventSpawn(CreatureSpawnEvent e) {
 		World world = e.getEntity().getWorld();
 		if (!world.getMetadata("skywars_edit_world").isEmpty()
-				|| MinG.getGame(e.getEntity().getWorld().getUID()) instanceof SkyGame) {
+				|| Pixel.getGame(e.getEntity().getWorld().getUID()) instanceof SkyGame) {
 			if (e.getSpawnReason() == SpawnReason.NATURAL) {
 				e.setCancelled(true);
 			}

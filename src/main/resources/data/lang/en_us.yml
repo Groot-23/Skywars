@@ -1,0 +1,51 @@
+game:
+  time_until_start: "Time until start"
+  players_left: "Players left"
+  time_left: "Time left"
+  start_in: "Skywars starts in"
+  started: "Skywars started!"
+  get_ready: "Get ready!"
+  fight_begins: "The fight begins!"
+
+  go_to_mid: "Get to the middle!"
+  bossbar_title: "&2Time left &euntil &dSKYWARS &cDeath-Match"
+  bossbar_start: '&lTHE &6&lGAME &f&lBEGINS IN'
+  no_teaming: "Teaming is forbidden!!!"
+
+  victory: "WON!"
+  leave: "Leave game"
+  event:
+    start: "Start"
+    refill: "Chest refill"
+    next: "Next event"
+
+map:
+  skywars_wueste: "Desert Ruins"
+
+
+kits:
+  standard_kit:
+    name: '&5Standard &aKit'
+    description: "The Standard Kit \nLine 2"
+  builder_kit:
+    name: '&eBuilder &dKit'
+    description: For everyone who loves building
+  lumber_kit:
+    name: "&Lumber &aKit"
+  bow_kit:
+    name: "&Bow &aKit"
+    description: "Bow spam :("
+  mlg_kit:
+    name: "&1M&2L&3G &aKit"
+  poseidon_kit:
+    name: "&9Poseidon &1Kit"
+  bomb_kit:
+    name: "&Bomb &cKit"
+  wizard_kit:
+    name: "&Wizard Kit"
+  pyro_kit:
+    name: "&cPyro Kit"
+  tank_kit:
+    name: "&7Tank &aKit"
+  thor_kit:
+    name: '&6Thor &9Kit'

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.groot_23.ming.commands.CommandBase;
+import me.groot_23.pixel.commands.CommandBase;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 

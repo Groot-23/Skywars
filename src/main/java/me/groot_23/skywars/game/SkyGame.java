@@ -12,16 +12,17 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.groot_23.ming.MinG;
-import me.groot_23.ming.game.Game;
-import me.groot_23.ming.gui.GuiItem;
-import me.groot_23.ming.gui.GuiItem.UseAction;
-import me.groot_23.ming.language.LanguageManager;
-import me.groot_23.ming.player.PlayerUtil;
-import me.groot_23.ming.player.team.GameTeam;
-import me.groot_23.ming.player.team.TeamHandler;
-import me.groot_23.ming.world.Arena;
-import me.groot_23.ming.world.ArenaCreator;
+import me.groot_23.pixel.Pixel;
+import me.groot_23.pixel.game.Game;
+import me.groot_23.pixel.gui.GuiItem;
+import me.groot_23.pixel.gui.GuiItem.UseAction;
+import me.groot_23.pixel.language.LanguageApi;
+import me.groot_23.pixel.language.PixelLangKeys;
+import me.groot_23.pixel.player.PlayerUtil;
+import me.groot_23.pixel.player.team.GameTeam;
+import me.groot_23.pixel.player.team.TeamHandler;
+import me.groot_23.pixel.world.Arena;
+import me.groot_23.pixel.world.ArenaCreator;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.tasks.SkyTasksDelayed;
 import me.groot_23.skywars.game.tasks.SkyTasksRepeated;
@@ -43,7 +44,7 @@ public class SkyGame extends Game {
 		super(name, option, Main.getInstance(), teamSize);
 		
 
-		arena = MinG.WorldProvider.provideArena(option, this, new ArenaCreator() {
+		arena = Pixel.WorldProvider.provideArena(option, this, new ArenaCreator() {
 			@Override
 			public Arena createArena(Game game, World world, String map) {
 				return new SkyArena(SkyGame.this, world, map);
@@ -68,15 +69,14 @@ public class SkyGame extends Game {
 	@Override
 	public void onJoin(Player player) {
 		PlayerUtil.resetPlayer(player);
-		LanguageManager langManager = MinG.getLanguageManager();
 		// init hotbar
 		GuiItem kitSelector = new GuiItem(Material.CHEST,
-				Util.chat(langManager.getTranslation(player, LanguageKeys.KIT_SELECTOR)));
-		kitSelector.addActionUseRunnable("openGui", UseAction.RIGHT_CLICK);
+				Util.chat(LanguageApi.getTranslation(player, PixelLangKeys.KIT_SELECTOR)));
+		kitSelector.addActionUseRunnable("openKitGui", UseAction.RIGHT_CLICK);
 		player.getInventory().setItem(4, kitSelector.getItem());
 
 		GuiItem lobbyLeave = new GuiItem(Material.MAGMA_CREAM,
-				Util.chat(langManager.getTranslation(player, LanguageKeys.LEAVE)));
+				Util.chat(LanguageApi.getTranslation(player, LanguageKeys.LEAVE)));
 		lobbyLeave.addActionUse("swleave", UseAction.RIGHT_CLICK, UseAction.LEFT_CLICK);
 		player.getInventory().setItem(8, lobbyLeave.getItem());
 
@@ -153,7 +153,7 @@ public class SkyGame extends Game {
 			@Override
 			public void run() {
 				event.getPlayer().setGameMode(GameMode.ADVENTURE);
-				MinG.setSpectator(event.getPlayer(), true);
+				Pixel.setSpectator(event.getPlayer(), true);
 			}
 		}.runTaskLater(plugin, 2);
 

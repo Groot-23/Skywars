@@ -8,10 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.groot_23.ming.MinG;
-import me.groot_23.ming.commands.CommandBase;
-import me.groot_23.ming.game.task.GameTaskDelayed;
-import me.groot_23.ming.world.Arena;
+import me.groot_23.pixel.Pixel;
+import me.groot_23.pixel.commands.CommandBase;
+import me.groot_23.pixel.game.task.GameTaskDelayed;
+import me.groot_23.pixel.world.Arena;
 import me.groot_23.skywars.game.tasks.SkyTasksDelayed;
 
 public class SWstart extends CommandBase {
@@ -32,7 +32,7 @@ public class SWstart extends CommandBase {
 			return false;
 		}
 		Player player = (Player) sender;
-		Arena arena = MinG.getArena(player.getWorld().getUID());
+		Arena arena = Pixel.getArena(player.getWorld().getUID());
 		if(arena != null) {
 			GameTaskDelayed task = arena.getGame().taskManager.getTask(SkyTasksDelayed.GoToSpawn.id);
 			if(task != null) {

@@ -101,7 +101,7 @@ public class SWmaps extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String arg2, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler können diesen Befehl ausf�hren");
+			sender.sendMessage(Main.chatPrefix + "Nur Spieler können diesen Befehl ausf�hren");
 			return true;
 		}
 		Player player = (Player) sender;
@@ -112,7 +112,7 @@ public class SWmaps extends CommandBase {
 			String world = args[1];
 			String group = args[2];
 			if (!WorldUtil.worldExists(world)) {
-				player.sendMessage(Util.chat("&cDie Welt \"" + args[1] + "\" wurde nicht gefunden!"));
+				player.sendMessage(Util.chat(Main.chatPrefix + "&cDie Welt \"" + args[1] + "\" wurde nicht gefunden!"));
 				return true;
 			}
 			addWorldToGroup(world, group);
@@ -121,13 +121,13 @@ public class SWmaps extends CommandBase {
 
 			ConfigurationSection groups = getGroupConfig();
 			if (groups == null) {
-				player.sendMessage("Es sind keine Daten vorhanden");
+				player.sendMessage(Main.chatPrefix + "Es sind keine Daten vorhanden");
 				return true;
 			}
 			for (String key : groups.getValues(false).keySet()) {
-				player.sendMessage(ChatColor.GREEN + key + ":");
+				player.sendMessage(Main.chatPrefix + ChatColor.GREEN + key + ":");
 				for(String s : groups.getStringList(key)) {
-					player.sendMessage(" - " + s);
+					player.sendMessage(Main.chatPrefix + " - " + s);
 				}
 			}
 		} else if (args.length == 3 && mode.equals("remove")) {
@@ -158,10 +158,10 @@ public class SWmaps extends CommandBase {
 						setMidSpawn(world, x, y, z);
 					}
 					catch(NumberFormatException e) {
-						player.sendMessage(ChatColor.RED + "Ungültige Koordinaten (Es müssen ganze Zahlen sein)");
+						player.sendMessage(Main.chatPrefix + ChatColor.RED + "Ungültige Koordinaten (Es müssen ganze Zahlen sein)");
 					}
 				} else {
-					player.sendMessage(ChatColor.RED + "Zu wenige Argumente für die Koordinaten. Gib keine an, wenn es deine Position sein soll!");
+					player.sendMessage(Main.chatPrefix + ChatColor.RED + "Zu wenige Argumente für die Koordinaten. Gib keine an, wenn es deine Position sein soll!");
 				}
 			}
 		}else return false;
@@ -240,7 +240,7 @@ public class SWmaps extends CommandBase {
 			}
 		} catch(NumberFormatException e) {
 			if(sender != null)
-				sender.sendMessage(Util.chat("&c\"" + intStr + "\" ist keine erlaubte Zahl"));
+				sender.sendMessage(Main.chatPrefix + Util.chat("&c\"" + intStr + "\" ist keine erlaubte Zahl"));
 		}
 
 	}

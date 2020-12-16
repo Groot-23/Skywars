@@ -36,7 +36,7 @@ public class SWset extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler können diesen Befehl ausführen");
+			sender.sendMessage(Main.chatPrefix + "Nur Spieler können diesen Befehl ausführen");
 			return true;
 		}
 		Player player = (Player) sender;
@@ -72,7 +72,7 @@ public class SWset extends CommandBase {
 			plugin.saveConfig();
 		}catch(NumberFormatException e) {
 			if(sender != null)
-				sender.sendMessage(Util.chat("&c\"" + timeStr + "\" ist keine erlaubte Zahl"));
+				sender.sendMessage(Main.chatPrefix + Util.chat("&c\"" + timeStr + "\" ist keine erlaubte Zahl"));
 		}
 	}
 

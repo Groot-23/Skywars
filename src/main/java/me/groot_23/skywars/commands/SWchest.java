@@ -36,13 +36,13 @@ public class SWchest extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler dürfen diesen Befehl ausführen");
+			sender.sendMessage(Main.chatPrefix + "Nur Spieler dürfen diesen Befehl ausführen");
 			return true;
 		}
 		Player player = (Player) sender;
 
 		if(args.length == 0) {
-			player.sendMessage(Util.chat("&cGib den LootTable an"));
+			player.sendMessage(Main.chatPrefix + Util.chat("&cGib den LootTable an"));
 			return false;
 		}
 

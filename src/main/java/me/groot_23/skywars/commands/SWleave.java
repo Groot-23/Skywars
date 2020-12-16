@@ -17,7 +17,7 @@ public class SWleave implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg2, String[] args) {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler können diesen Befehl verwenden");
+			sender.sendMessage(Main.chatPrefix + "Nur Spieler können diesen Befehl verwenden");
 			return false;
 		}
 		Player player = (Player) sender;

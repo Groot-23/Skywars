@@ -1,10 +1,20 @@
 skywars_wueste:
   builder: test
   minPlayers: 1
-  maxPlayers: 2
+  maxPlayers: 8
   midRadius: 20
   mapRadius: 100
   midSpawn:
     x: 0
     y: 117.0
     z: 0
+
+skywars_asia:
+  midSpawn:
+    x: 8
+    y: 95
+    z: 8
+  minPlayers: 1
+  maxPlayers: 8
+  midRadius: 10
+  mapRadius: 100

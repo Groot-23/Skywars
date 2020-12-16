@@ -1,6 +1,7 @@
 package me.groot_23.skywars.game;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,12 +11,16 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.pixel.Pixel;
 import me.groot_23.pixel.game.Game;
 import me.groot_23.pixel.gui.GuiItem;
+import me.groot_23.pixel.gui.GuiRunnable;
 import me.groot_23.pixel.gui.GuiItem.UseAction;
+import me.groot_23.pixel.kits.KitApi;
 import me.groot_23.pixel.language.LanguageApi;
 import me.groot_23.pixel.language.PixelLangKeys;
 import me.groot_23.pixel.player.PlayerUtil;
@@ -68,20 +73,53 @@ public class SkyGame extends Game {
 
 	@Override
 	public void onJoin(Player player) {
+		for(Player p : players) {
+			p.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(p, PixelLangKeys.JOIN), player.getName()));
+		}
+		
 		PlayerUtil.resetPlayer(player);
-		// init hotbar
+		// ====== init hotbar ==========
+		// kit selector
 		GuiItem kitSelector = new GuiItem(Material.CHEST,
 				Util.chat(LanguageApi.getTranslation(player, PixelLangKeys.KIT_SELECTOR)));
-		kitSelector.addActionUseRunnable("openKitGui", UseAction.RIGHT_CLICK);
-		player.getInventory().setItem(4, kitSelector.getItem());
+		kitSelector.addUseRunnable(new GuiRunnable() {
+			@Override
+			public void run(Player player, ItemStack item, Inventory inv) {
+				KitApi.openGui(player, "skywars");
+			}
+		}, UseAction.RIGHT_CLICK);
+		player.getInventory().setItem(3, kitSelector.getItem());
 
+		// kit shop
+		GuiItem kitShop = new GuiItem(Material.DIAMOND, ChatColor.GOLD + "" + ChatColor.BOLD + "Kit Shop");
+		kitShop.addUseRunnable(new GuiRunnable() {
+			@Override
+			public void run(Player player, ItemStack item, Inventory inv) {
+				KitApi.openShop(player, "skywars");
+			}
+		}, UseAction.RIGHT_CLICK);
+		player.getInventory().setItem(5, kitShop.getItem());
+		
+		// leave
 		GuiItem lobbyLeave = new GuiItem(Material.MAGMA_CREAM,
 				Util.chat(LanguageApi.getTranslation(player, LanguageKeys.LEAVE)));
-		lobbyLeave.addActionUse("swleave", UseAction.RIGHT_CLICK, UseAction.LEFT_CLICK);
+		lobbyLeave.addUseCommand("swleave", UseAction.RIGHT_CLICK, UseAction.LEFT_CLICK);
 		player.getInventory().setItem(8, lobbyLeave.getItem());
 
+		// team selector
 		GuiItem teamSelector = new GuiItem(Material.OAK_SIGN);
-		teamSelector.addActionUseRunnable("open_kit_selector");
+		teamSelector.addUseRunnable(new GuiRunnable() {
+			@Override
+			public void run(Player player, ItemStack item, Inventory inv) {
+				Arena arena = Pixel.getArena(player.getWorld().getUID());
+				if (arena != null) {
+					if (arena.getGame() instanceof SkyGame) {
+						player.openInventory(((SkyGame) arena.getGame()).teamHandler.getTeamSelectorInv());
+					}
+				}
+			}
+		});
+		
 		player.getInventory().setItem(0, teamSelector.getItem());
 		
 		SkywarsScoreboard.resetKills(player);
@@ -113,16 +151,21 @@ public class SkyGame extends Game {
 	@Override
 	public void onDeath(PlayerDeathEvent event) {
 //		System.out.println("onDeath from SkyGame!");
+		event.setDeathMessage(Main.chatPrefix + String.format(LanguageApi.getDefault(PixelLangKeys.DEATH), event.getEntity().getName()));
 		Player killer = event.getEntity().getKiller();
 		if(killer == null) {
 			killer = PlayerUtil.getLastAttacker(event.getEntity());
 		}
 		if (killer != null) {
-//			System.out.println("Killer: " + killer.getName());
 			SkywarsScoreboard.addKill(killer);
-		} else {
-//			System.out.println("Killer: null");
-		}
+			String msg = "Herzen von " + killer.getName() + ": ";
+			for(int i = 0; i < 10; ++i) {
+				if(killer.getHealth() - 2*i > 1) msg += ChatColor.RED + "\u2764";
+				else if(killer.getHealth() - 2*i > 0) msg += ChatColor.RED + "\u2765";
+				else msg += ChatColor.WHITE +  "\u2764";
+			}
+			event.getEntity().sendMessage(Main.chatPrefix + msg);
+		} 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -162,6 +205,11 @@ public class SkyGame extends Game {
 	@Override
 	public void onPlayerLeave(Player player) {
 		super.onPlayerLeave(player);
+		for(Player p : players) {
+			p.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(p, PixelLangKeys.LEAVE), player.getName()));
+		}
+		player.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(player, PixelLangKeys.LEAVE), player.getName()));
+		
 		if (players.size() == 0) {
 			endGame();
 			System.out.println("[Skywars] lobby stopped: " + arena.getWorld().getName());
@@ -174,6 +222,11 @@ public class SkyGame extends Game {
 				player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 			}
 		}, 5);
+	}
+	
+	@Override
+	public void onEnd() {
+		super.onEnd();
 	}
 
 }

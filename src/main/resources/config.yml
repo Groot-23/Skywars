@@ -2,3 +2,4 @@ refillTime: 3600
 refillTimeChange: 0
 deathMatchBegin: 12000
 deathMacthBorderShrinkTime: 1200
+chat_prefix: "&8[&dSkyWars&8] &r"

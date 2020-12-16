@@ -17,6 +17,7 @@ import me.groot_23.pixel.kits.Kit;
 import me.groot_23.pixel.kits.KitApi;
 import me.groot_23.pixel.language.LanguageApi;
 import me.groot_23.pixel.player.team.GameTeam;
+import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.SkyGame;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
@@ -97,7 +98,7 @@ public class SkyTasksDelayed {
 				kit.applyToPlayer(player);
 				
 				String started = ChatColor.GREEN + LanguageApi.getTranslation(player, LanguageKeys.STARTED);
-				player.sendMessage(started);
+				player.sendMessage(Main.chatPrefix + started);
 				player.sendTitle(started, ChatColor.LIGHT_PURPLE + LanguageApi.getTranslation(player, 
 						LanguageKeys.FIGHT_BEGINS), 3, 20, 3);
 			}

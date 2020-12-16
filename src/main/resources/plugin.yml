@@ -41,6 +41,9 @@ commands:
     
   swstart:
     description: Starte ein Spiel früher
+    usage: /<command>
+    
+  shop:
     usage: /<command>  
 
 permissions:

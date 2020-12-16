@@ -12,6 +12,7 @@ import me.groot_23.pixel.Pixel;
 import me.groot_23.pixel.commands.CommandBase;
 import me.groot_23.pixel.game.task.GameTaskDelayed;
 import me.groot_23.pixel.world.Arena;
+import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.tasks.SkyTasksDelayed;
 
 public class SWstart extends CommandBase {
@@ -28,7 +29,7 @@ public class SWstart extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, Command arg1, String arg2, String[] args) {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler können diesen Befehl verwenden");
+			sender.sendMessage(Main.chatPrefix + "Nur Spieler können diesen Befehl verwenden");
 			return false;
 		}
 		Player player = (Player) sender;

@@ -44,7 +44,7 @@ public class SWedit extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String arg2, String[] args) {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("Nur Spieler können diesen Befehl ausführen");
+			sender.sendMessage(Main.chatPrefix + "Nur Spieler können diesen Befehl ausführen");
 			return true;
 		}
 		Player player = (Player) sender;
@@ -52,12 +52,12 @@ public class SWedit extends CommandBase {
 			World world = Bukkit.getWorld(args[0]);
 			if(world == null) {
 				if(!WorldUtil.worldExists(args[0])) {
-					player.sendMessage(Util.chat("&cDie Welt \"" + args[0] + "\" wurde nicht gefunden"));
+					player.sendMessage(Main.chatPrefix + Util.chat("&cDie Welt \"" + args[0] + "\" wurde nicht gefunden"));
 					return true;
 				}
 				world = Bukkit.createWorld(new WorldCreator(args[0]).generator(new ChunkGeneratorVoid()));
 				if(world == null) {
-					player.sendMessage(Util.chat("&cBeim Laden der Welt ist ein Fehler aufgetreten"));
+					player.sendMessage(Main.chatPrefix + Util.chat("&cBeim Laden der Welt ist ein Fehler aufgetreten"));
 					return true;
 				}
 			}

@@ -3,6 +3,7 @@ package me.groot_23.skywars;
 import java.io.File;
 import java.io.IOException;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -23,6 +24,7 @@ import me.groot_23.pixel.player.DataManager;
 import me.groot_23.pixel.util.ResourceExtractor;
 import me.groot_23.pixel.util.Utf8Config;
 import me.groot_23.pixel.world.Arena;
+import me.groot_23.skywars.commands.KitShop;
 import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
 import me.groot_23.skywars.commands.SWleave;
@@ -37,6 +39,8 @@ import me.groot_23.skywars.util.Util;
 
 public class Main extends JavaPlugin {
 
+	public static String chatPrefix;
+	
 	public static LanguageFolder langFolder;
 
 	private static Main instance;
@@ -97,24 +101,10 @@ public class Main extends JavaPlugin {
 		new StopLobbyLeave(this);
 		new ChestEvents(this);
 		new GameEvents(this);
-
-		Pixel.registerGuiRunnable("openKitGui", new GuiRunnable() {
-			@Override
-			public void run(Player player, ItemStack item, Inventory inv) {
-				KitApi.openGui(player, "skywars");
-			}
-		});
-		Pixel.registerGuiRunnable("open_kit_selector", new GuiRunnable() {
-			@Override
-			public void run(Player player, ItemStack item, Inventory inv) {
-				Arena arena = Pixel.getArena(player.getWorld().getUID());
-				if (arena != null) {
-					if (arena.getGame() instanceof SkyGame) {
-						player.openInventory(((SkyGame) arena.getGame()).teamHandler.getTeamSelectorInv());
-					}
-				}
-			}
-		});
+		
+		getCommand("shop").setExecutor(new KitShop());
+		
+		chatPrefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("chat_prefix"));
 
 	}
 

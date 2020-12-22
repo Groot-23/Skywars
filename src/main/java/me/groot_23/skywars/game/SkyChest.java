@@ -1,11 +1,9 @@
 package me.groot_23.skywars.game;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 import org.bukkit.Bukkit;
@@ -21,7 +19,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 import org.bukkit.loot.Lootable;
 import org.bukkit.metadata.FixedMetadataValue;

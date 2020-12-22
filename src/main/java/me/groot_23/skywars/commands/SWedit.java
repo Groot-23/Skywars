@@ -14,13 +14,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import me.groot_23.pixel.Pixel;
-import me.groot_23.pixel.commands.CommandBase;
+import me.groot_23.pixel.commands.PlayerCommand;
 import me.groot_23.pixel.world.ChunkGeneratorVoid;
 import me.groot_23.pixel.world.WorldUtil;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 
-public class SWedit extends CommandBase {
+public class SWedit extends PlayerCommand {
 
 	private Main plugin;
 	
@@ -43,10 +43,6 @@ public class SWedit extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String arg2, String[] args) {
-		if(!(sender instanceof Player)) {
-			sender.sendMessage(Main.chatPrefix + "Nur Spieler können diesen Befehl ausführen");
-			return true;
-		}
 		Player player = (Player) sender;
 		if(args.length == 1) {
 			World world = Bukkit.getWorld(args[0]);

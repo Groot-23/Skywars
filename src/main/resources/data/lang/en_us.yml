@@ -1,4 +1,4 @@
-game:
+sky_game:
   time_until_start: "Time until start"
   players_left: "Players left"
   time_left: "Time left"
@@ -17,10 +17,18 @@ game:
   event:
     start: "Start"
     refill: "Chest refill"
-    next: "Next event"
+
+sign:
+  game:
+    skywars-solo: "SkyWars - Solo"
+    skywars-duo: "SkyWars - Duo"
+  map:
+    skywars_wueste: Desert Ruins
+    skywars_asia: Asia
 
 map:
   skywars_wueste: "Desert Ruins"
+  skywars_asia: "Asia"
 
 
 kits:
@@ -31,9 +39,9 @@ kits:
     name: '&eBuilder &dKit'
     description: For everyone who loves building
   lumber_kit:
-    name: "&Lumber &aKit"
+    name: "&6Lumber &aKit"
   bow_kit:
-    name: "&Bow &aKit"
+    name: "&6Bow &aKit"
     description: "Bow spam :("
   mlg_kit:
     name: "&1M&2L&3G &aKit"
@@ -49,3 +57,5 @@ kits:
     name: "&7Tank &aKit"
   thor_kit:
     name: '&6Thor &9Kit'
+  glados:
+    name: "&7&lGLaDOS &cKit"

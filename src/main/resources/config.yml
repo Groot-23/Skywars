@@ -1,5 +1,7 @@
-refillTime: 3600
+refillTime: 50
 refillTimeChange: 0
-deathMatchBegin: 12000
-deathMacthBorderShrinkTime: 1200
+deathMatchBegin: 300
+deathMacthBorderShrinkTime: 20
 chat_prefix: "&8[&dSkyWars&8] &r"
+coins_victory: 25
+coins_kill: 5

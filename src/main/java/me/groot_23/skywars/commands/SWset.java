@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import me.groot_23.pixel.commands.CommandBase;
 import me.groot_23.skywars.Main;
@@ -35,32 +34,26 @@ public class SWset extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String label, String[] args) {
-		if(!(sender instanceof Player)) {
-			sender.sendMessage(Main.chatPrefix + "Nur Spieler können diesen Befehl ausführen");
-			return true;
-		}
-		Player player = (Player) sender;
-		
 		if(args.length < 2) return false;
 
 		String mode = args[0];
 		
 		if( mode.equals("refillTime")) {
-			writeTimeToConfig("refillTime", args[1], player);
+			writeTimeToConfig("refillTime", args[1], sender);
 			
 		} else if(mode.equals("refillTimeChange")) {
-			writeTimeToConfig("refillTimeChange", args[1], player);
+			writeTimeToConfig("refillTimeChange", args[1], sender);
 		} else if(mode.equals("deathMatchBegin")) {
-			writeTimeToConfig("deathMatchBegin", args[1], player);
+			writeTimeToConfig("deathMatchBegin", args[1], sender);
 		} else if(mode.equals("deathMatchBorderShrinkTime")) {
-			writeTimeToConfig("deathMatchBorderShrinkTime", args[1], player);
+			writeTimeToConfig("deathMatchBorderShrinkTime", args[1], sender);
 		} else {
 			return false;
 		}
 		return true;
 	}
 	
-	public void writeTimeToConfig(String key, String timeStr, Player sender) {
+	public void writeTimeToConfig(String key, String timeStr, CommandSender sender) {
 		try {
 			int refillTime;
 			if(timeStr.contains(":")) {

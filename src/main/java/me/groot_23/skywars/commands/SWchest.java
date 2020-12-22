@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.groot_23.pixel.commands.CommandBase;
+import me.groot_23.pixel.commands.PlayerCommand;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.util.Util;
 
-public class SWchest extends CommandBase {
+public class SWchest extends PlayerCommand {
 	
 	public SWchest(Main plugin) {
 		super(plugin, "swchest", "skywars.chest");
@@ -35,17 +35,12 @@ public class SWchest extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String label, String[] args) {
-		if(!(sender instanceof Player)) {
-			sender.sendMessage(Main.chatPrefix + "Nur Spieler dürfen diesen Befehl ausführen");
-			return true;
-		}
 		Player player = (Player) sender;
 
 		if(args.length == 0) {
 			player.sendMessage(Main.chatPrefix + Util.chat("&cGib den LootTable an"));
 			return false;
 		}
-
 		
 		ItemStack item = new ItemStack(Material.CHEST);
 		ItemMeta meta = item.getItemMeta();

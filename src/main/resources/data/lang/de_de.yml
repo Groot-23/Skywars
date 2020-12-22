@@ -1,4 +1,4 @@
-game:
+sky_game:
   time_until_start: Zeit bis zum Start
   players_left: Spieler übrig
   time_left: Zeit übrig
@@ -17,10 +17,19 @@ game:
   event:
     start: Start
     refill: Refill
-    next: Nächstes Event
+
+sign:
+  game:
+    skywars-solo: "SkyWars - Solo"
+    skywars-duo: "SkyWars - Duo"
+  map:
+    skywars_wueste: Wüsten Ruinen
+    skywars_asia: Asia
+
 
 map:
   skywars_wueste: Wüsten Ruinen
+  skywars_asia: Asia
 
 mode:
   skywars-solo: "Solo"
@@ -52,3 +61,5 @@ kits:
     name: "&7Tank &aKit"
   thor_kit:
     name: '&6Thor &9Kit'
+  glados:
+    name: "&7&lGLaDOS &cKit"

@@ -1,5 +1,7 @@
 standard_kit:
+  default: true
   material: wooden_sword
+  cost: 0
   items:
     item_0:
       slot: 0
@@ -27,6 +29,7 @@ standard_kit:
       amount: 1
 builder_kit:
   material: golden_pickaxe
+  cost: 100
   items:
     item_0:
       slot: 0
@@ -50,6 +53,7 @@ builder_kit:
       amount: 1
 lumber_kit:
   material: stone_axe
+  cost: 60
   items:
     item_0:
       slot: 0
@@ -69,6 +73,7 @@ lumber_kit:
       amount: 3
 bow_kit:
   material: bow
+  cost: 250
   items:
     item_0:
       slot: 0
@@ -92,6 +97,7 @@ bow_kit:
       amount: 25
 mlg_kit:
   material: water_bucket
+  cost: 150
   items:
     item_0:
       slot: 0
@@ -111,6 +117,7 @@ mlg_kit:
       amount: 5
 bomb_kit:
   material: tnt
+  cost: 250
   items:
     item_0:
       slot: 0
@@ -134,6 +141,7 @@ bomb_kit:
       amount: 1
 poseidon_kit:
   material: trident
+  cost: 500
   items:
     item_0:
       slot: 0
@@ -163,6 +171,7 @@ poseidon_kit:
       amount: 1
 wizard_kit:
   material: potion
+  cost: 1000
   items:
     item_0:
       slot: 0
@@ -227,6 +236,7 @@ wizard_kit:
       amount: 1
 pyro_kit:
   material: blaze_powder
+  cost: 1000
   items:
     item_0:
       slot: 0
@@ -267,6 +277,7 @@ pyro_kit:
         fire_protection: 1
 tank_kit:
   material: diamond_chestplate
+  cost: 2000
   items:
     item_0:
       slot: 0
@@ -298,6 +309,7 @@ tank_kit:
       amount: 1
 thor_kit:
   material: iron_axe
+  cost: 1000
   items:
     item_0:
       slot: 0
@@ -320,6 +332,7 @@ thor_kit:
       amount: 1
 glados:
   material: barrier
+  cost: 1000000
   items:
     item_0:
       slot: 0

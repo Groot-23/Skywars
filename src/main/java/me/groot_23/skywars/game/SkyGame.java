@@ -10,7 +10,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -18,8 +24,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.groot_23.pixel.Pixel;
 import me.groot_23.pixel.game.Game;
 import me.groot_23.pixel.gui.GuiItem;
-import me.groot_23.pixel.gui.GuiRunnable;
 import me.groot_23.pixel.gui.GuiItem.UseAction;
+import me.groot_23.pixel.gui.GuiRunnable;
 import me.groot_23.pixel.kits.KitApi;
 import me.groot_23.pixel.language.LanguageApi;
 import me.groot_23.pixel.language.PixelLangKeys;
@@ -45,11 +51,10 @@ public class SkyGame extends Game {
 	public int deathMatchBegin;
 	public int deathMatchBorderShrinkTime;
 
-	public SkyGame(String name, String option, int teamSize) {
-		super(name, option, Main.getInstance(), teamSize);
-		
+	public SkyGame(String name, String map, int teamSize) {
+		super(name, map, Main.getInstance());
 
-		arena = Pixel.WorldProvider.provideArena(option, this, new ArenaCreator() {
+		arena = Pixel.WorldProvider.provideArena(map, this, new ArenaCreator() {
 			@Override
 			public Arena createArena(Game game, World world, String map) {
 				return new SkyArena(SkyGame.this, world, map);
@@ -137,26 +142,18 @@ public class SkyGame extends Game {
 		}
 	}
 	
-	@Override
-	public void onBlockPlace(BlockPlaceEvent event) {
-		if(event.getBlock().getType() == Material.TNT) {
-			event.getBlock().setType(Material.AIR);
-			TNTPrimed tnt = (TNTPrimed)event.getPlayer().getWorld().spawnEntity(
-					event.getBlock().getLocation().add(0.5, 0, 0.5), EntityType.PRIMED_TNT);
-			tnt.setFuseTicks(40);
-		}
-	}
 	
 
 	@Override
 	public void onDeath(PlayerDeathEvent event) {
-//		System.out.println("onDeath from SkyGame!");
 		event.setDeathMessage(Main.chatPrefix + String.format(LanguageApi.getDefault(PixelLangKeys.DEATH), event.getEntity().getName()));
 		Player killer = event.getEntity().getKiller();
 		if(killer == null) {
 			killer = PlayerUtil.getLastAttacker(event.getEntity());
 		}
-		if (killer != null) {
+		if (killer != null && killer != event.getEntity()) {
+			Pixel.getEconomy().depositPlayer(killer, Main.getInstance().getConfig().getInt("coins_kill"));
+			killer.sendMessage(Main.chatPrefix + ChatColor.GOLD + Pixel.getEconomy().format(Main.getInstance().getConfig().getInt("coins_kill")));
 			SkywarsScoreboard.addKill(killer);
 			String msg = "Herzen von " + killer.getName() + ": ";
 			for(int i = 0; i < 10; ++i) {
@@ -166,6 +163,7 @@ public class SkyGame extends Game {
 			}
 			event.getEntity().sendMessage(Main.chatPrefix + msg);
 		} 
+		PlayerUtil.clear(event.getEntity());
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -210,23 +208,95 @@ public class SkyGame extends Game {
 		}
 		player.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(player, PixelLangKeys.LEAVE), player.getName()));
 		
+		if(teamHandler.getTeamsAliveCount() == 1) {
+			GameTeam winner = teamHandler.getTeamsAlive().get(0);
+			taskManager.addTask(new SkyTasksDelayed.Victory(SkyGame.this, 0, winner), SkyTasksDelayed.Victory.id);
+		} else if(teamHandler.getTeamsAliveCount() == 0) {
+			if(taskManager.getTask(SkyTasksDelayed.Draw.id) != null) {
+				taskManager.getTask(SkyTasksDelayed.Draw.id).runTaskEarly();
+			}
+		}
+		
 		if (players.size() == 0) {
 			endGame();
-			System.out.println("[Skywars] lobby stopped: " + arena.getWorld().getName());
+//			System.out.println("[Skywars] lobby stopped: " + arena.getWorld().getName());
 		}
 
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
-			public void run() {
-				player.setGameMode(GameMode.ADVENTURE);
-				PlayerUtil.resetPlayer(player);
-				player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-			}
-		}, 5);
+//		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+//			public void run() {
+//				player.setGameMode(GameMode.ADVENTURE);
+//				PlayerUtil.resetPlayer(player);
+//				player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+//			}
+//		}, 5);
 	}
 	
+	
+	/*
+	 * ================================================================
+	 * ================    Utility Events    ==========================
+	 * ================================================================
+	 */
+	
+	/*
+	 * TNT explosion after placing
+	 */
+	
 	@Override
-	public void onEnd() {
-		super.onEnd();
+	public void onBlockPlace(BlockPlaceEvent event) {
+		if(event.getBlock().getType() == Material.TNT) {
+			event.getBlock().setType(Material.AIR);
+			TNTPrimed tnt = (TNTPrimed)event.getPlayer().getWorld().spawnEntity(
+					event.getBlock().getLocation().add(0.5, 0, 0.5), EntityType.PRIMED_TNT);
+			tnt.setFuseTicks(40);
+		}
 	}
+	
+	/*
+	 * Remove bottle after drinking a potion
+	 */
+	
+	@Override
+	public void onItemConsume(PlayerItemConsumeEvent event) {
+		if(event.getItem().getType() == Material.POTION) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					if(event.getPlayer().getEquipment().getItemInMainHand().getType() == Material.GLASS_BOTTLE)
+						event.getPlayer().getEquipment().setItemInMainHand(null);
+					if(event.getPlayer().getEquipment().getItemInOffHand().getType() == Material.GLASS_BOTTLE)
+						event.getPlayer().getEquipment().setItemInOffHand(null);
+				}
+			}.runTaskLater(plugin, 1);
+		}
+	}
+	
+	/*
+	 * always lapis in enchanting table
+	 */
+	
+	@Override
+	public void onInventoryOpen(InventoryOpenEvent event) {
+		if (event.getInventory().getType() == InventoryType.ENCHANTING) {
+			EnchantingInventory inv = (EnchantingInventory) event.getInventory();
+			inv.setSecondary(new ItemStack(Material.LAPIS_LAZULI, 64));
+		}
+	}
+	@Override
+	public void onInventoryClick(InventoryClickEvent event) {
+		if (event.getInventory().getType() == InventoryType.ENCHANTING) {
+			if (event.getCurrentItem().getType() == Material.LAPIS_LAZULI) {
+				event.setCancelled(true);
+			}
+		}
+	}
+	@Override
+	public void onInventoryClose(InventoryCloseEvent event) {
+		if (event.getInventory().getType() == InventoryType.ENCHANTING) {
+			EnchantingInventory inv = (EnchantingInventory) event.getInventory();
+			inv.setSecondary(null);
+		}
+	}
+
 
 }

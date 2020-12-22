@@ -7,7 +7,6 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
-import me.groot_23.pixel.Pixel;
 import me.groot_23.pixel.display.BossBarApi;
 import me.groot_23.pixel.game.Game;
 import me.groot_23.pixel.game.task.GameTaskDelayed;

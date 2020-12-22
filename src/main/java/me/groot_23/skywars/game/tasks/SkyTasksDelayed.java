@@ -189,6 +189,10 @@ public class SkyTasksDelayed {
 						ChatColor.DARK_PURPLE + LanguageApi.getTranslation(player, LanguageKeys.VICTORY), 3, 50, 3);
 				Pixel.setSpectator(player, true);
 			}
+			for(Player player : winner.getPlayers()) {
+				Pixel.getEconomy().depositPlayer(player, Main.getInstance().getConfig().getInt("coins_victory"));
+				player.sendMessage(Main.chatPrefix + ChatColor.GOLD + Pixel.getEconomy().format(Main.getInstance().getConfig().getInt("coins_victory")));
+			}
 			game.taskManager.removeTask(Draw.id);
 			game.taskManager.addTask(new EndGame(game, 200), EndGame.id);
 		}

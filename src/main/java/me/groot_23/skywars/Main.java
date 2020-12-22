@@ -5,9 +5,6 @@ import java.io.IOException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.groot_23.pixel.Pixel;
@@ -16,14 +13,12 @@ import me.groot_23.pixel.commands.LangCommand;
 import me.groot_23.pixel.commands.MarkerCommand;
 import me.groot_23.pixel.game.Game;
 import me.groot_23.pixel.game.GameCreator;
-import me.groot_23.pixel.gui.GuiRunnable;
 import me.groot_23.pixel.kits.KitApi;
 import me.groot_23.pixel.language.LanguageApi;
 import me.groot_23.pixel.language.LanguageFolder;
 import me.groot_23.pixel.player.DataManager;
 import me.groot_23.pixel.util.ResourceExtractor;
 import me.groot_23.pixel.util.Utf8Config;
-import me.groot_23.pixel.world.Arena;
 import me.groot_23.skywars.commands.KitShop;
 import me.groot_23.skywars.commands.SWchest;
 import me.groot_23.skywars.commands.SWedit;
@@ -31,7 +26,6 @@ import me.groot_23.skywars.commands.SWleave;
 import me.groot_23.skywars.commands.SWmaps;
 import me.groot_23.skywars.commands.SWset;
 import me.groot_23.skywars.commands.SWstart;
-import me.groot_23.skywars.events.GameEvents;
 import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
 import me.groot_23.skywars.game.SkyGame;
@@ -52,22 +46,24 @@ public class Main extends JavaPlugin {
 
 		Pixel.registerGame("skywars-solo", new GameCreator() {
 			@Override
-			public Game createGame(String options) {
-				return new SkyGame("skywars-solo", options, 1);
+			public Game createGame(String map) {
+				return new SkyGame("skywars-solo", map, 1);
 			}
 		});
 		Pixel.registerGame("skywars-duo", new GameCreator() {
 			@Override
-			public Game createGame(String options) {
-				return new SkyGame("skywars-duo", options, 2);
+			public Game createGame(String map) {
+				return new SkyGame("skywars-duo", map, 2);
 			}
 		});
 		Utf8Config cfg = new Utf8Config();
+		Utf8Config cfg2 = new Utf8Config();
 		try {
 			cfg.load(new File(this.getDataFolder(), "groups.yml"));
+			cfg2.load(new File(this.getDataFolder(), "worlds.yml"));
 			for (String s : cfg.getStringList("default")) {
-				Pixel.registerGameOption("skywars-solo", s);
-				Pixel.registerGameOption("skywars-duo", s);
+				Pixel.registerGameMap("skywars-solo", s, cfg2.getInt(s + ".maxPlayers", 8));
+				Pixel.registerGameMap("skywars-duo", s, cfg2.getInt(s + ".maxPlayers", 8));
 			}
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
@@ -87,7 +83,7 @@ public class Main extends JavaPlugin {
 		DataManager.loadFile(kitUnlockFile, "skywars_kit_unlock");
 		KitApi.setUnlockedDataId("skywars", "skywars_kit_unlock");
 
-		new SWleave(this);
+		new SWleave(this, "swleave");
 		new SWedit(this);
 		new SWmaps(this);
 		new SWchest(this);
@@ -100,9 +96,8 @@ public class Main extends JavaPlugin {
 
 		new StopLobbyLeave(this);
 		new ChestEvents(this);
-		new GameEvents(this);
 		
-		getCommand("shop").setExecutor(new KitShop());
+		new KitShop(this, "shop");
 		
 		chatPrefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("chat_prefix"));
 

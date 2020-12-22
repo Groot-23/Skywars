@@ -9,13 +9,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.groot_23.pixel.Pixel;
-import me.groot_23.pixel.commands.CommandBase;
+import me.groot_23.pixel.commands.PlayerCommand;
 import me.groot_23.pixel.game.task.GameTaskDelayed;
 import me.groot_23.pixel.world.Arena;
-import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.tasks.SkyTasksDelayed;
 
-public class SWstart extends CommandBase {
+public class SWstart extends PlayerCommand {
 
 	public SWstart(JavaPlugin plugin) {
 		super(plugin, "swstart", "skywars.start");
@@ -28,10 +27,6 @@ public class SWstart extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, Command arg1, String arg2, String[] args) {
-		if(!(sender instanceof Player)) {
-			sender.sendMessage(Main.chatPrefix + "Nur Spieler können diesen Befehl verwenden");
-			return false;
-		}
 		Player player = (Player) sender;
 		Arena arena = Pixel.getArena(player.getWorld().getUID());
 		if(arena != null) {

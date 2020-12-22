@@ -11,7 +11,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import me.groot_23.pixel.Pixel;
 import me.groot_23.pixel.display.ScoreboardApi;
 import me.groot_23.pixel.kits.Kit;
 import me.groot_23.pixel.kits.KitApi;

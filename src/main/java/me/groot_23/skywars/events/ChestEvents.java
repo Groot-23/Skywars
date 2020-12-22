@@ -1,7 +1,6 @@
 package me.groot_23.skywars.events;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -20,7 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;

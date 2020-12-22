@@ -1,10 +1,10 @@
 package me.groot_23.skywars.commands;
 
-import java.util.List;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,6 +17,8 @@ import org.bukkit.entity.Player;
 
 import me.groot_23.pixel.Pixel;
 import me.groot_23.pixel.commands.CommandBase;
+import me.groot_23.pixel.language.LanguageApi;
+import me.groot_23.pixel.language.PixelLangKeys;
 import me.groot_23.pixel.util.Utf8Config;
 import me.groot_23.pixel.world.WorldUtil;
 import me.groot_23.skywars.Main;
@@ -100,19 +102,13 @@ public class SWmaps extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String arg2, String[] args) {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(Main.chatPrefix + "Nur Spieler können diesen Befehl ausf�hren");
-			return true;
-		}
-		Player player = (Player) sender;
-
 		if (args.length == 0) return false;
 		String mode = args[0];
 		if (args.length == 3 && mode.equals("register")) {
 			String world = args[1];
 			String group = args[2];
 			if (!WorldUtil.worldExists(world)) {
-				player.sendMessage(Util.chat(Main.chatPrefix + "&cDie Welt \"" + args[1] + "\" wurde nicht gefunden!"));
+				sender.sendMessage(Util.chat(Main.chatPrefix + "&cDie Welt \"" + args[1] + "\" wurde nicht gefunden!"));
 				return true;
 			}
 			addWorldToGroup(world, group);
@@ -121,13 +117,13 @@ public class SWmaps extends CommandBase {
 
 			ConfigurationSection groups = getGroupConfig();
 			if (groups == null) {
-				player.sendMessage(Main.chatPrefix + "Es sind keine Daten vorhanden");
+				sender.sendMessage(Main.chatPrefix + "Es sind keine Daten vorhanden");
 				return true;
 			}
 			for (String key : groups.getValues(false).keySet()) {
-				player.sendMessage(Main.chatPrefix + ChatColor.GREEN + key + ":");
+				sender.sendMessage(Main.chatPrefix + ChatColor.GREEN + key + ":");
 				for(String s : groups.getStringList(key)) {
-					player.sendMessage(Main.chatPrefix + " - " + s);
+					sender.sendMessage(Main.chatPrefix + " - " + s);
 				}
 			}
 		} else if (args.length == 3 && mode.equals("remove")) {
@@ -139,16 +135,20 @@ public class SWmaps extends CommandBase {
 			String world = args[1];
 			
 			if(args[2].equals("minPlayers")) {
-				setWorldProperty(world, "minPlayers", args[3], player);
+				setWorldProperty(world, "minPlayers", args[3], sender);
 			} else if(args[2].equals("maxPlayers")) {
-				setWorldProperty(world, "maxPlayers", args[3], player);
+				setWorldProperty(world, "maxPlayers", args[3], sender);
 			} else if(args[2].equals("midRadius")) {
-				setWorldProperty(world, "midRadius", args[3], player);
+				setWorldProperty(world, "midRadius", args[3], sender);
 			} else if(args[2].equals("mapRadius")) {
-				setWorldProperty(world, "mapRadius", args[3], player);
+				setWorldProperty(world, "mapRadius", args[3], sender);
 			} else if(args[2].equals("midSpawn")) {
 				if(args.length == 3) {
-					Location l = player.getLocation();
+					if(!(sender instanceof Player)) {
+						sender.sendMessage(LanguageApi.getDefault(PixelLangKeys.CMD_PLAYER_ONLY));
+						return true;
+					} 
+					Location l = ((Player)sender).getLocation();
 					setMidSpawn(world, l.getBlockX(), l.getBlockY(), l.getBlockZ());
 				} else if(args.length >= 6) {
 					try {
@@ -158,10 +158,10 @@ public class SWmaps extends CommandBase {
 						setMidSpawn(world, x, y, z);
 					}
 					catch(NumberFormatException e) {
-						player.sendMessage(Main.chatPrefix + ChatColor.RED + "Ungültige Koordinaten (Es müssen ganze Zahlen sein)");
+						sender.sendMessage(Main.chatPrefix + ChatColor.RED + "Ungültige Koordinaten (Es müssen ganze Zahlen sein)");
 					}
 				} else {
-					player.sendMessage(Main.chatPrefix + ChatColor.RED + "Zu wenige Argumente für die Koordinaten. Gib keine an, wenn es deine Position sein soll!");
+					sender.sendMessage(Main.chatPrefix + ChatColor.RED + "Zu wenige Argumente für die Koordinaten. Gib keine an, wenn es deine Position sein soll!");
 				}
 			}
 		}else return false;
@@ -228,7 +228,7 @@ public class SWmaps extends CommandBase {
 		}
 	}
 	
-	public void setWorldProperty(String world, String property, String intStr, Player sender) {
+	public void setWorldProperty(String world, String property, String intStr, CommandSender sender) {
 		try {
 			int val = Integer.parseInt(intStr);
 			Utf8Config cfg = getWorldConfig();

@@ -2,7 +2,7 @@ sky_game:
   time_until_start: "Time until start"
   players_left: "Players left"
   time_left: "Time left"
-  start_in: "Skywars starts in"
+  start_in: "&7The game starts in &e%d &7seconds."
   started: "Skywars started!"
   get_ready: "Get ready!"
   fight_begins: "The fight begins!"
@@ -12,8 +12,14 @@ sky_game:
   bossbar_start: '&lTHE &6&lGAME &f&lBEGINS IN'
   no_teaming: "Teaming is forbidden!!!"
 
+  chests_refilled: "&7aAll chests are &arefilled&7!"
+
+  kill_coins: "&c+1 Kill &8(&e&l+%s&8)"
+
   victory: "WON!"
-  leave: "Leave game"
+  victory_chat_player: "&7The player %s has won the game!"
+  victory_chat_team: "&7The team %s has won the game!"
+  leave: "&c&lLeave game &7(rightclick)"
   event:
     start: "Start"
     refill: "Chest refill"
@@ -59,3 +65,5 @@ kits:
     name: '&6Thor &9Kit'
   glados:
     name: "&7&lGLaDOS &cKit"
+  enderman_kit:
+    name: "&5Enderman Kit"

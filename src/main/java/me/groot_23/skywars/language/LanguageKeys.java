@@ -18,8 +18,15 @@ public class LanguageKeys {
 	public static final String GET_READY    		= "sky_game.get_ready";
 	public static final String FIGHT_BEGINS 		= "sky_game.fight_begins";
 	
+	
+	public static final String VICTORY_TEAM 		= "sky_game.victory_chat_team";
+	public static final String VICTORY_PLAYER		= "sky_game.victory_chat_player";
 	public static final String VICTORY 				= "sky_game.victory";
 	public static final String NO_TEAMING 			= "sky_game.no_teaming";
 	
 	public static final String LEAVE 				= "sky_game.leave";
+	
+	public static final String CHESTS_REFILLED		= "sky_game.chests_refilled";
+	
+	public static final String KILL_COINS			= "sky_game.kill_coins";
 }

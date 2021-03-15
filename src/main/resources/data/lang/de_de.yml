@@ -2,7 +2,7 @@ sky_game:
   time_until_start: Zeit bis zum Start
   players_left: Spieler übrig
   time_left: Zeit übrig
-  start_in: Skywars startet in
+  start_in: "&7Die Runde startet in &e%d &7Sekunden."
   started: Skywars gestartet!
   get_ready: Mache dich bereit!
   fight_begins: Der Kampf beginnt!
@@ -12,8 +12,14 @@ sky_game:
   bossbar_start: '&lDAS &6&lSPIEL &f&lBEGINNT IN'
   no_teaming: '&c&lTEAMING &f&lIST &4&lVERBOTEN&f&l!!!'
 
+  chests_refilled: "&7Alle Kisten werden &aneu gefüllt&7!"
+
+  kill_coins: "&c+1 Kill &8(&e&l+%s&8)"
+
   victory: HAT GEWONNEN!
-  leave: Spiel verlassen
+  victory_chat_player: "&7Der Spieler %s hat das Spiel gewonnen!"
+  victory_chat_team: "&7Das Team %s hat das Spiel gewonnen!"
+  leave: "&c&lSpiel verlassen &7(Rechtsklick)"
   event:
     start: Start
     refill: Refill
@@ -63,3 +69,5 @@ kits:
     name: '&6Thor &9Kit'
   glados:
     name: "&7&lGLaDOS &cKit"
+  enderman_kit:
+    name: "&5Enderman Kit"

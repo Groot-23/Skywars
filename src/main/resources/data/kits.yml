@@ -53,7 +53,7 @@ builder_kit:
       amount: 1
 lumber_kit:
   material: stone_axe
-  cost: 60
+  cost: 100
   items:
     item_0:
       slot: 0
@@ -73,7 +73,7 @@ lumber_kit:
       amount: 3
 bow_kit:
   material: bow
-  cost: 250
+  cost: 300
   items:
     item_0:
       slot: 0
@@ -97,7 +97,7 @@ bow_kit:
       amount: 25
 mlg_kit:
   material: water_bucket
-  cost: 150
+  cost: 300
   items:
     item_0:
       slot: 0
@@ -117,7 +117,7 @@ mlg_kit:
       amount: 5
 bomb_kit:
   material: tnt
-  cost: 250
+  cost: 350
   items:
     item_0:
       slot: 0
@@ -141,7 +141,7 @@ bomb_kit:
       amount: 1
 poseidon_kit:
   material: trident
-  cost: 500
+  cost: 1000
   items:
     item_0:
       slot: 0
@@ -171,7 +171,7 @@ poseidon_kit:
       amount: 1
 wizard_kit:
   material: potion
-  cost: 1000
+  cost: 1500
   items:
     item_0:
       slot: 0
@@ -236,7 +236,7 @@ wizard_kit:
       amount: 1
 pyro_kit:
   material: blaze_powder
-  cost: 1000
+  cost: 500
   items:
     item_0:
       slot: 0
@@ -309,7 +309,7 @@ tank_kit:
       amount: 1
 thor_kit:
   material: iron_axe
-  cost: 1000
+  cost: 700
   items:
     item_0:
       slot: 0
@@ -330,102 +330,19 @@ thor_kit:
       slot: 38
       type: IRON_CHESTPLATE
       amount: 1
-glados:
-  material: barrier
-  cost: 1000000
+enderman_kit:
+  material: ender_pearl
+  cost: 3000
   items:
     item_0:
       slot: 0
-      type: PLAYER_HEAD
-      amount: 64
-      name: Companion Cube
-      skull_nbt: '{Id:"aa974e80-ae00-4ae2-90cf-56e158576445",Properties:{textures:[{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWI3OGU1NWUzZWE2YjM2ODJiZDdjZWFkNDNlYjFjOTFiMjUyN2E4MWFhMjg5NGYwOTU4MDFmNmVlNDdhMyJ9fX0="}]}}'
+      type: ENDER_PEARL
+      amount: 1
     item_1:
       slot: 1
-      type: POTATO
+      type: END_STONE
       amount: 64
-      name: POTAOS
-    item_2:
-      slot: 2
-      type: ENDER_PEARL
-      amount: 16
-      name: 'apenture sience quantum tunneling '
-    item_3:
-      slot: 3
-      type: SPLASH_POTION
-      amount: 1
-      name: nurotoxin
-      effect: UNCRAFTABLE
-      effect_data:
-        extended: false
-        upgraded: false
-      custom_effects:
-        '0':
-          type: SPEED
-          duration: 72000
-          amplifier: 100
-        '1':
-          type: JUMP
-          duration: 72000
-          amplifier: 20
-        '2':
-          type: CONFUSION
-          duration: 72000
-          amplifier: 20
-        '3':
-          type: BLINDNESS
-          duration: 72000
-          amplifier: 5
-        '4':
-          type: ABSORPTION
-          duration: 72000
-          amplifier: 127
-        '5':
-          type: SLOW_FALLING
-          duration: 72000
-          amplifier: 127
-        '6':
-          type: GLOWING
-          duration: 72000
-          amplifier: 1
-    item_5:
-      slot: 5
-      type: DIAMOND_SWORD
-      amount: 1
-      name: making sience now
-      enchants:
-        sharpness: 5
-    item_7:
-      slot: 7
-      type: POTION
-      amount: 1
-      name: Weatly
-      effect: WEAKNESS
-      effect_data:
-        extended: true
-        upgraded: false
-    item_8:
-      slot: 8
-      type: TOTEM_OF_UNDYING
-      amount: 1
-      name: still alive
-    item_36:
-      slot: 36
-      type: DIAMOND_BOOTS
-      amount: 1
-      name: 'null'
-    item_37:
-      slot: 37
-      type: DIAMOND_LEGGINGS
-      amount: 1
-      name: nullpointer()
-    item_38:
-      slot: 38
-      type: DIAMOND_CHESTPLATE
-      amount: 1
-      name: -2-new_order_refuse_this_order
     item_39:
       slot: 39
-      type: DIAMOND_HELMET
+      type: LEATHER_HELMET
       amount: 1
-      name: Paradox-1- this statment is false

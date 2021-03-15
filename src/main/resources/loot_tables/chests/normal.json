@@ -2,52 +2,25 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "rolls": 1,
+      "rolls":  {
+        "min": 0,
+        "max": 1
+      },
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:wooden_pickaxe",
+          "name": "minecraft:iron_pickaxe",
           "weight": 2
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:stone_pickaxe",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:iron_pickaxe",
-          "weight": 6
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:golden_pickaxe",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:diamond_pickaxe",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:wooden_axe",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:stone_axe",
           "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:iron_axe",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:golden_axe",
-          "weight": 2
+          "weight": 1
         },
         {
           "type": "minecraft:item",
@@ -56,47 +29,14 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:wooden_shovel",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:stone_shovel",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:iron_shovel",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:golden_shovel",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:diamond_shovel",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:water_bucket",
           "weight": 1
         }
       ]
     },
     {
-      "rolls": {
-        "min": 0,
-        "max": 1
-      },
+      "rolls": 1,
       "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:wooden_sword",
-          "weight": 1
-        },
         {
           "type": "minecraft:item",
           "name": "minecraft:stone_sword",
@@ -105,34 +45,131 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:iron_sword",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:golden_sword",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:diamond_sword",
           "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:bow",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:iron_boots",
-          "weight": 3
         }
       ]
     },
     {
       "rolls": {
-        "min": 3,
-        "max": 5
+        "min": 1,
+        "max": 2
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:leather_helmet",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:leather_chestplate",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:leather_leggings",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:leather_boots",
+          "weight": 4
+        },
+
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:chainmail_helmet",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:chainmail_chestplate",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:chainmail_leggings",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:chainmail_boots",
+          "weight": 1
+        },
+
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_helmet",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_chestplate",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_leggings",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_boots",
+          "weight": 4
+        },
+
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_helmet",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_chestplate",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_leggings",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_boots",
+          "weight": 3
+        },
+
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_helmet",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_chestplate",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_leggings",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_boots",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "min": 2,
+        "max": 4
       },
       "entries": [
         {
@@ -143,9 +180,8 @@
             {
               "function": "minecraft:set_count",
               "count": {
-                "type": "minecraft:binomial",
-                "n": 80,
-                "p": 0.5
+                "min": 16,
+                "max": 64
               }
             }
           ]
@@ -158,9 +194,36 @@
             {
               "function": "minecraft:set_count",
               "count": {
-                "type": "minecraft:binomial",
-                "n": 80,
-                "p": 0.5
+                "min": 16,
+                "max": 64
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:glass",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 16,
+                "max": 64
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:stone",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 16,
+                "max": 64
               }
             }
           ]
@@ -173,9 +236,8 @@
             {
               "function": "minecraft:set_count",
               "count": {
-                "type": "minecraft:binomial",
-                "n": 8,
-                "p": 0.5
+                "min": 1,
+                "max": 12
               }
             }
           ]
@@ -188,24 +250,8 @@
             {
               "function": "minecraft:set_count",
               "count": {
-                "type": "minecraft:binomial",
-                "n": 5,
-                "p": 0.2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:coal",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:binomial",
-                "n": 12,
-                "p": 0.5
+                "min": 1,
+                "max": 6
               }
             }
           ]
@@ -213,28 +259,40 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:experience_bottle",
-          "weight": 4,
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
-                "type": "minecraft:binomial",
-                "n": 20,
-                "p": 0.5
+                "min": 1,
+                "max": 5
               }
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:arrow",
-          "weight": 5,
+          "name": "minecraft:cobweb",
+          "weight": 7,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": 16
+              "count": {
+                "min": 6,
+                "max": 12
+              }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:water_bucket",
+          "weight": 7
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:lava_bucket",
+          "weight": 7
         }
       ]
     },
@@ -244,14 +302,13 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:cooked_beef",
-          "weight": 3,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
-                "type": "minecraft:binomial",
-                "n": 6,
-                "p": 0.5
+                "min": 2,
+                "max": 8
               }
             }
           ]
@@ -259,14 +316,13 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:bread",
-          "weight": 2,
+          "weight": 5,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
-                "type": "minecraft:binomial",
-                "n": 8,
-                "p": 0.5
+                "min": 2,
+                "max": 8
               }
             }
           ]
@@ -274,17 +330,35 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:melon_slice",
-          "weight": 1,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
-                "type": "minecraft:binomial",
-                "n": 30,
-                "p": 0.5
+                "min": 8,
+                "max": 32
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:apple",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_apple",
+          "weight": 1
         }
       ]
     }

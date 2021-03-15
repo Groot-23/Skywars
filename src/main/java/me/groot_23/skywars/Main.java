@@ -11,8 +11,8 @@ import me.groot_23.pixel.Pixel;
 import me.groot_23.pixel.commands.KitCommands;
 import me.groot_23.pixel.commands.LangCommand;
 import me.groot_23.pixel.commands.MarkerCommand;
-import me.groot_23.pixel.game.Game;
-import me.groot_23.pixel.game.GameCreator;
+import me.groot_23.pixel.game.Lobby;
+import me.groot_23.pixel.game.LobbyCreator;
 import me.groot_23.pixel.kits.KitApi;
 import me.groot_23.pixel.language.LanguageApi;
 import me.groot_23.pixel.language.LanguageFolder;
@@ -28,7 +28,7 @@ import me.groot_23.skywars.commands.SWset;
 import me.groot_23.skywars.commands.SWstart;
 import me.groot_23.skywars.events.ChestEvents;
 import me.groot_23.skywars.events.StopLobbyLeave;
-import me.groot_23.skywars.game.SkyGame;
+import me.groot_23.skywars.game.SkyLobby;
 import me.groot_23.skywars.util.Util;
 
 public class Main extends JavaPlugin {
@@ -44,16 +44,16 @@ public class Main extends JavaPlugin {
 		firstStart();
 		instance = this;
 
-		Pixel.registerGame("skywars-solo", new GameCreator() {
+		Pixel.registerGame("skywars-solo", new LobbyCreator() {
 			@Override
-			public Game createGame(String map) {
-				return new SkyGame("skywars-solo", map, 1);
+			public Lobby createGame(String map) {
+				return new SkyLobby("skywars-solo", map, 1, 8, 1, 30*20);
 			}
 		});
-		Pixel.registerGame("skywars-duo", new GameCreator() {
+		Pixel.registerGame("skywars-duo", new LobbyCreator() {
 			@Override
-			public Game createGame(String map) {
-				return new SkyGame("skywars-duo", map, 2);
+			public Lobby createGame(String map) {
+				return new SkyLobby("skywars-duo", map, 2, 8, 2, 30*20);
 			}
 		});
 		Utf8Config cfg = new Utf8Config();

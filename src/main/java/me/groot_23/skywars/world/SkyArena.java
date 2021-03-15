@@ -11,15 +11,22 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import me.groot_23.pixel.game.Game;
-import me.groot_23.pixel.world.Arena;
+import me.groot_23.pixel.world.GameWorld;
+import me.groot_23.pixel.world.PixelWorld;
 import me.groot_23.pixel.world.WorldMarker;
 import me.groot_23.skywars.game.SkyChest;
 import me.groot_23.skywars.util.Util;
 
-public class SkyArena extends Arena{
+public class SkyArena extends GameWorld{
 
 	private List<SkyChest> chests;
 	protected List<Location> spawns;
+	
+	public SkyArena(Game game, PixelWorld world) {
+		super(game, world);
+		findChests();
+		findPlayerSpawns();
+	}
 	
 	public SkyArena(Game game, World world, String mapName) {
 		super(game, world, mapName);

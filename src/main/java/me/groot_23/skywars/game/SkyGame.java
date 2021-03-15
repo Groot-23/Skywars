@@ -1,10 +1,11 @@
 package me.groot_23.skywars.game;
 
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -17,29 +18,27 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.EnchantingInventory;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.groot_23.pixel.Pixel;
 import me.groot_23.pixel.game.Game;
-import me.groot_23.pixel.gui.GuiItem;
-import me.groot_23.pixel.gui.GuiItem.UseAction;
-import me.groot_23.pixel.gui.GuiRunnable;
-import me.groot_23.pixel.kits.KitApi;
 import me.groot_23.pixel.language.LanguageApi;
 import me.groot_23.pixel.language.PixelLangKeys;
 import me.groot_23.pixel.player.PlayerUtil;
 import me.groot_23.pixel.player.team.GameTeam;
 import me.groot_23.pixel.player.team.TeamHandler;
-import me.groot_23.pixel.world.Arena;
-import me.groot_23.pixel.world.ArenaCreator;
+import me.groot_23.pixel.world.GameplayModifier;
+import me.groot_23.pixel.world.PixelWorld;
 import me.groot_23.skywars.Main;
 import me.groot_23.skywars.game.tasks.SkyTasksDelayed;
+import me.groot_23.skywars.game.tasks.SkyTasksDelayed.Draw;
+import me.groot_23.skywars.game.tasks.SkyTasksDelayed.EndGame;
+import me.groot_23.skywars.game.tasks.SkyTasksDelayed.StartGame;
 import me.groot_23.skywars.game.tasks.SkyTasksRepeated;
 import me.groot_23.skywars.language.LanguageKeys;
 import me.groot_23.skywars.scoreboard.SkywarsScoreboard;
-import me.groot_23.skywars.util.Util;
 import me.groot_23.skywars.world.SkyArena;
 
 public class SkyGame extends Game {
@@ -51,97 +50,47 @@ public class SkyGame extends Game {
 	public int deathMatchBegin;
 	public int deathMatchBorderShrinkTime;
 
-	public SkyGame(String name, String map, int teamSize) {
-		super(name, map, Main.getInstance());
+	public SkyGame(JavaPlugin plugin, String name, PixelWorld world, Set<Player> players, TeamHandler teams) {
+		super(plugin, name, world, players, teams);
 
-		arena = Pixel.WorldProvider.provideArena(map, this, new ArenaCreator() {
-			@Override
-			public Arena createArena(Game game, World world, String map) {
-				return new SkyArena(SkyGame.this, world, map);
-			}
-		});
-		skyArena = (SkyArena) arena;
-		teamHandler = new TeamHandler(arena.getMaxPlayers(), teamSize);
+		skyArena = new SkyArena(this, world);
+
+		teamHandler.chatPrefix = Main.chatPrefix;
 		
 		skyArena.initBorder();
 		skyArena.refillChests();
-		arena.getWorld().setPVP(false);
+		arena.getWorld().setPVP(true);
+		
+		GameplayModifier mod = GameplayModifier.old();
+		mod.canSwimWater = true;
+		GameplayModifier.set(world.getWorld(), mod);
 
 		deathMatchBegin = plugin.getConfig().getInt("deathMatchBegin");
 		deathMatchBorderShrinkTime = plugin.getConfig().getInt("deathMatchBorderShrinkTime");
 		refillTime = plugin.getConfig().getInt("refillTime");
 		refillTimeChange = plugin.getConfig().getInt("refillTimeChange");
 		
-		taskManager.addRepeated(new SkyTasksRepeated.Lobby1(this), "lobby1");
-		taskManager.addRepeated(new SkyTasksRepeated.Lobby20(this), "lobby20");
+		int i = 0;
+		for (GameTeam team : teamHandler.getTeams()) {
+			for (Player p : team.getPlayers()) {
+				p.teleport(skyArena.getSpawns().get(i));
+				// remove team selector if present!
+				p.getInventory().setItem(0, null);
+				p.sendTitle(
+						ChatColor.GOLD + "Map" + SkywarsScoreboard.COLON + ChatColor.WHITE
+								+ LanguageApi.getTranslation(p, "map." + arena.getMapName()),
+						ChatColor.AQUA + "Builder" + SkywarsScoreboard.COLON + ChatColor.WHITE + arena.getBuilder(),
+						10, 80, 10);
+			}
+			i++;
+		}
+		skyArena.removeLobby();
+
+		taskManager.addRepeated(new SkyTasksRepeated.Game1(this), "game1");
+		taskManager.addRepeated(new SkyTasksRepeated.Game20(this), "game20");
+
+		taskManager.addTask(new StartGame(this), 10 * 20, StartGame.id);
 	}
-
-	@Override
-	public void onJoin(Player player) {
-		for(Player p : players) {
-			p.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(p, PixelLangKeys.JOIN), player.getName()));
-		}
-		
-		PlayerUtil.resetPlayer(player);
-		// ====== init hotbar ==========
-		// kit selector
-		GuiItem kitSelector = new GuiItem(Material.CHEST,
-				Util.chat(LanguageApi.getTranslation(player, PixelLangKeys.KIT_SELECTOR)));
-		kitSelector.addUseRunnable(new GuiRunnable() {
-			@Override
-			public void run(Player player, ItemStack item, Inventory inv) {
-				KitApi.openGui(player, "skywars");
-			}
-		}, UseAction.RIGHT_CLICK);
-		player.getInventory().setItem(3, kitSelector.getItem());
-
-		// kit shop
-		GuiItem kitShop = new GuiItem(Material.DIAMOND, ChatColor.GOLD + "" + ChatColor.BOLD + "Kit Shop");
-		kitShop.addUseRunnable(new GuiRunnable() {
-			@Override
-			public void run(Player player, ItemStack item, Inventory inv) {
-				KitApi.openShop(player, "skywars");
-			}
-		}, UseAction.RIGHT_CLICK);
-		player.getInventory().setItem(5, kitShop.getItem());
-		
-		// leave
-		GuiItem lobbyLeave = new GuiItem(Material.MAGMA_CREAM,
-				Util.chat(LanguageApi.getTranslation(player, LanguageKeys.LEAVE)));
-		lobbyLeave.addUseCommand("swleave", UseAction.RIGHT_CLICK, UseAction.LEFT_CLICK);
-		player.getInventory().setItem(8, lobbyLeave.getItem());
-
-		// team selector
-		GuiItem teamSelector = new GuiItem(Material.OAK_SIGN);
-		teamSelector.addUseRunnable(new GuiRunnable() {
-			@Override
-			public void run(Player player, ItemStack item, Inventory inv) {
-				Arena arena = Pixel.getArena(player.getWorld().getUID());
-				if (arena != null) {
-					if (arena.getGame() instanceof SkyGame) {
-						player.openInventory(((SkyGame) arena.getGame()).teamHandler.getTeamSelectorInv());
-					}
-				}
-			}
-		});
-		
-		player.getInventory().setItem(0, teamSelector.getItem());
-		
-		SkywarsScoreboard.resetKills(player);
-		SkywarsScoreboard.init(player);
-		SkywarsScoreboard.initPreGame(player, arena.getMaxPlayers(), 30, arena.getMapName(), name);
-
-		
-		if(players.size() == arena.getMinPlayers()) {
-			// start lobby task
-			taskManager.addTask(new SkyTasksDelayed.GoToSpawn(this, 30 * 20), SkyTasksDelayed.GoToSpawn.id);
-		}
-		if (players.size() == arena.getMaxPlayers()) {
-			// end lobby task sooner
-			taskManager.getTask(SkyTasksDelayed.GoToSpawn.id).runTaskEarly();
-		}
-	}
-	
 	
 
 	@Override
@@ -153,7 +102,7 @@ public class SkyGame extends Game {
 		}
 		if (killer != null && killer != event.getEntity()) {
 			Pixel.getEconomy().depositPlayer(killer, Main.getInstance().getConfig().getInt("coins_kill"));
-			killer.sendMessage(Main.chatPrefix + ChatColor.GOLD + Pixel.getEconomy().format(Main.getInstance().getConfig().getInt("coins_kill")));
+			killer.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(killer, LanguageKeys.KILL_COINS), Pixel.getEconomy().format(Main.getInstance().getConfig().getInt("coins_kill"))));
 			SkywarsScoreboard.addKill(killer);
 			String msg = "Herzen von " + killer.getName() + ": ";
 			for(int i = 0; i < 10; ++i) {
@@ -177,7 +126,7 @@ public class SkyGame extends Game {
 			public void run() {
 				if(teamHandler.getTeamsAliveCount() == 1) {
 					GameTeam winner = teamHandler.getTeamsAlive().get(0);
-					taskManager.addTask(new SkyTasksDelayed.Victory(SkyGame.this, 0, winner), SkyTasksDelayed.Victory.id);
+					victory(winner);
 				} else if(teamHandler.getTeamsAliveCount() == 0) {
 					if(taskManager.getTask(SkyTasksDelayed.Draw.id) != null) {
 						taskManager.getTask(SkyTasksDelayed.Draw.id).runTaskEarly();
@@ -185,6 +134,29 @@ public class SkyGame extends Game {
 				}
 			}
 		}.runTaskLater(plugin, 5);
+	}
+	
+	private void victory(GameTeam winner) {
+		for (Player player : players) {
+			if (teamHandler.teamSize > 1) {
+				player.sendTitle(
+						GameTeam.toChatColor(winner.getColor()) + "Team " + LanguageApi.translateColor(player, winner.getColor()),
+						ChatColor.DARK_PURPLE + LanguageApi.getTranslation(player, LanguageKeys.VICTORY), 3, 50, 3);
+				player.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(player, LanguageKeys.VICTORY_TEAM),
+						GameTeam.toChatColor(winner.getColor()) + LanguageApi.translateColor(player, winner.getColor())));
+			} else {
+				player.sendTitle(ChatColor.GOLD + winner.getPlayers().get(0).getDisplayName(), ChatColor.DARK_PURPLE + LanguageApi.getTranslation(player, LanguageKeys.VICTORY), 3, 50, 3);
+				player.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(player, LanguageKeys.VICTORY_PLAYER), winner.getPlayers().get(0).getDisplayName()));
+			}
+			Pixel.setSpectator(player, true);
+		}
+		for (Player player : winner.getPlayers()) {
+			Pixel.getEconomy().depositPlayer(player, Main.getInstance().getConfig().getInt("coins_victory"));
+			player.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(player, PixelLangKeys.MORE_COINS),
+					Pixel.getEconomy().format(Main.getInstance().getConfig().getInt("coins_victory"))));
+		}
+		taskManager.removeTask(Draw.id);
+		taskManager.addTask(new EndGame(this), 200, EndGame.id);
 	}
 	
 	@Override
@@ -202,15 +174,9 @@ public class SkyGame extends Game {
 
 	@Override
 	public void onPlayerLeave(Player player) {
-		super.onPlayerLeave(player);
-		for(Player p : players) {
-			p.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(p, PixelLangKeys.LEAVE), player.getName()));
-		}
-		player.sendMessage(Main.chatPrefix + String.format(LanguageApi.getTranslation(player, PixelLangKeys.LEAVE), player.getName()));
-		
 		if(teamHandler.getTeamsAliveCount() == 1) {
 			GameTeam winner = teamHandler.getTeamsAlive().get(0);
-			taskManager.addTask(new SkyTasksDelayed.Victory(SkyGame.this, 0, winner), SkyTasksDelayed.Victory.id);
+			victory(winner);
 		} else if(teamHandler.getTeamsAliveCount() == 0) {
 			if(taskManager.getTask(SkyTasksDelayed.Draw.id) != null) {
 				taskManager.getTask(SkyTasksDelayed.Draw.id).runTaskEarly();
@@ -219,18 +185,9 @@ public class SkyGame extends Game {
 		
 		if (players.size() == 0) {
 			endGame();
-//			System.out.println("[Skywars] lobby stopped: " + arena.getWorld().getName());
 		}
-
-//		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
-//			public void run() {
-//				player.setGameMode(GameMode.ADVENTURE);
-//				PlayerUtil.resetPlayer(player);
-//				player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-//			}
-//		}, 5);
 	}
-	
+
 	
 	/*
 	 * ================================================================

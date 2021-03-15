@@ -10,8 +10,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.groot_23.pixel.Pixel;
 import me.groot_23.pixel.commands.PlayerCommand;
-import me.groot_23.pixel.game.task.GameTaskDelayed;
-import me.groot_23.pixel.world.Arena;
+import me.groot_23.pixel.game.task.PixelTaskDelayed;
+import me.groot_23.pixel.world.GameWorld;
+import me.groot_23.pixel.world.LobbyWorld;
 import me.groot_23.skywars.game.tasks.SkyTasksDelayed;
 
 public class SWstart extends PlayerCommand {
@@ -28,12 +29,9 @@ public class SWstart extends PlayerCommand {
 	@Override
 	public boolean execute(CommandSender sender, Command arg1, String arg2, String[] args) {
 		Player player = (Player) sender;
-		Arena arena = Pixel.getArena(player.getWorld().getUID());
-		if(arena != null) {
-			GameTaskDelayed task = arena.getGame().taskManager.getTask(SkyTasksDelayed.GoToSpawn.id);
-			if(task != null) {
-				task.runTaskEarly();
-			}
+		LobbyWorld lobby = Pixel.getLobby(player.getWorld().getUID());
+		if(lobby != null) {
+			lobby.lobby.timer.runTaskEarly();
 		}
 		return true;
 	}

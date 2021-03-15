@@ -1,5 +1,7 @@
 package me.groot_23.skywars.scoreboard;
 
+import java.util.Collection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -57,7 +59,7 @@ public class SkywarsScoreboard {
 		return "";
 	}
 
-	public static void initPreGame(Player player, int maxPlayers, int timeLeft, String map, String mode) {
+	public static void initLobby(Player player, int maxPlayers, int timeLeft, String map, String mode) {
 		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 		int playerCount = player.getWorld().getPlayers().size();
 
@@ -78,9 +80,9 @@ public class SkywarsScoreboard {
 
 	}
 
-	public static void updatePreGame(World world, int maxPlayers, int timeLeft) {
-		int playerCount = world.getPlayers().size();
-		for (Player player : world.getPlayers()) {
+	public static void updatePreGame(Collection<Player> players, int maxPlayers, int timeLeft) {
+		int playerCount = players.size();
+		for (Player player : players) {
 			String kit = getKit(player);
 
 			ScoreboardApi.setValue(player, "players", ChatColor.GOLD + Integer.toString(playerCount) + "/" + maxPlayers
@@ -93,7 +95,7 @@ public class SkywarsScoreboard {
 	}
 
 	public static void initGame(Player player, int playersLeft, String nextEvent, int timeTillEvent, int deathMatch,
-			int remainingTime, String map, String mode) {
+			int remainingTime, String map, String mode, boolean useTeams) {
 		Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
 		String kit = getKit(player);
@@ -111,16 +113,14 @@ public class SkywarsScoreboard {
 				ChatColor.GREEN + LanguageApi.getTranslation(player, LanguageKeys.PLAYERS_LEFT) + COLON + playersLeft);
 		ScoreboardApi.setValue(player, "kills", ChatColor.RED + "Kills" + COLON + 0);
 		ScoreboardApi.setValue(player, "event", nextEvent + COLON + Util.minuteSeconds(timeTillEvent));
-//		ScoreboardApi.setValue(player, "eventHeader",
-//				ChatColor.GREEN + Main.game.getTranslation(player, LanguageKeys.NEXT_EVENT));
-//		ScoreboardApi.setValue(player, "deathMatch",
-//				ChatColor.RED + "Death Match" + COLON + Util.minuteSeconds(deathMatch));
 		ScoreboardApi.setValue(player, "remainingTime", ChatColor.GREEN
 				+ LanguageApi.getTranslation(player, LanguageKeys.TIME_LEFT) + COLON + Util.minuteSeconds(remainingTime));
 
 		ScoreboardApi.setValue(player, "mode", ChatColor.GREEN + "Modus" + COLON + ChatColor.WHITE + 
 				LanguageApi.getTranslation(player, "mode." + mode));
-		ScoreboardApi.setValue(player, "team", "Team" + COLON  + teamStr);
+		if(useTeams) {
+			ScoreboardApi.setValue(player, "team", "Team" + COLON  + teamStr);
+		}
 	}
 
 	public static void updateGame(World world, int playersLeft, String nextEvent, int timeTillEvent, int deathMatch,
